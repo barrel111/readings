@@ -8,7 +8,7 @@
   sem: "Summer",
   title: "Online Algorithms",
   subtitle: "",
-  authors: ("Shaleen Baral",),
+  // authors: ("Shaleen Baral",),
 )
 
 #let OPT = `OPT`
@@ -74,7 +74,7 @@
   + *return* $O$
 ])
 
-#theorem[`KN-Greedy` is a polynomial-time $2$-approximation algorithm for the simple
+#prop[`KN-Greedy` is a polynomial-time $2$-approximation algorithm for the simple
 knapsack problem.]
 #proof[
   Running time is $cal(O)(n)$, which is polynomial. The loop invariants ensure
@@ -174,7 +174,7 @@ make this notion more explicit.
   such that the number of different input lengths in $cal(I)$ is infinite. Suppose
   further that $q(OPT) > 0$ on $cal(I)$. If there is an increasing, unbounded
   function $c: NN^+ arrow RR^+$ such that, $ q(ALG(I_i))/q(OPT(I_i)) >= c(n) "where" n = |I_i|, $ then $ALG$ isn't
-  competitive.]
+  competitive.]<min-uncompetitive>
 #proof[
   Suppose for contradiction that $ALG$ is competitive, that is
   $ q(ALG(I_i)) <= c' dot.c q(OPT(I_i)) + alpha. $
@@ -189,17 +189,17 @@ make this notion more explicit.
   further that $q(ALG) > 0$ on $cal(I)$. If there is an increasing, unbounded
   function $c: NN^+ arrow RR^+$ such that, $ q(OPT(I_i))/q(ALG(I_i)) >= c(n) "where" n = |I_i|, $ then $ALG$ isn't
   competitive.]
-#remark[Since this is a minimization problem, $q(OPT) > 0$ also implies $q(ALG) > 0$.]
+#remark[Since this is a minimization problem, $q(OPT) > 0$ also implies $q(ALG) > 0$.]<max-uncompetitive>
 #proof[ Same idea as the prior proof. ]
 
-#theorem[ Let $Pi$ be an online minimization problem, and let $cal(I) = {I_1, I_2, dots}$ be
+#prop[ Let $Pi$ be an online minimization problem, and let $cal(I) = {I_1, I_2, dots}$ be
   an infinite set of instances of $Pi$ such that $abs(I_i) <= abs(I_(i + 1))$, and
   such that the number of different input lengths in $cal(I)$ is infinite. Let $ALG$ be
   an online algorithm for $Pi$. If there is some constant $c >= 1$ such that
   + $ q(ALG(I_i))/q(OPT(I_i)) >= c, " for every" i in NN^+ $
   + $lim_(i to infinity) q(OPT(I_i)) = infinity$
   then $ALG$ isn't a $(c - epsilon)$-competitive online algorithm for $Pi$, for
-  any $epsilon > 0$. ]
+  any $epsilon > 0$. ]<min-nobetter>
 #proof[
   Suppose for contradiction that $ALG$ is a $(c - epsilon)$-competitive algorithm
   for some $epsilon > 0$. Then, there is a constant $alpha$ such that
@@ -210,28 +210,28 @@ make this notion more explicit.
   have a contradiction.
 ]
 
-#theorem[Let $Pi$ be an online maximization problem, and let $cal(I) = {I_1, I_2, dots}$ be
+#prop[Let $Pi$ be an online maximization problem, and let $cal(I) = {I_1, I_2, dots}$ be
   an infinite set of instances of $Pi$ such that $abs(I_i) <= abs(I_(i + 1))$, and
   such that the number of different input lengths in $cal(I)$ is infinite. Let $ALG$ be
   an online algorithm for $Pi$. If there is some constant $c >= 1$ such that
   + $ q(OPT(I_i))/q(ALG(I_i)) >= c, " for every" i in NN^+ $
   + $lim_(i to infinity) q(OPT(I_i)) = infinity$
   then $ALG$ isn't a $(c - epsilon)$-competitive online algorithm for $Pi$, for
-  any $epsilon > 0$.]
+  any $epsilon > 0$.]<max-nobetter>
 #proof[
   Suppose for contradiction that $ALG$ is a $(c - epsilon)$-competitive online
   algorithm for some $epsilon > 0$. Then, there is some constant $alpha$ such that
   $ q(OPT(I_i))/q(ALG(I_i)) - alpha/q(ALG(I_i)) <= c - epsilon $ for every $i in NN^+$.
   Furthermore, by a) and b), if $q(ALG(I_i))$ were bounded by a constant, it
   wouldn't be competitive at all. Thus, it is fair to assume that $lim_(i to infinity) q(ALG(I_i)) = infinity$.
-  By a), first term above is at least $c$ and we can find instances for which the
+  By a), the first term above is at least $c$ and from the previous sentence, we can find instances for which the
   second term is less than $epsilon$. Thus, we have a contradiction.
 ]
 
 #remark[Propositions 1.2.1 and 1.2.2 need to be carefully interpreted. For example, they
   don't rule out the possibility for a $(c - 1/n)$-competitive algorithm.]
 
-== Paging
+== Paging: Basics
 
 #definition(
   "Paging",
@@ -265,12 +265,141 @@ make this notion more explicit.
   + For any $i$ with $2 <= i <= N$, phase $P_i$ is a maximum-length subsequence of $I$ that
     starts right after $P_(i - 1)$ and again contains at most $k$ distinct pages. ]
 
+One possible strategy is given by the following algorithm.
+
 #algorithm(
   caption: [`FIFO`],
   $"The cache is organized as a queue. Whenever a page must be evicted, the one residing in the" \ "cache for the longest time is chosen. The first " k "pages may be removed arbirarily."$,
 )
 
-#prop[`FIFO` is strictly $k$-competitive for paging.]
+We analyze this algorithm by considering its behavior on different
+
+#lemma[Any optimal solution `OPT` must make at least one page fault for every phase in a $k$-phase partition.]<opt-paging>
+#proof[Let $I = (x_1, x_2, dots, x_N)$ be any instance of paging and consider $I$'s $k$-phase partition $P_1, P_2, dots, P_N$. WLOG, assume $x_1 in.not {p_1, p_2, dots, p_k}$. Shift the $k$-phase partition ${P_i}_( i in [N] )$ by a single page to form the partition ${P'_i}_(i in [N])$. Note that the last phase $P'_N$ may be empty but all others have the same length as before (i.e. $abs(P_i) = abs(P'_i)$).
+
+For $i in [N - 1]$, all phases $P_i$ had maximum length (with respect to containing $k$-distinct pages) and thus, the corresponding phases $P'_i$ contain $k$ pages that differ from the page $p'$ that was last requested before the start of $P'_i$. Since $p'$ is in the cache of $OPT$ at the beginning of $P'_i$ and there are $k$ more distinct requests different from $p'$, $OPT$ has to cause one page fault during $P'_i$. This gives us $N - 1$ pages faults for $OPT$ plus an additional one on $x_1$ at the beginning before any of the phases ${P'_i}$.
+]
+
+#prop[`FIFO` is strictly $k$-competitive for paging.]<FIFO>
 #proof[Let $I = (x_1, x_2, dots, x_N)$ be any instance of paging and consider $I$'s $k$-phase
   partition $P_1, P_2, dots, P_N$. WLOG, assume $x_1 in.not {p_1, p_2, dots, p_k}$.
+
+  We start by showing that in any fixed phase $P_i$, $i in [N]$, `FIFO` does not cause more than $k$ page faults during $P_i$. By definition there are at most $k$ pages requested in this phase. Suppose $p$ is the first page in phase $P_i$ that causes a page fault for `FIFO`. Further suppose that $C_i$ is the set of all pages added to the cache in phase $P_i$. Then $p$ must be the first element of $C_i$ that is evicted from the cache. However, when $p$ is loaded into the cache there are $k - 1$ other pages in the cache that must be removed before $p$. So, $p$ must remain in the cache for the next $k - 1$ page faults. Every element of $C_i - p$ can cause at most one page fault in the next $k - 1$ page faults. Since there are at most $k - 1$ distinct pages requested in $P_i$, it must be the case that phase $P_i$ ends in the next $k - 1$ page faults too. Thus, no element causes more than one page fault in phase $P_i$. Consequently, there are at most $k$ page faults in total during any one phase.
+
+
+  Thus, by @opt-paging,
+  $ ALG <= k dot.c N <= k dot OPT. $
 ]
+
+In fact, this is the best we can hope for.
+
+#prop[No online algorithm for paging is better than $k$-competitive.]
+#proof[ For convenience, take $n$ to be a multiple of $k$. Consider instances with $k + 1$ pages $p_1, p_2, dots, p_k, p_(k + 1)$. Recall that the cache is initialized $(p_1, p_2, dots, p_k)$. Since the cache size is $k$, there is exactly one page, at any given time step, that isn't in the cache of $ALG$. The idea is that the adversary always requests precisely this uncached page to obtain an instance of length $n$. Since the adversary knows $ALG$, it can always forsee which page will be replaces by $ALG$ if a page fault occurs (for example, it can just run $ALG$ to determine this).
+
+More formally, the following algorithm can construct the instance for us.
+#algorithm(
+  caption: [Paging Adversary],
+  pseudocode-list[
+    + $I = (p_(k + 1))$
+    + $i = 1$
+    + *while* $i <= n - 1$ do
+      + $p = "the page that is currently note in the cache of" ALG$
+      + $I = I union p$
+      + $ i = i + 1$
+    + *end*
+    + *return* $I$
+]
+)
+By construction, this causes a page fault at every time step. Hence, $ALG$ has a total cost of $n$ on instance $I$.
+
+Now, we study the optimal cost $OPT$ for this instance. We divide the input into distinct consecutive phases such that each phase consists of exactly $k$ time steps. Note that $ALG$ makes $k$ page faults in every phase. So, we want to show that $OPT$ makes at most one page fault in every phase.
+
+For any phase $P_i$, consider the first time step $T_j$, $j in [(i - 1)k + 1, i k]$, wherein the first page fault occurs. Note that there $P_i$ consists of exactly $i k - j <= k - 1$ more time steps, so at msot $k - 1$ more distinct pages are requested. Since the cache stores $k$ pages, there must be at least one page $p'$ in the cache that isn't requested during this phase and $OPT$ chooses $p'$ to evict. If there are more than one candidate for $p'$, $OPT$ can break the tie by choosing the page whose first request is the latest among all such pages [TERRIBLE EXPOSITION: should just explicitly say that Longest Forward Distance is the local optima or not leak details of the $OPT$ strategy without meaning to!]. We have, on this instance,
+
+$ ALG(I) = n = k dot n/k <= k dot OPT(I). $
+
+Now if , as $n arrow infinity$, the number of page faults caused by $OPT$ is constant or bounded, $ALG$ isn't competitive at all (@min-uncompetitive). On the other hand, if the number of page faults by $OPT$ increases with $n$, then $ALG$ cannot be better than $k$-competitive (@max-nobetter).
+]
+
+A natural counterpart to `FIFO` is the following strategy.
+#algorithm(
+  caption: [`LIFO`],
+  $"The cache is organized as a stack. Whenever a page must be evicted, the one that was most" \ "recently loaded into the cache is chosen. On the first page fault, an arbirary page may be " \ "removed."$,
+)
+
+This is a terrible strategy! Intuitively, this is because we end up using only one of the cells in the cache.
+
+#prop[`LIFO` is not competitive for paging.]
+#proof[
+  We use @min-uncompetitive by showing that, for every $n$, there is an instance of paging of length $n$ such that $q(mono("LIFO"))/q(OPT)$ grows propotionally with $n$.
+
+  Consider an instance of length $n$ on $m = k + 1$ total pages where the adversary always requests the same two pages. Since the cache is initialized with pages $p_1, dots, p_k$, the adversary starts off by requesting page $p_(k + 1)$. As a result, `LIFO` must evict a page $p_i$ from the cache. Since the adversary knows that `LIFO` chooses $p_i$, it requests it in time step $T_2$ and `LIFO` removes $p_(k + 1)$. The adversary keeps requesting these two pages, constructing the instance $I$,
+  $ (p_(k + 1), p_i, p_(k + 1), p_i, dots) $
+  We see that on this instance, `LIFO` causes a page fault at every time step. On the other hand, the optimal solution $OPT$ just removes a page $p_j$ with $j != i$ in time step $T_1$ and has overall cost $1$ because both $p_i$ and $p_(k + 1)$ will be in the cache from this time step onwards.
+]
+
+Intuitively, we may expect the frequency of access to be a good heuristic. This gives us the following strategy dubbed _Least Frequently Used_.
+
+#algorithm(
+  caption: [`LFU`],
+  $"On a page fault, the page that was, so far, least frequently used is removed."$,
+)
+
+Unfortunately, this isn't much better in the worst case.
+
+#prop[`LFU` is not competitive for paging.]
+#proof[ Again, we want to employ @min-uncompetitive. The idea is very similar to the adversarial construction for `LIFO`. Consider the instance $I$ given by,
+$ "("underbrace(p_1\, p_1\, dots\, p_1, n' "requests"), underbrace(p_2 \, p_2\, dots \, p_2, n' "requests"), dots ,underbrace(p_(k - 1)\, p_(k - 1)\, dots\, p_(k - 1), n' "requests"), underbrace(p_(k + 1)\, p_k\, dots\, p_(k + 1) \, p_k, 2(n' - 1) "requests")  ")" $
+of length $n' (k - 1) + 2(n' - 1)$. By the initial contents of the cache, no page faults occur in the first $n'(k - 1)$ time steps for any online algorithm.
+
+After that, all pages in the cache except for $p_k$ have been requested $k + 1$ times. Thus when $p_(k + 1)$ is requested, at time step $T_(n'(k - 1) + 1)$, `LFU` evicts page $p_k$. Next, the adversary requests page $p_k$ and `LFU` evicts $p_(k + 1)$  as it has been requested only once. This is iterated $n' - 1$ times until both $p_k$ and $p_(k + 1)$ have been requested $n' - 1$ times each. Note that `LFU` (by induction) makes a page fault in each of the last $2(n' - 1)$ time steps.
+
+On the other hand, the optimal solution $OPT(I)$ simply removes a page $p_j$ with $j != k$ in time step $T_(n'(k - 1) + 1)$ and causes no more page faults. Since
+$ n' = (n + 2)/(k + 1), $
+the competitive ratio of `LFU` can be bounded from below by
+$ 2(n' - 1) = 2 dot (n - k + 1)/(k + 1) $
+which is a linear function of $n$.
+]
+
+#remark[Taking a closer look at the previous propositions, we see that the lower bound on the competitive ratio of `LIFO` is stronger than the one for `LFU` by a factor of $(k + 1)/2$.]
+
+== Paging: Marking
+
+With some basic results out of the way, we shift our focus to a general class of algorithms for pagins known as _marking algorithms_. These play an important role in the context of randomized algorithms for paging.
+
+#definition("Marking Algorithm")[A _marking algorithm_ works in phases and _marks_ pages that were already requested; it only removes pages that are not marked. If all pages in the cache are marked and a page fault occurs, the current phase ends and a new one starts by first, unmarking all pages in the cache. Before processing the first request, all pages get marked such that the first request that causes a page fault starts a new phase. In pseudocode, the general form is as shown below.
+#algorithm(
+  caption: "Marking Algorithm",
+  pseudocode-list[
+    + *mark* all pages in the cache #comment[first page fault starts new phase]
+    + *for* every request $x$ *do*
+      + *if* $x in "cache"$
+        + *if* $x$ is unmarked
+          + *mark* $x$
+        + *output* "0"
+      + *else*
+        + *if* there is no unmarked page
+          + #line-label(<reset-mark>) *unmark* all pages in the cache #comment[start new phase]
+        + #line-label(<marking-choice>) $p =$ page somehow chosen among all unmarked cached pages
+        + #line-label(<remove-unmark>) *remove* $p$ and *insert* $x$ at the old position of $p$
+        + #line-label(<pagefault-mark>)*mark* $x$
+        + *output* "$p$"
+    + *end*
+  ]
+)]
+
+Marking algorithms are really nice!
+
+#let PM = k => $P_(mono("MARK"), #k)$
+
+#lemma[ There are at most $k$ page faults in one marking phase.]<k-faults-in-phase>
+#proof[A page that has been marked in one phase never gets unmarked until the next phase starts (@reset-mark). Furthermore, throughout a phase, a marked page remains in the cache as only unmarked pages are ever removed (@remove-unmark). Since there are at most $k$ pages in the cache, there are at most $k$ pages that are marked in a single phase. In any one such phase $PM(i)$, note that every page fault leads to a page being marked (@pagefault-mark). So, there are at most $k$ page faults in one marking phase too. ]
+
+#prop[Every marking algorithm is strictly $k$-competitive.]
+#proof[Let `MARK` be a fixed marking algorithm. Let $I$ denote the given input and consider its $k$-phase partition into $N$ phases $P_1, dots, P_N$. By the same argument as @FIFO, we conclude that any optimal algorithm $OPT$ makes at least $N$ page faults in total on $I$.
+
+Now, we show that `MARK` makes at most $k$ page faults in one fixed phase $P_i$ with $i in [N]$. We denote the $overline(N)$ phases defined by `MARK` by $PM(1), PM(2), dots, PM(overline(N))$. First, we claim that both $N = overline(N)$ and that $P_i = PM(i)$ for $i in [N]$. The result we want follows from verifying these two claims since `MARK` makes at most $k$ page faults in one phase $PM(i)$ (@k-faults-in-phase).
+
+Start by observing that $P_1$ and $PM(1)$ start with the first request that causes a page fault. Every phase $P_i$ except the last one is, by definition, is a maximum-length sequence of $k$ distinct requests. Every requested page gets marked by `MARK` after being requested. When $k$ distinct pages have been requested then all pages in `MARK`'s cache are marked. With the $(k + 1)$-th distinct page $p'$ requested since the beginning of $P_(i)$, a new phase $P_(i + 1)$ starts. In this time step, a new phase $PM(i + 1)$ is also started as there is no unmarked page left in its cache to replace with $p'$. So, the phases $P_i$ and $PM(i)$ coincide. ]
+
+== Paging: Lookahead and Resource Augmentation
