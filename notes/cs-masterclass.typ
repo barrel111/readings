@@ -12,7 +12,7 @@
 
 == Proofs
 
-#theorem(
+#prop(
   "Cauchy-Schwarz",
 )[For $a_i, b_i in RR$ we have $ a_1b_1 + a_2b_2 + dots.c + a_n b_n <= sqrt(a_1^2 + a_2^2 + dots.c + a_n^2)sqrt(b_1^2 + b_2^2 + dots.c + b_n^2). $]
 
@@ -69,7 +69,7 @@
 
 ]
 
-#theorem[Equality holds in the Cauchy-Schwarz inequality iff the sequences ${a_k}$ and ${b_k}$ are
+#prop[Equality holds in the Cauchy-Schwarz inequality iff the sequences ${a_k}$ and ${b_k}$ are
   scalar multiple of one another.]
 
 #proof[ We focus on the nontrivial case where neither of the sequences is identically
@@ -98,12 +98,12 @@ The Cauchy-Schwarz inequality can be quite compactly represented in the context
 of an _inner product space_. We introduce the requisite material here.
 
 #definition[Suppose $V$ is a real vector space. Then a function on $V times V$ defined by
-  the mapping $(bold(a), bold(b)) arrow.bar innerproduct(bold(a), bold(b))$ is an _inner product_ and
-  we say that $(V, innerproduct(dot.c, dot.c))$ is a _real inner product space_ provided
-  that the pair $(V, innerproduct(dot.c, dot.c))$ has the following properties
-  + $innerproduct(bold(v), bold(w)) = innerproduct(bold(w), bold(v))$ for all $bold(v), bold(w) in V$
-  + $innerproduct(bold(v), bold(v)) > 0$ for all nonzero $bold(v) in V$
-  + $innerproduct(alpha bold(v) + bold(u), bold(w)) = alpha innerproduct(bold(v), bold(w)) + innerproduct(bold(u), bold(w))$ for
+  the mapping $(bold(a), bold(b)) arrow.bar inner(bold(a), bold(b))$ is an _inner product_ and
+  we say that $(V, inner(dot.c, dot.c))$ is a _real inner product space_ provided
+  that the pair $(V, inner(dot.c, dot.c))$ has the following properties
+  + $inner(bold(v), bold(w)) = inner(bold(w), bold(v))$ for all $bold(v), bold(w) in V$
+  + $inner(bold(v), bold(v)) > 0$ for all nonzero $bold(v) in V$
+  + $inner(alpha bold(v) + bold(u), bold(w)) = alpha inner(bold(v), bold(w)) + inner(bold(u), bold(w))$ for
     all $alpha in RR$ and $bold(u), bold(v), bold(w) in V$
 ]
 
@@ -111,50 +111,50 @@ On $RR^n$, the following inner product is popular.
 
 #definition(
   "Euclidean Inner Product",
-)[For $bold(a), bold(b) in RR^n$, $ innerproduct(bold(a), bold(b)) = sum_(j = 1)^n a_j b_j $]
+)[For $bold(a), bold(b) in RR^n$, $ inner(bold(a), bold(b)) = sum_(j = 1)^n a_j b_j $]
 
 This lets us rewrite the Cauchy-Schwarz inequality succinctly.
 
-#theorem[For $bold(a), bold(b) in RR^n$ we have $ innerproduct(bold(a), bold(b)) <= innerproduct(bold(a), bold(a))^(1/2) innerproduct(bold(b), bold(b))^(1/2). $]
+#prop[For $bold(a), bold(b) in RR^n$ we have $ inner(bold(a), bold(b)) <= inner(bold(a), bold(a))^(1/2) inner(bold(b), bold(b))^(1/2). $]
 
 Of course, there are other inner product spaces too!
 
-#example[ On $RR^n$ the following weighted sum defines an inner product, $ innerproduct(bold(a), bold(b)) = sum_(j = 1)^n a_j b_j w_j. $ ]
+#example[ On $RR^n$ the following weighted sum defines an inner product, $ inner(bold(a), bold(b)) = sum_(j = 1)^n a_j b_j w_j. $ ]
 
 #example[ Consider the vector space $C [a, b]$ of real-valued continuous functions on the
   bounded interval $[a, b]$. Then, for any continuous $w:[a, b] to RR$ such that $w(x) > 0$ for
-  all $x in [a, b]$, we can define an inner product on $C[a, b]$ by setting $ innerproduct(f, g) = integral_a^b f(x)g(x)w(x) #h(2pt) d x. $ ]
+  all $x in [a, b]$, we can define an inner product on $C[a, b]$ by setting $ inner(f, g) = integral_a^b f(x)g(x)w(x) #h(2pt) d x. $ ]
 
 This naturally leads us to ask whether Cauchy-Schwarz is true for all inner
 product spaces.
 
-#theorem[Let $(V, innerproduct(dot, dot))$ be an inner product space. Then, for any $bold(v), bold(w) in V$ we
-  have $ innerproduct(bold(v), bold(w)) <= innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2). $ For
-  nonzero $bold(v), bold(w) in V$ we have $ innerproduct(bold(v), bold(w)) = innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2) " if and only if " bold(v) = lambda bold(w) $ for
+#prop[Let $(V, inner(dot, dot))$ be an inner product space. Then, for any $bold(v), bold(w) in V$ we
+  have $ inner(bold(v), bold(w)) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2). $ For
+  nonzero $bold(v), bold(w) in V$ we have $ inner(bold(v), bold(w)) = inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2) " if and only if " bold(v) = lambda bold(w) $ for
   a nonzero constant $lambda$.]
-#proof[ We try to use a variant of the additive method developed above. Consider, $ 0 <= innerproduct(bold(v) - bold(w), bold(v) - bold(w)) \ implies innerproduct(bold(v), bold(w)) <= 1/2 (innerproduct(bold(v), bold(v)) + innerproduct(bold(w), bold(w))). $
+#proof[ We try to use a variant of the additive method developed above. Consider, $ 0 <= inner(bold(v) - bold(w), bold(v) - bold(w)) \ implies inner(bold(v), bold(w)) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w))). $
 
   We normalize to convert this to a multiplicative bound. Since the inequality
   holds trivially for $bold(v) = bold(0)$ or $bold(w) = bold(0)$, we assume that $bold(v), bold(w)$ are
   nonzero. Define,
 
-  $ hat(bold(v)) = bold(v)/innerproduct(bold(v), bold(v))^(1/2) #h(15pt) hat(bold(w)) = bold(w)/innerproduct(bold(w), bold(w))^(1/2) #h(5pt) . $
+  $ hat(bold(v)) = bold(v)/inner(bold(v), bold(v))^(1/2) #h(15pt) hat(bold(w)) = bold(w)/inner(bold(w), bold(w))^(1/2) #h(5pt) . $
 
   We then have,
 
-  $ innerproduct(hat(bold(v)), hat(bold(w))) <= 1/2 (innerproduct(hat(bold(v)), hat(bold(v))) + innerproduct(hat(bold(w)), hat(bold(w)))) = 1 \ implies innerproduct(
-    bold(v)/(innerproduct(bold(v), bold(v))^(1/2)),
-    bold(w)/(innerproduct(bold(w), bold(w))^(1/2)),
+  $ inner(hat(bold(v)), hat(bold(w))) <= 1/2 (inner(hat(bold(v)), hat(bold(v))) + inner(hat(bold(w)), hat(bold(w)))) = 1 \ implies inner(
+    bold(v)/(inner(bold(v), bold(v))^(1/2)),
+    bold(w)/(inner(bold(w), bold(w))^(1/2)),
 
-  ) <= 1 \ implies innerproduct(bold(v), bold(w)) <= innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2). $
+  ) <= 1 \ implies inner(bold(v), bold(w)) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2). $
 
   Now, we deal with the necessary condition for equality. If $bold(v), bold(w)$ are
   nonzero then the normalized vectors $hat(bold(v)), hat(bold(w))$ are well
-  defined. Furthermore, equality in the Cauchy-Schwarz inequality then gives us $innerproduct(hat(bold(v)), hat(bold(w))) = 1.$ So,
+  defined. Furthermore, equality in the Cauchy-Schwarz inequality then gives us $inner(hat(bold(v)), hat(bold(w))) = 1.$ So,
 
-  $ innerproduct(bold(hat(v)), bold(hat(w))) = 1/2 (innerproduct(bold(hat(v)), bold(hat(v))) + innerproduct(bold(hat(w)), bold(hat(w)))) \ implies innerproduct(bold(hat(v)) - bold(hat(w)), bold(hat(v)) - bold(hat(w))) = 0 \ implies bold(hat(v)) = bold(hat(w)) $
+  $ inner(bold(hat(v)), bold(hat(w))) = 1/2 (inner(bold(hat(v)), bold(hat(v))) + inner(bold(hat(w)), bold(hat(w)))) \ implies inner(bold(hat(v)) - bold(hat(w)), bold(hat(v)) - bold(hat(w))) = 0 \ implies bold(hat(v)) = bold(hat(w)) $
 
-  Thus, $ bold(v) = lambda bold(w) " for " lambda = innerproduct(bold(v), bold(v))^(1/2)/innerproduct(bold(w), bold(w))^(1/2). $ ]
+  Thus, $ bold(v) = lambda bold(w) " for " lambda = inner(bold(v), bold(v))^(1/2)/inner(bold(w), bold(w))^(1/2). $ ]
 
 == Symmetry and Amplification
 
@@ -165,13 +165,13 @@ This material is from #link(
 We consider the general setting of a complex inner product space, $V$.// That is to say, $V$ is a complex inner product space that is complete with respect to the norm induced by the inner product.
 In this context, the Cauchy-Schwarz inequality is given by
 
-$ abs(innerproduct(bold(v), bold(w))) <= innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2). $
+$ abs(inner(bold(v), bold(w))) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2). $
 
 To prove this, we start off with the additive bound,
 
-$ 0 <= innerproduct(bold(v) - bold(w), bold(v) - bold(w)) \ implies Re innerproduct(bold(v), bold(w)) <= 1/2 (innerproduct(bold(v), bold(v)) + innerproduct(bold(w), bold(w))). $
+$ 0 <= inner(bold(v) - bold(w), bold(v) - bold(w)) \ implies Re inner(bold(v), bold(w)) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w))). $
 
-This is a weaker bound than Cauchy-Schwarz as $Re innerproduct(bold(v), bold(w)) <= innerproduct(bold(v), bold(w)) <= innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2) <= 1/2 (innerproduct(bold(v), bold(v)) + innerproduct(bold(w), bold(w)))$.
+This is a weaker bound than Cauchy-Schwarz as $Re inner(bold(v), bold(w)) <= inner(bold(v), bold(w)) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w)))$.
 The last inequality follows from the AM-GM inequality (see next chapter for more
 details).
 
@@ -179,24 +179,24 @@ We can amplify this additive bound by observing some symmetry imbalances.
 Particularly, the phase rotation $bold(v) arrow.bar e^(i theta) bold(v)$ preserves
 the right-hand side but not the left-hand side,
 
-$ Re #h(2pt) e^(i theta) innerproduct(bold(v), bold(w)) <= 1/2 (innerproduct(bold(v), bold(v)) + innerproduct(bold(w), bold(w))). $
+$ Re #h(2pt) e^(i theta) inner(bold(v), bold(w)) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w))). $
 
 We can choose any real $theta$ we want. To make the left-hand side as large as
-possible, we choose $theta$ to cancel the phase of $innerproduct(bold(v), bold(w))$.
+possible, we choose $theta$ to cancel the phase of $inner(bold(v), bold(w))$.
 This gets us,
 
-$ abs(innerproduct(bold(v), bold(w))) <= 1/2 (innerproduct(bold(v), bold(v)) + innerproduct(bold(w), bold(w))). $
+$ abs(inner(bold(v), bold(w))) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w))). $
 
 Now, to strengthen the right-hand side we exploit a different symmetry, _homogenisation symmetry_.
 Particularly, consider the map $(bold(v), bold(w)) arrow.bar (lambda bold(v), 1/lambda bold(w))$ for
 a scalar $lambda > 0$. This gives us,
 
-$ abs(innerproduct(bold(v), bold(w))) <= lambda^2/2 innerproduct(bold(v), bold(v)) + 1/(2 lambda^2) innerproduct(bold(w), bold(w)). $
+$ abs(inner(bold(v), bold(w))) <= lambda^2/2 inner(bold(v), bold(v)) + 1/(2 lambda^2) inner(bold(w), bold(w)). $
 
 The choice of $lambda = sqrt(norm(bold(w)) slash norm(bold(v)))$ minimizes the
 right-hand side. This gives us,
 
-$ abs(innerproduct(bold(v), bold(w))) <= innerproduct(bold(v), bold(v))^(1/2) innerproduct(bold(w), bold(w))^(1/2). $
+$ abs(inner(bold(v), bold(w))) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2). $
 
 == Yet Another Proof ™
 
@@ -228,11 +228,11 @@ inequality and the necessary condition for equality,
 $ sum_(k, j) (a_k b_j - a_j b_k)^2 &= sum_(k, j) (a_k^2 b_j^2 - 2 a_k a_j b_k b_j + a_j^2 b_k^2) \ &= 2 sum_(k, j) a_k^2 b_j^2 - 2 sum_( k, j ) a_k b_k a_j b_j \ &= 2 sum_(k) a_k^2 sum_j b_j^2 - 2 (sum_(k) a_k b_k)^2. $
 
 Now, we try to extend this idea to real inner product spaces. We want to show
-that $ innerproduct(bold(v), bold(w)) <= norm(bold(v)) norm(bold(w)) $ with
-equality iff $bold(v)$ and $bold(w)$ are proportional with a positive constant.
-Again, we motivate our proof by thinking in terms of expressing proportionality.
-A first attempt is to say that $bold(v), bold(w)$ are proportional with a
-positive constant iff $bold(v) slash norm(bold(v)) = bold(w) slash norm(bold(w))$ (note
+that $ inner(bold(v), bold(w)) <= norm(bold(v)) norm(bold(w)) $ with equality
+iff $bold(v)$ and $bold(w)$ are proportional with a positive constant. Again, we
+motivate our proof by thinking in terms of expressing proportionality. A first
+attempt is to say that $bold(v), bold(w)$ are proportional with a positive
+constant iff $bold(v) slash norm(bold(v)) = bold(w) slash norm(bold(w))$ (note
 how this doesn't work for proportionality in general, for example we could have $bold(v) = - bold(w)$).
 As we did before, we can equivalently express this condition as requiring $norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
 So that we may express this using inner products, we consider the squared
@@ -240,14 +240,14 @@ version of this: $(norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 0$. Note
 that the left-hand side is in fact always greater than or equal to zero. Then,
 expanding the left hand side immediately gives us the Cauchy-Schwarz result,
 
-$ (norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 2norm(bold(v))^2norm(bold(w))^2 - 2 norm(bold(w)) norm(bold(v)) innerproduct(bold(v), bold(w)). $
+$ (norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 2norm(bold(v))^2norm(bold(w))^2 - 2 norm(bold(w)) norm(bold(v)) inner(bold(v), bold(w)). $
 
 For a complex inner product space, $(norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2$ expands
 as
 
-$ (norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 2 norm(bold(v))^2 norm(bold(w))^2 - norm(bold(w)) norm(bold(v)) (innerproduct(bold(v), bold(w)) + innerproduct(bold(w), bold(v))) $
+$ (norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 2 norm(bold(v))^2 norm(bold(w))^2 - norm(bold(w)) norm(bold(v)) (inner(bold(v), bold(w)) + inner(bold(w), bold(v))) $
 
-Let $x$ be a complex number with modulus $abs(x) = 1$ and the property that $innerproduct(bold(w), x bold(v))$ is
-real and non-negative. Consequently, $innerproduct(bold(w), x bold(v)) = abs(innerproduct(bold(w), bold(v)))$.
-We readily get that $abs(innerproduct(bold(w), bold(v))) = innerproduct(bold(w), x bold(v)) <= norm(bold(v)) norm(bold(w))$ with
+Let $x$ be a complex number with modulus $abs(x) = 1$ and the property that $inner(bold(w), x bold(v))$ is
+real and non-negative. Consequently, $inner(bold(w), x bold(v)) = abs(inner(bold(w), bold(v)))$.
+We readily get that $abs(inner(bold(w), bold(v))) = inner(bold(w), x bold(v)) <= norm(bold(v)) norm(bold(w))$ with
 equality iff $norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
