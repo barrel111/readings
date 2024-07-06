@@ -316,7 +316,7 @@ Now, we study the optimal cost $OPT$ for this instance. We divide the input into
 
 For any phase $P_i$, consider the first time step $T_j$, $j in [(i - 1)k + 1, i k]$, wherein the first page fault occurs. Note that there $P_i$ consists of exactly $i k - j <= k - 1$ more time steps, so at msot $k - 1$ more distinct pages are requested. Since the cache stores $k$ pages, there must be at least one page $p'$ in the cache that isn't requested during this phase and $OPT$ chooses $p'$ to evict. If there are more than one candidate for $p'$, $OPT$ can break the tie by choosing the page whose first request is the latest among all such pages [TERRIBLE EXPOSITION: should just explicitly say that Longest Forward Distance is the local optima or not leak details of the $OPT$ strategy without meaning to!]. We have, on this instance,
 
-$ ALG(I) = n = k dot n/k <= k dot OPT(I). $
+$ ALG(I) = n = k dot n/k >= k dot OPT(I). $
 
 Now if , as $n arrow infinity$, the number of page faults caused by $OPT$ is constant or bounded, $ALG$ isn't competitive at all (@min-uncompetitive). On the other hand, if the number of page faults by $OPT$ increases with $n$, then $ALG$ cannot be better than $k$-competitive (@max-nobetter).
 ]
@@ -402,4 +402,36 @@ Now, we show that `MARK` makes at most $k$ page faults in one fixed phase $P_i$ 
 
 Start by observing that $P_1$ and $PM(1)$ start with the first request that causes a page fault. Every phase $P_i$ except the last one is, by definition, is a maximum-length sequence of $k$ distinct requests. Every requested page gets marked by `MARK` after being requested. When $k$ distinct pages have been requested then all pages in `MARK`'s cache are marked. With the $(k + 1)$-th distinct page $p'$ requested since the beginning of $P_(i)$, a new phase $P_(i + 1)$ starts. In this time step, a new phase $PM(i + 1)$ is also started as there is no unmarked page left in its cache to replace with $p'$. So, the phases $P_i$ and $PM(i)$ coincide. ]
 
+There are quite a few algorithms that fit into the marking paradigm. Consider the _Least Recently Used_ strategy given below.
+
+#algorithm(
+  caption: `LRU`,
+  $"On a page fault, the page that was last requested least recently is removed. The first " k \ "pages may be removed arbitrarily."$
+)
+
+#prop[`LRU` is a marking algorithm.]
+#proof[ We want to show that `LRU` never removes a page that is currently marked by some marking algorithm. Suppose for contradiction that there exists an instance $I$ such that `LRU` removes a marked page. Let $p$ be the page for which this happens for the first time, and denote the corresponding timestep by $T_(j)$ with $j in [n]$ during some phase $P_i$ with $i in [N]$. Since $p$ is marked, it must have been requested before during $P_i$, say in time step $T_(j')$ with $j' < j$. After that $p$ was the most recently used. So, if `LRU` removes $p$ in time step $T_j$, there must have been $k$ distinct requests following time step $T_(j')$ -- the first $(k - 1)$ cause $p$ to become least recently used and on the $k$-th request $p$ is removed by `LRU`. However, this implies that $P_i$ consists of at least $k + 1$ different requests, which contradicts the definition of a $k$-phase partition.]
+
 == Paging: Lookahead and Resource Augmentation
+
+So far, we have been dealing with analyzing the worst case performance of our online algorithms. However, it might be realistic to assume some additional knowledge about the input.
+
+A straightforward approach to give an online algorithm an advantage compared to the classical model is to alow it to have some _lookahead_ i.e. allow it to look into the future for $l$ time steps. However, in this context, it doesn't give us much improvement.
+
+#prop[No online algorithm with lookahead $ell$ for paging is better than $k$-competitive.]
+#proof[ Consider paging with lookahead $ell$. That is to say, in any time step, an online algorithm $ALG_ell$ sees the current request together with subsequent $ell$ requests. Since the adversary also knows $ALG_ell$, it surely knows $ell$ and may use the following construction.
+
+The idea is to repeat each request $ell$ times such that $ALG_ell$ is still in the dark at the time step where it has to replace a page. Consider an instance with $m = k + 1$ pages. The first $ell + 1$ requests all ask for the only page that is not in the cache initially i.e. $p_(k + 1)$. In the first time step, $ALG_ell$ must replace a page, but it cannot see which page is requested in time step $T_(ell + 2)$. Thus, the additional knowledge is completely useless and the adversary can request $p_i$ which $ALG_ell$ replaces in time step $T_1$. When $ALG_ell$ must find a page to replace with $p_i$, it only knows the prefix $ (p_(k + 1), underbrace(p_(k + 1) \, dots \, p_(k + 1), ell "requests"), p_i, underbrace(p_i\, dots\, p_i, ell "requests") ")" $
+of the input. Again, this doesn't help.
+
+Repeating this construction, the adversary can ensure that $ALG_ell$ causes a page fault every $ell + 1$ time steps. By @opt-paging, $OPT$ makes at most one page fault every $k(ell + 1)$ time steps. So, for such inputs of length $n$, $ALG_ell$ causes $n slash (ell + 1)$ page faults while $OPT$ causes at most $n slash (k(ell + 1)). $
+
+[IMPROVE THIS PROOF.]]
+
+Another way to empower online algorithms against the adversary is called _resource augmentation_, wherein we allow the online algorithm to use more resources than the optimal offline algorithm.
+
+= Randomized Algorithms
+== Randomized Online Algorithms
+== Yao's Principle
+== Paging: Randomized Algorithms
+== Ski-Rental Problem
