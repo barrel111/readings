@@ -1,5 +1,4 @@
 #import "@local/preamble:0.1.0": *
-#import "@preview/fletcher:0.4.3" as fletcher: diagram, node, edge
 #import "@preview/commute:0.2.0": node, arr, commutative-diagram
 
 #show: project.with(
@@ -64,7 +63,7 @@ Note that $approx$ is an equivalence relation for pretty much the same reasons
 as $tilde$ above. Furthermore, $RR times RR \/ approx tilde.equiv [0, 1) times [0, 1)$ by
 a similar reasoning to above.
 
-== Functions between sets
+== Functions Between Sets
 
 *Problem 2.1*
 
@@ -88,7 +87,7 @@ are $n(n - 1)! = n!$ many bijections from $S$ to $S'$. So, $P(k + 1)$ holds.
 
 By induction, $P(n)$ is true for all $n in NN$.
 
-*Problem 2.2*: _$f$ has a right inverse if and only if it is surjective._
+*Problem 2.2*
 
 We deal with the forward direction first. Suppose $f:A to B$ has a right inverse $g:B to A$.
 Then for every $b in B$, $g(b) in A$ is such that $f(g(b)) = b$. Thus, every
@@ -118,7 +117,7 @@ This follows from showing:
 
 #definition[A function $f: A to B$ is an _epimorphism_ for all sets $Z$ and all function $alpha', alpha'': B to Z$ $ alpha' compose f = alpha'' compose f implies alpha' = alpha''. $]
 
-#theorem[A function is surjective iff it is an epimorphism]
+#prop[A function is surjective iff it is an epimorphism]
 #proof[We start with the forward direction. Suppose $f: A to B$ is surjective. Then we
   know that $f$ has a right inverse $g$. So, $ alpha' compose f = alpha'' compose f \ implies alpha' compose f compose g = alpha'' compose f compose g \ implies alpha' = alpha''. $
   Now, we consider, the backward direction. Suppose $f: A to B$ is an epimorphism.
@@ -158,3 +157,149 @@ Thus, $f = g$.
 
 Next, we show that $cal(F)$ is surjective. Consider any $S subset.eq 2^A$. Then $cal(1)_S in 2^A$ and
 is such that $cal(F)(cal(1)_S) = S$.
+
+== Categories
+
+*Problem 3.1*
+
+For clarity denote by $compose_(sans("C"))$ and $compose_(sans("C")^"op")$ the
+composition laws for $sans("C")$ and $sans("C")^(op)$ respectively. Consider $f in Hom("C"^(op), A, B)$ and $g in Hom("C"^(op), B, C)$.
+Then note that $f in Hom("C", B, A)$ and $g in Hom("C", C, B)$. So, there exists $f compose_(sans("C")) g in Hom("C", C, A)$.
+Then, note that $f compose_(sans("C")) g in Hom("C"^(op), A, C)$ and hence, we
+can define $compose_(sans("C")^("op"))$ by
+$ g compose_(sans("C")^"op") f = f compose_(sans("C")) g in Hom(sans("C")^"op", A, C). $
+
+If $1_A in Hom("C", A, A)$, then note that $1_A in Hom("C"^(op), A, A)$ too. So, we take the identity morphism of every object $A$ of $sans("C")^(op)$ to be $1_A in Hom("C"^(op), A, A)$ too.
+
+We now prove that composition defined this way satisfies the required
+properties.
+
+#let compose_op = $compose_(sans("C")^(op))$
+#let compose_c = $compose_(sans("C"))$
+
++ _associativity_ \ Consider $f in Hom("C"^(op), A, B)$, $g in Hom("C"^(op), B, C)$ and $h in Hom("C"^(op), C, D)$.
+  Then,
+$ (h #compose_op g) #compose_op f &= f #compose_c (g #compose_c h) \
+&= (f #compose_c g) #compose_c h \ &= h #compose_op (g #compose_op f). $
+
++ _identity_ \ Consider for $f in Hom("C"^(op), A, B)$ and $g in Hom("C"^(op), B, A)$ the following facts,
+
+$ f #compose_op 1_A = 1_A #compose_c f = f, \ 1_A #compose_op g = g #compose_c 1_A = g. $
+
++ _disjointness_ \ Note that $Hom("C"^(op), A, B) = Hom("C", B, A)$ and $Hom("C"^(op), C, D) = Hom("C", D, C)$. Since $Hom("C", B, A)$ and $Hom("C", D, C)$ are disjoint unless $B = D$ and $A = C$, we have that $Hom("C"^(op), A, B)$ and $Hom("C"^(op), C, D)$ are disjoint unless $A = C$ and $B = D$.
+
+*Problem 3.3*
+
+#let sanC = $sans("C")$
+
+In Example $3.3$, we construct a category $sanC$ from a set $S$ and a reflexive, transitive relation $tilde$ on $S$. Saying that $1_a$ is an identity means that for every $f in Hom("C", a, b)$ and $g in Hom("C", b, a)$ the following holds $ f compose 1_A = f #h(5pt) "and" #h(5pt) 1_A compose g = g. $
+
+If either $Hom("C", a, b) = emptyset$ or $Hom("C", b, a) = emptyset$ then the corresponding equation holds vacuously. So let us deal with the case where $Hom("C", a, b) != emptyset$ or $Hom("C", b, a) != emptyset$:
+
+If $exists f in Hom("C", a, b)$ then it must be $f = (a, b)$. Since $tilde$ is reflexive, we have $1_a = (a, a) in Hom("C", a, a)$. Thus, by the composition law, $ f compose 1_A = (a, b) = f. $
+
+Similarly, if $exists g in Hom("C", b, a)$ then it must be $g = (b, a)$. Again, we have $1_a = (a, a) in Hom("C", a, a)$ and by the composition law,
+$ 1_A compose g = (b, a) = g. $
+
+*Problem 3.5*
+
+We can view Example $3.4$ as a concrete instance of Example $3.3$. In this case, the underlying set is $cal(P)(S)$ with the subset relation $subset.eq$ being used as $tilde$. Note how $subset.eq$ is both reflexive and transitive and hence, meets the same criteria as $tilde$ did for Example $3.3$. Then the description of Example 3.4 precisely corresponds to the construction described in Example 3.3 with the relation being given by $subset.eq$.
+
+*Problem 3.6*
+
+The category $sans("V")$ is defined by
+- _objects_: $Obj(sans("V")) = NN$
+- _morphisms_: for $n, m in NN$ we define $Hom("V", n, m) = "the set of" m times n "matrices with real entries".$ Furthermore, the identity morphism of $Hom("V", n, n)$ is the $(n times n)$ identity matrix $I_(n times n) in Hom("V", n, n)$.
+- _composition_: The composition of morphisms is given by matrix multiplication, $ Hom("V", n, m) times Hom("V", m, p) to Hom("V", n, p) \ (A, B) |-> B times A. $
+- _identity_: For any object $n in NN$ of $sans(V)$, we take the $(n times n)$ identity matrix $I_(n times n) in Hom("V", n, n)$  to be the identity morphism.
+Associativity for composition follows from the associativity of matrix multiplication. The identity morphism is the identity with respect to composition by the fact that $A times I_(n times n) = A$ and $I_(n times n) times B = B$ for any $(m times n)$ matrix, $A$, and $(n times m)$ matrix, $B$. Finally, $Hom("V", n, m)$ and $Hom("V", p, q)$ are equal only if $n = p$ and $m = q$ as otherwise, they would contain matrices of different dimension.
+
+*Problem 3.7*
+
+Let $sanC$ be a cateogry and let $A$ be an object in $sanC$. We define the co-slice category $sanC^A$ as follows.
+- _objects_: $Obj(sanC^A) = $ all morphisms from $A$ to any object in $sanC$
+- _morphisms_: for objects $f_1, f_2$ of $sanC^A$, the morphisms $f_1 to f_2$ are defined to be _commutative diagrams_ #box(width:100%)[#align(center)[
+  #commutative-diagram(
+    node-padding: (30pt, 50pt),
+    node((0, 0), $Z_1$),
+    node((0, 2), $Z_2$),
+    node((1,1), $A$),
+    arr($A$, $Z_1$, $f_1$),
+    arr($A$, $Z_2$, $f_2$, label-pos: right),
+    arr($Z_1$, $Z_2$, $sigma$, label-pos: left)
+  )
+]] in the ambient category $sanC$. Alternatively, morphisms $f_1 to f_2$ correspond to those morphisms $sigma: Z_1 -> Z_2$ in $sanC$ such that $sigma f_1 = f_2.$
+- _composition_: The composition of two morphisms $f_1 -> f_2$ and $f_2 -> f_3$ corresponding to the diagrams \ #box(width:100%)[
+  #align(center)[
+  #commutative-diagram(
+    node-padding: (30pt, 50pt),
+    node((0, 0), $Z_1$),
+    node((0, 2), $Z_2$),
+    node((1, 1), $A$),
+    arr($A$, $Z_1$, $f_1$),
+    arr($A$, $Z_2$, $f_2$, label-pos: right),
+    arr($Z_1$, $Z_2$, $sigma_1$)
+   )
+  #commutative-diagram(
+    node-padding: (30pt, 50pt),
+    node((0, 0), $Z_2$),
+    node((0, 2), $Z_3$),
+    node((1, 1), $A$),
+    arr($A$, $Z_2$, $f_2$),
+    arr($A$, $Z_3$, $f_3$, label-pos: right),
+    arr($Z_2$, $Z_3$, $sigma_2$)
+   )]] is given by the diagram \ #box(width:100%)[
+    #align(center)[
+      #commutative-diagram(
+        node-padding: (30pt, 50pt),
+        node((0, 0), $Z_1$),
+        node((0, 2), $Z_3$),
+        node((1, 1), $A$),
+        arr($A$, $Z_1$, $f_1$),
+        arr($A$, $Z_3$, $f_3$, label-pos: right),
+        arr($Z_1$, $Z_3$, $sigma_2 sigma_1$)
+      )
+    ]
+   ]
+- _identity_: For any object $f: A -> Z$ of $sans(C)^A$, we define the identity morphism $1_f$  to correspond to the morphism $1_(Z)$ in $sans(C)$--- that is, the identity $1_f$ corresponds to the diagram \ \ #box(width:100%)[
+#import "@preview/fletcher:0.5.0" as fletcher: diagram, node, edge
+  #align(center)[
+  #diagram(
+    spacing: (10mm, 15mm),
+    node((0, 0), $Z$, name:<Z>),
+    node((0, 1), $A$, name:<A>),
+    edge((0, 0), (0, 0), "->", bend:130deg, $1_Z$),
+    edge(<A>, <Z>, "->", $f$, label-side: left),
+  )
+  ]]
+
+*Problem 3.8*
+
+#let setinf = $sans("Set")^oo$
+We define the category of _infinite sets_, $setinf$, as follows
+- _objects_: $Obj(setinf)=$ the collection of all infinite sets
+- _morphisms_:
+- _composition_:
+- _identity_:
+
+*Problem 3.9*
+
+*Problem 3.11*
+
+== Morphisms
+
+*Problem 4.1*
+
+*Problem 4.2*
+
+== Universal Properties
+
+*Problem 5.2*
+
+*Problem 5.3*
+
+*Problem 5.5*
+
+*Problem 5.6*
+
+*Problem 5.12*
