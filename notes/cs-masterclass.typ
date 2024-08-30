@@ -1,4 +1,4 @@
-"#import "@local/preamble:0.1.0": *
+#import "@local/preamble:0.1.0": *
 
 #show: project.with(
   course: "",
@@ -17,7 +17,7 @@
 )[For $a_i, b_i in RR$ we have $ a_1b_1 + a_2b_2 + dots.c + a_n b_n <= sqrt(a_1^2 + a_2^2 + dots.c + a_n^2)sqrt(b_1^2 + b_2^2 + dots.c + b_n^2). $]
 
 #proof(
-  "of Cauchy-Schwarz (via Induction)",
+  [of Cauchy-Schwarz (via Induction)],
 )[
 
   Let $H(n)$ stand for the hypothesis that Cauchy's inequality is valid for $n$.
@@ -251,3 +251,7 @@ Let $x$ be a complex number with modulus $abs(x) = 1$ and the property that $inn
 real and non-negative. Consequently, $inner(bold(w), x bold(v)) = abs(inner(bold(w), bold(v)))$.
 We readily get that $abs(inner(bold(w), bold(v))) = inner(bold(w), x bold(v)) <= norm(bold(v)) norm(bold(w))$ with
 equality iff $norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
+
+= The AM-GM Inequality
+
+

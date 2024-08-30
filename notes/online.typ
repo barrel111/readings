@@ -431,7 +431,11 @@ Repeating this construction, the adversary can ensure that $ALG_ell$ causes a pa
 Another way to empower online algorithms against the adversary is called _resource augmentation_, wherein we allow the online algorithm to use more resources than the optimal offline algorithm.
 
 = Randomized Algorithms
+
 == Randomized Online Algorithms
+
 == Yao's Principle
+
 == Paging: Randomized Algorithms
+
 == Ski-Rental Problem

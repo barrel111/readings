@@ -8,6 +8,7 @@
 )
 
 = Events and Probability
+
 == Events
 
 Random phenonmenon are observed by means of experiments. Each experiment results
@@ -158,11 +159,25 @@ We can apply this to estimate the binomial coefficients.
 
 == Independence and Conditioning
 
+#definition("Independent")[Two events $A$ and $B$ are called _independent_ if $ P(A sect B) = P(A) P(B). $]
+
+#definition("Jointly Independent")[A family ${A_n}_(n in NN)$ of events is called independent if for all finite indices $i_1, dots, i_r in NN$, $ P(A_(i_1) sect A_(i_2) sect dots sect A_(i_r)) = P(A_(i_1)) times P(A_(i_2)) times dots.c times P(A_(i_r)). $ One also says that the $A_n$'s  are _jointly independent_.]
+
+#prop[Suppose that the family of event ${A_n}_(n in NN)$ is independent. Then, so is the family ${tilde(A_n)}_(n in NN)$, where for each $n$, $tilde(A_n) = A_n$ or $overline(A_n)$ (the choice may vary with the index).]
+
+#proof[
+]
+
 = Random Variables
+
 == Probability Distribution and Expectation
-== Generating Function
+
+== Generating Functions
+
 == Conditional Expectation
 
 = Bounds and Inequalities
+
 == The Three Basic Inequalities
+
 == Frequently Used Bounds

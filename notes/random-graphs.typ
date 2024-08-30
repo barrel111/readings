@@ -43,7 +43,7 @@
 #lemma[If $f_1, f_2 in O(g)$ then $f_1 + f_2 = O(g)$.]
 
 #proof[ There exists $C_1, C_2, N_1, N_2 > 0$ such that for $n > N_1$ and $n > N_2$ $ abs(f_1) &<= C_1 abs(g) \ abs(f_2) &<= C_2 abs(g). $ Then,
-  for $N = max(N_1, N_2)$, we can say that if $n > N$ then $ |f_1 + f_2| <= (C_1 + C_2) |g|. $ ]
+  for $N = max(N_1, N_2)$, we can say that if $n > N$ then $ |f_1 + f_2| <= (C_1 + C_2) |g|. $ ] 
 
 #lemma[ If $f_1, f_2 in Omega(g)$ then $f_1 + f_2 in Omega(g)$ too. ]
 
