@@ -1,0 +1,36 @@
+#import "@local/preamble:0.1.0": *
+#import "@preview/cetz:0.2.2": canvas, plot, draw
+
+#show: project.with(
+  course: "1910SU",
+  sem: "Summer",
+  title: "Group Discussion: L'Hôpital's Rule",
+  subtitle: "Solutions",
+  contents: false,
+)
+
+= Compute the following limits.
+
+\
+
+== $lim_(x->oo) (x^2 + 1)/(2 + cos(4x))$
+
+Note that 
+
+$ x^2 + 1 <= (x^2 + 1)/(2 + cos(4x)) $
+
+The lower bound tends to infinity as $x -> infinity$. Hence, $lim_(x -> infinity) (x^2 + 1)/(2 + cos(4x)) = oo$ by the Squeeze Theorem.
+
+
+== $lim_(x -> oo) (2x + sin(x))/(x + 4)$
+
+== $lim_(x -> pi) (sin(x))/(x - pi)$
+
+== $lim_(x -> oo) (3x)/(x^2 - 1)$
+
+= More Limits
+
+== $lim_(x-> 0^+, 1^-, 1^+) 1/(x ln x)$
+
+== $lim_(x-> 0^+, 1^-, 1^+) 1/(x ln x)$
+

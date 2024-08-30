@@ -15,6 +15,8 @@ Recall the statement of the _First Fundamental Theorem of Calculus_,
 
 = First Fundamental Theorem of Calculus
 
+Quite a few people were confused about exactly what this question required. The task is to first compute $A(x)$ by integration, and then differentiate the result to show that $d/(d x) A(x) = f(x)$ as claimed by the First Fundamental Theorem of Calculus. 
+
 == $a = 0, f(x) = x^2$
 
 $ A(x) &= integral_0^x t^2 d t \
@@ -25,9 +27,11 @@ $ d/(d x) A(x) = x^2 $
 == $a = 2, f(x) = 1/x$
 
 $ A(x) &= integral_2^x 1/x d t \ 
-       &= lr(ln x |)_2^x \
-       &= ln x - ln 2 $ 
-$ d/(d x) A(x) = 1/x $ 
+       &= lr(ln abs(x) |)_2^x \
+       &= ln abs(x) - ln 2 $ 
+$ d/(d x) A(x) = "sgn"(x) dot 1/x $ 
+
+Here, $"sgn": RR-{0} -> {-1, 1} $  is the sign function, more formally defined by $ "sgn"(x) = cases(1 &"if " x > 0\,, -1 &"if " x < 0.) $ 
 
 == $a = pi, f(x) = cos x$
 
@@ -74,9 +78,9 @@ $ d/(d x) A(x^2) = A'(x^2) d/(d x) x^2 = 2 f(x^2) x. $
 
 == $d/(d x) integral_(p(x))^(q(x)) f(t) d t$
 
-This is essentially the same idea as the previous barts, albeit generalized slightly. Consider first the decomposition,  
+This is essentially the same idea as the previous parts, albeit generalized slightly. Consider first the decomposition,  
 
-$ integral_(p(x))^(q(x)) f(t) d t &= integral_0^(q(x)) f(t) d t + integral^0_(p(x)) f(t) d t \ &= integral_0^(q(x)) f(t) d t - integral_0^(p(x)) f(t) d t $
+$ integral_(p(x))^(q(x)) f(t) d t &= integral_0^(q(x)) f(t) d t + integral^0_(p(x)) f(t) d t \ &= integral_0^(q(x)) f(t) d t - integral_0^(p(x)) f(t) d t. $
 
 Then, 
 
