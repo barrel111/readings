@@ -272,7 +272,7 @@
   "Canonical Decomposition",
 )[Let $f: A to B$ be any function and define $tilde$ as above. Then $f$ decomposes
   as follows:
-  #v(15pt)
+  #v(20pt)
   #align(center)[
     #commutative-diagram(
       node-padding: (45pt, 50pt),
@@ -284,7 +284,7 @@
       arr($(A \/ tilde)$, $im(f)$, $tilde(f)$, label-pos: right),
       arr($(A \/ tilde)$, $im(f)$, $tilde$),
       arr($im(f)$, $B$, "", "inj"),
-      arr($A$, $B$, $f$, curve: 15deg),
+      arr($A$, $B$, $f$, curve: 30deg),
     )
   ]
 
@@ -324,7 +324,7 @@
   - _morphisms_: For $A, B$ in $"Obj"(sans("Set"))$, $"Hom"_(sans("Set"))(A, B) = B^A$;
   - _composition_: Composition of morphisms is defined to be the same as the
     composition of functions;
-  - _identity_: For any object $A$ of $sans("Set")$, the dentity is defined to be
+  - _identity_: For any object $A$ of $sans("Set")$, the identity is defined to be
     the identity function on $A$.]
 
 #example(
@@ -382,7 +382,7 @@
         arr($Z_1$, "A1", $f_1$, label-pos: right),
         arr($Z_2$, "A2", $f_2$),
       )
-    ] in $sans(C)$. Morphisms $f_1 -> f_2$ are defined to be _commutative diagrams_ #align(center)[
+    ] in $sans(C)$, morphisms $f_1 -> f_2$ are defined to be _commutative diagrams_ #align(center)[
       #commutative-diagram(
         node-padding: (30pt, 40pt),
         node((0, 0), $Z_1$),
@@ -395,9 +395,38 @@
     ] in the _ambient_ category $sans(C)$. Alternatively, morphisms $f_1 -> f_2$ corresponds
     to those morphisms $sigma: Z_1 -> Z_2$ in $sans(C)$ such that $f_1 = f_2 sigma$.
 
-  - _composition_:
+  - _composition_: Two morphisms $f_1 -> f_2 -> f_3$ in $sans("C")_A$ correspond to putting two diagrams side-by-side, #align(center)[
+    #commutative-diagram(
+      node-padding: (30pt, 40pt),
+      node((0, 0), $Z_1$),
+      node((0, 2), $Z_2$),
+      node((0, 4), $Z_3$),
+      node((1, 2), $A$),
+      arr($Z_1$, $Z_2$, $sigma$),
+      arr($Z_2$, $Z_3$, $tau$),
+      arr($Z_1$, $A$, $f_1$, label-pos: right),
+      arr($Z_2$, $A$, $f_2$),
+      arr($Z_3$, $A$, $f_3$)
+    )
+  ] That is, the composition $f_1 -> f_2 -> f_3$ is the commutative diagram #align(center)[#commutative-diagram(
+    node-padding: (30pt, 40pt),
+    node((0, 0), $Z_1$),
+    node((0, 2), $Z_3$),
+    node((1, 1), $A$),
+    arr($Z_1$, $A$, $f_1$, label-pos: right),
+    arr($Z_3$, $A$, $f_3$),
+    arr($Z_1$, $Z_3$, $tau sigma$)
+  )]
 
-  - _identity_:
+  - _identity_: The identity morphism corresponds to the following commutative diagram #align(center)[#commutative-diagram(
+    node-padding: (30pt, 40pt),
+    node((0, 0), $Z$, "Z1"),
+    node((0, 2), $Z$, "Z2"),
+    node((1, 1), $A$), 
+    arr("Z1", $A$, $f$, label-pos: right),
+    arr("Z2", $A$, $g$),
+    arr("Z1", "Z2", $"id"_Z$),
+  )]
 
   Categories constructed in these manners are known as _slice categories_, which
   are particular cases of _comma categories_.]
@@ -488,8 +517,71 @@
       )
     ] Alternatively, morphisms in $sans(C)_(A, B)$ corresponds to those morphisms $sigma: Z_1 -> Z_2$ in $sans(C)$ such
     that $f_1 = f_2 sigma$ and $g_1 = g_2 sigma$.
-  - _composition_:
-  - _identity_:]
+  - _composition_: Consider the two morphisms #align(center)[#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_1$),
+        node((0, 1), $Z_2$),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr($Z_1$, $Z_2$, $sigma$),
+        arr($Z_2$, $A$, $f_2$),
+        arr($Z_2$, $B$, $g_2$, label-pos: right),
+        arr($Z_1$, $A$, $f_1$, curve: 25deg),
+        arr($Z_1$, $B$, $g_1$, curve: -25deg, label-pos: right),
+      )
+#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_2$),
+        node((0, 1), $Z_3$),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr($Z_2$, $Z_3$, $sigma'$),
+        arr($Z_3$, $A$, $f_3$),
+        arr($Z_3$, $B$, $g_3$, label-pos: right),
+        arr($Z_2$, $A$, $f_2$, curve: 25deg),
+        arr($Z_2$, $B$, $g_2$, curve: -25deg, label-pos: right),
+      )
+    ] Then, their composition corresponds to the commutative diagram   #align(center)[#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_1$),
+        node((0, 1), $Z_2$),
+        arr($Z_1$, $Z_2$, $sigma$),
+        arr($Z_2$, $A$, $f_2$, curve: 15deg),
+        arr($Z_2$, $B$, $g_2$, label-pos: right, curve: -15deg),
+        arr($Z_1$, $A$, $f_1$, curve: 25deg),
+        arr($Z_1$, $B$, $g_1$, curve: -25deg, label-pos: right),
+        node((0, 3), $Z_3$),
+        node((-1, 5), $A$),
+        node((1, 5), $B$),
+        arr($Z_3$, $A$, $f_3$, label-pos: left),
+        arr($Z_3$, $B$, $g_3$, label-pos: right), 
+        arr($Z_2$, $Z_3$, $sigma'$))] That is, the composition of the two morphism corresponds to the following morphism #align(center)[#commutative-diagram(
+          node-padding: (40pt, 30pt), 
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_3$),
+          arr($Z_1$, $Z_3$, $sigma' sigma$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          arr($Z_1$, $A$, $f_1$, curve: 20deg),
+          arr($Z_1$, $B$, $g_1$, curve: -20deg, label-pos: right),
+          arr($Z_3$, $A$, $f_3$),
+          arr($Z_3$, $B$, $g_3$, label-pos: right)
+        )]
+
+  - _identity_: The identity morphism corresponds to the following commutative diagram #align(center)[
+      #commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z$, "Z_1"),
+        node((0, 1), $Z$, "Z_2"),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr("Z_1", "Z_2", $"id"_Z$),
+        arr("Z_2", $A$, $f$),
+        arr("Z_2", $B$, $g$, label-pos: right),
+        arr("Z_1", $A$, $f$, curve: 25deg),
+        arr("Z_1", $B$, $g$, curve: -25deg, label-pos: right),
+      )
+    ]]
 
 #example(
   $italic("Fibered") sans(C)_(A, B)$,
@@ -526,8 +618,93 @@
           arr($Z_1$, $Z_2$, $sigma$),
         )
       ]]
-  - _composition_:
-  - _identity_:]
+  - _composition_: Consider the two morphisms #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($Z_1$, $A$, $f_1$, curve: 25deg),
+          arr($Z_1$, $B$, $g_1$, curve: -25deg, label-pos: right),
+          arr($Z_2$, $A$, $f_2$),
+          arr($Z_2$, $B$, $g_2$, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr($Z_1$, $Z_2$, $sigma$),
+        )
+      #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_2$),
+          node((0, 1), $Z_3$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($Z_2$, $A$, $f_2$, curve: 25deg),
+          arr($Z_2$, $B$, $g_2$, curve: -25deg, label-pos: right),
+          arr($Z_3$, $A$, $f_3$),
+          arr($Z_3$, $B$, $g_3$, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr($Z_2$, $Z_3$, $sigma'$),
+        )
+] Then their composition corresponds to the commutative diagram #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          arr($Z_1$, $A$, $f_1$, curve: 25deg),
+          arr($Z_1$, $B$, $g_1$, curve: -25deg, label-pos: right),
+          arr($Z_2$, $A$, $f_2$, curve: 15deg),
+          arr($Z_2$, $B$, $g_2$, curve: -15deg, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr($Z_1$, $Z_2$, $sigma$),
+          node((0, 3), $Z_3$),
+          node((-1, 4), $A$),
+          node((1, 4), $B$),
+          node((0, 5), $C$),
+          arr($Z_3$, $A$, $f_3$),
+          arr($Z_3$, $B$, $g_3$, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr($Z_2$, $Z_3$, $#h(10pt) sigma'$)
+        )
+] That is, the composition of the two morphism corresponds to the following morphism #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($Z_1$, $A$, $f_1$, curve: 25deg),
+          arr($Z_1$, $B$, $g_1$, curve: -25deg, label-pos: right),
+          arr($Z_2$, $A$, $f_3$),
+          arr($Z_2$, $B$, $g_3$, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr($Z_1$, $Z_2$, $sigma' sigma$),
+        )
+]
+  - _identity_: The identity morphism corresponds to the following commutative diagram #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z$, "Z_1"),
+          node((0, 1), $Z$, "Z_2"),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr("Z_1", $A$, $f$, curve: 25deg),
+          arr("Z_1", $B$, $g$, curve: -25deg, label-pos: right),
+          arr("Z_2", $A$, $f$),
+          arr("Z_2", $B$, $g$, label-pos: right),
+          arr($A$, $C$, $alpha$),
+          arr($B$, $C$, $beta$, label-pos: right),
+          arr("Z_1", "Z_2", $"id"_Z$),
+        )
+]]
 
 == Morphisms
 
