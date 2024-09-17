@@ -277,18 +277,274 @@ Let $sanC$ be a cateogry and let $A$ be an object in $sanC$. We define the co-sl
 
 #let setinf = $sans("Set")^oo$
 We define the category of _infinite sets_, $setinf$, as follows
-- _objects_: $Obj(setinf)=$ the collection of all infinite sets
-- _morphisms_:
-- _composition_:
-- _identity_:
+- _objects_: $Obj(setinf)=$ the collection of all infinite sets,
+- _morphisms_: For $A, B in Obj(setinf)$, $Hom(sans("Set")^oo, A, B) = B^A$, 
+- _composition_: Composition of morphisms is defined to be the same as the composition of functions, 
+- _identity_: For any object $A$ of $sans("Set")^oo$, the identity is defined to be the identity function on $A$.
+
+We may view $sans("Set")^oo$ as a subcategory of $sans("Set")$ since $"Obj"(setinf) subset.eq Obj(sans("Set"))$ and $Hom(setinf, A, B) subset.eq Hom(sans("Set"), A, B)$, for any $A, B in sans("Set")^oo$. In fact, $Hom(setinf, A, B) = Hom(sans("Set"), A, B) = B^A$. This justifies calling $setinf$ a full subcategory of $sans("Set")$.
 
 *Problem 3.9*
 
+#let Mset = $sans("MSet")$
+We define the category of _multisets_, $Mset$ , as follows 
+
+- _objects_: $Obj(Mset) = $ the collection of all tupples $(A, approx)$ where $A$ is a set and $approx$ is an equivalence relation on $A$,
+- _morphisms_: For $(A, approx_A), (B, approx_B) in Obj(Mset)$, we define $Hom(Mset, A, B)$ to be the set of all functions $f: A -> B$ such that $a approx_A b ==> f(a) approx_B f(b)$ ,
+- _composition_: Composition of morphisms is defined to be the same as the composition of functions,
+- _identity_: For any object $(A, approx_A)$ of $Mset$, the identity is defined to be the same as the composition of functions. 
+
+#let Set = $sans("Set")$
+Note that we may view $Set$ as a full subcategory of $Mset$ (or at least, a copy of $Set$). We define a copy of $Set$, $Set'$, as follows
+
+- _objects_: $Obj(Set')$ the collection of all tuples $(A, approx)$ where $approx$ is the identity relation on $A$,
+- _morphisms_: For $(A, approx_A), (B, approx_B) in Obj(Set')$, we define $Hom(Set', A, B) = B^A$. Note that $Hom(Mset, A, B) = B^A$ to as for all functions $f: A -> B$, we have $a approx_A b => a = b => f(a) approx_B f(b).$ 
+- _composition_: Composition of morphisms is defined to be the same as the composition of functions,
+- _identity_: For any object $(A, approx_A)$ of $Set'$, the identity is defined to be the same as the composition of functions. 
+
+Clearly, $Set'$ is a full subcategory of $Mset$.
+
 *Problem 3.11*
+
++ $sans(C)^(A, B)$\ Start from a category $sans(C)$ and two objects $A, B$ of $sans(C)$. We then
+  define a new category $sans(C)_(A, B)$ as follows
+  - _objects_: $Obj(sans(C)^(A, B)) =$ diagrams\ #box(width: 100%)[#align(center)[
+        #commutative-diagram(
+          node-padding: (50pt, 20pt),
+          node((0, 0), $Z$),
+          node((-1, 1), $A$),
+          node((1, 1), $B$),
+          arr($A$, $Z$, $f$, label-pos: right),
+          arr($B$, $Z$, $g$, label-pos: left),
+        )
+      ]] in $sans(C)$;
+
+  - _morphisms_:\ #box(width: 100%)[#align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 25pt),
+          node((0, 0), $Z_1$),
+          node((-1, 1), $A$),
+          node((1, 1), $B$),
+          node((0, 2), $Z_2$, "Z2"),
+          node((-1, 3), $A$, "A1"),
+          node((1, 3), $B$, "B1"),
+          node((0, 1), $$, "S"),
+          arr($A$, $Z_1$, $f_1$, label-pos: right),
+          arr("A1", "Z2", $f_2$, label-pos: right),
+          arr($B$, $Z_1$, $g_1$),
+          arr("B1", "Z2", $g_1$),
+          arr("S", "Z2", $$),
+        )
+      ]] are _commutative diagrams_ #align(center)[
+      #commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_1$),
+        node((0, 1), $Z_2$),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+        arr($A$, $Z_2$, $f_2$),
+        arr($B$, $Z_2$, $g_2$, label-pos: right),
+        arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+        arr($B$, $Z_1$, $g_1$, curve: 25deg),
+      )
+    ] Alternatively, morphisms in $sans(C)_(A, B)$ corresponds to those morphisms $sigma: Z_2 -> Z_1$ in $sans(C)$ such
+    that $f_1 = sigma f_2$ and $g_1 = sigma g_2$.
+  - _composition_: Consider the two morphisms #align(center)[#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_1$),
+        node((0, 1), $Z_2$),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+        arr($A$, $Z_2$, $f_2$),
+        arr($B$, $Z_2$, $g_2$, label-pos: right),
+        arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+        arr($B$, $Z_1$, $g_1$, curve: 25deg),
+      )
+#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_2$),
+        node((0, 1), $Z_3$),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr($Z_3$, $Z_2$, $sigma'$, label-pos: right),
+        arr($A$, $Z_3$, $f_3$),
+        arr($B$, $Z_3$, $g_3$, label-pos: right),
+        arr($A$, $Z_2$, $f_2$, curve: -25deg, label-pos: right),
+        arr($B$, $Z_2$, $g_2$, curve: 25deg),
+      )
+    ] Then, their composition corresponds to the commutative diagram   #align(center)[#commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z_1$),
+        node((0, 1), $Z_2$),
+        arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+        arr($A$, $Z_2$, $f_2$, curve: -15deg, label-pos: right),
+        arr($B$, $Z_2$, $g_2$, curve: 15deg),
+        arr($A$, $Z_1$, $f_1$, label-pos: right, curve: -25deg),
+        arr($B$, $Z_1$, $g_1$, curve: 25deg),
+        node((0, 3), $Z_3$),
+        node((-1, 5), $A$),
+        node((1, 5), $B$),
+        arr($A$, $Z_3$, $f_3$),
+        arr($B$, $Z_3$, $g_3$, label-pos: right), 
+        arr($Z_3$, $Z_2$, $sigma '$, label-pos: right))] That is, the composition of the two morphism corresponds to the following morphism #align(center)[#commutative-diagram(
+          node-padding: (40pt, 30pt), 
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_4$),
+          arr($Z_4$, $Z_1$, $sigma sigma'$, label-pos: right),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          arr($A$, $Z_1$, $f_1$, curve: -20deg, label-pos: right),
+          arr($B$, $Z_1$, $g_1$, curve: 20deg),
+          arr($A$, $Z_4$, $f_3$),
+          arr($B$, $Z_4$, $g_3$, label-pos: right)
+        )]
+
+  - _identity_: The identity morphism corresponds to the following commutative diagram #align(center)[
+      #commutative-diagram(
+        node-padding: (40pt, 30pt),
+        node((0, 0), $Z$, "Z_1"),
+        node((0, 1), $Z$, "Z_2"),
+        node((-1, 2), $A$),
+        node((1, 2), $B$),
+        arr("Z_2", "Z_1", $"id"_Z$, label-pos: right),
+        arr($A$, "Z_2", $f$),
+        arr($B$, "Z_2", $g$, label-pos: right),
+        arr($A$, "Z_1", $f$, curve: -25deg, label-pos: right),
+        arr($B$, "Z_1", $g$, curve: 25deg),
+      )
+    ]
+
++ $italic("Fibered") sans(C)^(A, B)$ \ Start with a given category $sans("C")$ and choose two fixed morphisms $alpha: C -> A, beta: C -> B$ in $sans("C")$ with
+  the same target $C$. We can then consider a category $C^(alpha, beta)$ as
+  follows
+  - _objects_: $Obj(sans(C)^(alpha, beta))$ = commutative diagrams\ #box(width: 100%)[#align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z$),
+          node((-1, 1), $A$),
+          node((1, 1), $B$),
+          node((0, 2), $C$),
+          arr($A$, $Z$, $f$, label-pos: right),
+          arr($B$, $Z$, $g$),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$, label-pos: left),
+        )
+      ]] in $sans(C)$;
+  - _morphisms_: morphisms correspond to commutative diagrams\ #box(width: 100%)[#align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+          arr($B$, $Z_1$, $g_1$, curve: 25deg),
+          arr($A$, $Z_2$, $f_2$, label-pos: right),
+          arr($B$, $Z_2$, $g_2$),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$, label-pos: left),
+          arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+        )
+      ]]
+  - _composition_: Consider the two morphisms #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+          arr($B$, $Z_1$, $g_1$, curve: 25deg),
+          arr($A$, $Z_2$, $f_2$, label-pos: right),
+          arr($B$, $Z_2$, $g_2$),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$),
+          arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+        )
+      #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_2$),
+          node((0, 1), $Z_3$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($A$, $Z_2$, $f_2$, curve: -25deg, label-pos: right),
+          arr($B$, $Z_2$, $g_2$, curve: 25deg),
+          arr($A$, $Z_3$, $f_3$, label-pos: right),
+          arr($B$, $Z_3$, $g_3$),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$),
+          arr($Z_3$, $Z_2$, $sigma'$, label-pos: right),
+        )
+] Then their composition corresponds to the commutative diagram #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+          arr($B$, $Z_1$, $g_1$, curve: 25deg),
+          arr($A$, $Z_2$, $f_2$, label-pos: right),
+          arr($B$, $Z_2$, $g_2$),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$),
+          arr($Z_2$, $Z_1$, $sigma$, label-pos: right),
+          node((0, 3), $Z_3$),
+          node((-1, 4), $A$),
+          node((1, 4), $B$),
+          node((0, 5), $C$),
+          arr($A$, $Z_3$, $f_3$, label-pos: 0.65em),
+          arr($B$, $Z_3$, $g_3$, label-pos: right),
+          arr($Z_3$, $Z_2$, $#h(10pt) sigma'$, label-pos: right)
+        )
+] That is, the composition of the two morphism corresponds to the following morphism #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z_1$),
+          node((0, 1), $Z_2$),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($A$, $Z_1$, $f_1$, curve: -25deg, label-pos: right),
+          arr($B$, $Z_1$, $g_1$, curve: 25deg),
+          arr($A$, $Z_2$, $f_3$),
+          arr($B$, $Z_2$, $g_3$, label-pos: right),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$),
+          arr($Z_2$, $Z_1$, $sigma sigma'$, label-pos: right),
+        )
+]
+  - _identity_: The identity morphism corresponds to the following commutative diagram #align(center)[
+        #commutative-diagram(
+          node-padding: (40pt, 30pt),
+          node((0, 0), $Z$, "Z_1"),
+          node((0, 1), $Z$, "Z_2"),
+          node((-1, 2), $A$),
+          node((1, 2), $B$),
+          node((0, 3), $C$),
+          arr($A$, "Z_1", $f$, curve: -25deg, label-pos: right),
+          arr($B$, "Z_1", $g$, curve: 25deg),
+          arr($A$, "Z_2", $f$),
+          arr($B$, "Z_2", $g$, label-pos: right),
+          arr($C$, $A$, $alpha$, label-pos: right),
+          arr($C$, $B$, $beta$),
+          arr("Z_2", "Z_1", $"id"_Z$, label-pos: right),
+        )
+]]
+
 
 == Morphisms
 
 *Problem 4.1*
+
+We use induction to show that $f_n f_(n - 1) dots.c f_1$ equals $(dots.c ((f_n f_(n - 1)) f_(n - 2)) dots.c f_1)$. The base case $n = 2$ is trivially true as $f_2 f_1 = (f_2 f_1)$. 
+
+Now, assuming this holds for some $n >= 2$, we wish to show that it holds for $n + 1$ too. Particularly, note that $ f_(n + 1) f_n dots.c f_1 = (f_(n + 1) f_n dots.c f_2) f_1 overbrace(=, "IH")  ( dots.c ((f_(n + 1) f_n) f_(n - 1)) dots f_2) f_1 $
+
+Thus, this holds for $n + 1$ too. By induction, it must be true for all $n in NN_(>= 2)$. 
 
 *Problem 4.2*
 
