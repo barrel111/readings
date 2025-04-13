@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{preamble}
+\usepackage{kpfonts}
+\title{CS4820 Prelim 1 Solution}
+
+\begin{document}
+\maketitle
+
+\begin{algorithm}
+\caption{Greedy Sequence Alignment}\label{alg:cap}
+\begin{algorithmic}
+\State $\ell \gets 1$
+\State $h \gets 1$
+\State $A \gets [ ~ ]$
+\While {$\ell \le k$ and $h \le n$}
+    \If {$L[\ell] = H[h]$} \Comment{There exists an alignment between $L$ and $H$}
+        \State $A.append(h)$
+        \State $\ell \gets \ell + 1$
+    \EndIf
+    \State $h \gets h + 1$
+\EndWhile
+\If{$len(A) = k$} \Comment{$L$ is fully aligned}
+    \State \Return $A$
+\Else
+    \State \Return $\bot$
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+Correctness can also be proven without greedy stays ahead. Consider the following two lemmas, the second of which utilizes an exchange argument:
+
+\begin{lemma}
+   If our algorithm returns an array $A$, then $A$ is a non-crossing alignment.
+\end{lemma}
+\begin{proof}
+  This can be proven by induction or by arguing in terms of loop invariants (really, both these approaches are the same). First, note that the variable $\ell$ is nondecreasing throughout the course of the loop. Furthermore, any time a value of $\ell$ is appended to $A$, we update $\ell \leftarrow \ell + 1$. Thus, for indices $i < j \le |A|$, we have $A[i] < A[j]$. The fact that $H_{A[\ell]} = L_{\ell}$ for all $\ell\in [|A|]$, follows from the fact that we only append $h$ to $A$ when the condition $L_\ell = H_h$ is true.
+
+\end{proof}
+
+\begin{lemma}
+   If an alignment exists, our algorithm returns a valid alignment. 
+\end{lemma}
+\begin{proof}
+  Suppose a sequence alignment $O$ exists. Let $s = |A|$. Consider the first index at which $A$ and $O$ differ. We consider two possibilities:
+  \begin{itemize}
+    \item $\forall i \in [s], \, A[i] = O[i]$ but $s < |O| = k$.
+      
+      This implies that our algorithm failed to find an instance of character $L[s + 1]$ after the $A[i]$-th element in the sequence $H$. However, by assumption $H_{O[s + 1]} = L_{ s + 1 }$ and $O[s + 1] > O[s] = A[s]$. After the algorithm appends the last element of $A$, the variable $\ell$ is equal to $s + 1 \le |O| = k$ for the remainder of the algorithm (as $\ell$ is only updated when we append an element to $A$). Thus, we keep iterating until $h = n$. Furthermore, note that on the iteration where $h = O[s + 1] \le n$, our algorithms performs the check $L_{s + 1} = H_{O[s + 1]}$. By optimality of $O$, this check passes and so our algorithm must have appended $O[s + 1]$ to $A$. A contradiction! \Lightning
+
+    \item $\exists j \in [\ell]$ such that $\forall i < j, A[i] = O[i]$ but $A[j] \ne O[j]$.
+
+      We claim that we can just replace $O[j]$ in $O$ with $A[j]$ to obtain a valid sequence alignment $O'$ that agrees with $A$ on the first $j$ indices. For this, it suffices to show that $A[j] \le O[j]$ as we already know $H_{A[j]} = L_j = H_{O[j]}$. 
+
+      By the fact that our algorithm only appends to $A$ when $L[\ell] = H[h]$, it must be the case that for $h \in \{A[\ell - 1] + 1, \hdots, A[\ell] - 1\}$, we have $L[\ell] \ne H[h]$. Applying this to $\ell = j$ and using the fact that $O[j] > O[j - 1] = A[j - 1]$, we can then conclude that $O[j] \ge A[j]$.
+
+  \end{itemize}
+\end{proof}
+
+\end{document}
