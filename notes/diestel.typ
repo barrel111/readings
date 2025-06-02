@@ -376,7 +376,7 @@ Throughout this section, let $X$ be a fixed graph.
 
 #remark[Informally, we get an $I X$ by replacing the vertices $x$ of $X$ with disjoint connected graphs $G_x$ and the edges $x y$ of $X$ with non-empty sets of $G_x "-" G_y$ edges.]
 
-#definition[If a graph $Y$ contains an $I X$ as a subgraph, then $X$ is a _minor_ of $Y$, the $I X$ is a _model_ of $X$ in $Y$ and we write $X lt.curly.eq Y$.]
+#definition[If a graph $Y$ contains an $I X$ as a subgraph, then $X$ is a _minor_ of $Y$, the $I X$ is a _model_ of $X$ in $Y$ and we write $X prec.curly.eq Y$.]
 
 #lemma[$X$ is a minor of $Y$ if and only if there is a map $phi$ from a subset of $V(Y)$ onto $V(X)$ such that for every vertex $x in X$ its inverse image $phi^(-1)(x)$ is connected in $Y$ and for ever edge $x x' in X$ there is an edge in $Y$ between the branch sets $phi^(-1)(x)$ and $phi^(-1)(x')$. ]
 

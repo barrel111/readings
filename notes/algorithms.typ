@@ -23,7 +23,7 @@ Given a graph $G$ and a suboptimal matching $M$, how should we improve it?
 #lemma[If $P$ is an $M$-augmenting path then $M xor P$ is a matching and $ abs(M xor P) = abs(M) + 1. $]
 #proof[ Consider a vertex $v in M xor P$. It suffices to prove that $v$ is adjacent exactly one edge of $M xor P$. Note that $M xor P = (M backslash P) union.sq (P backslash M)$. If $v in M backslash P$ then $v$ is adjacent to exactly one edge in $M backslash P$ as $M$ is a matching. Similarly, if $v in P backslash M$ then there are two cases to consider. First, if $v$ is free with respect to $M$, then $v$ is an endpoint of $P$ and hence, is only adjacent to one edge in $P$. Second, if $v$ is matched with respect to $M$, then $v$ must be an interior vertex of $P$ as it isn't free. Thus, it must be adjacent to exactly one edge in $M$ and one edge not in $M$. Consequently, $v$ is adjacent to exactly one edge in $P backslash M$.
 
-Note that $P$ alternates between edges in $M$ and not in $M$ and starts and ends with edges not in $M$. We have $abs(P backslash M) = abs(M) + 1$ and $abs(M sect P) = abs(M)$. Thus, $abs(M xor P) = abs(M) + 1$.
+Note that $P$ alternates between edges in $M$ and not in $M$ and starts and ends with edges not in $M$. We have $abs(P backslash M) = abs(M) + 1$ and $abs(M inter P) = abs(M)$. Thus, $abs(M xor P) = abs(M) + 1$.
 
 ] 
 

@@ -9,20 +9,20 @@
   authors_label: "authors:",
 )
 
-#set heading(numbering: "i.")
+// #set heading(numbering: "1.")
 
 = asymptotics
 
 == introduction
 
-For simplicity, all our functions are of the type $NN to RR$.
+For simplicity, all our functions are of the type $NN to RR$. 
 
 #definition[We say that $f(n)$ is _asymptotically equivalent_ to $g(n)$ and write $f(n) tilde g(n)$ if $f(n) slash g(n) arrow 1$ as $n arrow infinity$.]
 
 #definition[We write $f(n) in O(g(n))$ when there is a $C > 0$ such that for all
   sufficiently large $n$, $ abs(f(n)) <= C abs(g(n)). $]
 
-#remark[Technically, $O(dot)$ represents a set of functions. Still, we may write expressions involving $O(dot)$ (for eg. $f = O(g)$) in which case $O(dot)$ represents some function from this asymptotic class. This remark holds for all the other asymptotic classes we will define. ]
+Technically, $O(dot)$ represents a set of functions. Still, we may write expressions involving $O(dot)$ (for eg. $f = O(g)$) in which case $O(dot)$ represents some function from this asymptotic class. This remark holds for all the other asymptotic classes we will define.
 
 #definition[We write $f(n) in Omega(g(n))$ when there is a $c > 0$ such that for all
   sufficiently large $n$, $ abs(f(n)) >= c abs(g(n)). $]
@@ -53,10 +53,11 @@ For simplicity, all our functions are of the type $NN to RR$.
 
 #proof[ Same idea as above. \ ]
 
-#remark[A stronger statement is possible: if $f_1 in Omega(g)$ and $f >= f_1$ then $f in Omega(g)$.]
+
+A stronger statement is possible: #highlight[if $f_1 in Omega(g)$ and $f >= f_1$ then $f in Omega(g)$].
 
 #lemma[ If $f_1, f_2 in Theta(g)$ then $f_1 + f_2 in Theta(g)$ too. ]
-#proof[ Follows from prior two lemmas and definition of $Theta$. \ ]
+#proof[ Follows from the prior two lemmas and the definition of $Theta$. \ ]
 
 #definition[We write $f(n) in (g(n))$ (or $f(n) << g(n)$) if $f(n) slash g(n) arrow 0$ as $n arrow infinity$.
 ]
@@ -68,9 +69,9 @@ For simplicity, all our functions are of the type $NN to RR$.
 #lemma[If $f_1, f_2 in omega(g)$ then $f_1 + f_2 = omega(g)$.]
 #proof[Same idea as above.]
 
-#remark[A stronger statement is possible: if $f_1 in omega(g)$ and $f >= f_1$ then $f in omega(g)$.]
+A stronger statement is possible here too: #highlight[if $f_1 in omega(g)$ and $f >= f_1$ then $f in omega(g)$].
 
-#remark[Note that $O(dot)$ and $Omega(dot)$ both induce a _pre order_ (a reflexive, transitive relation) on functions $NN -> RR$. Similarly, $o(dot)$ and $omega(dot)$ induce a _strict partial order_ (an irreflexive, transtive relation). Finally, $Theta(dot)$ induces an _equivalence relation_ (a reflexive, symmetric, transitive relation). Consequently, $O(dot)$ and $Omega(dot)$ induce a _non-strict partial order_ (an antisymmetric preorder) on these equivalence classes.]
+Note that $O(dot)$ and $Omega(dot)$ both induce a _pre order_ (a reflexive, transitive relation) on functions $NN -> RR$. Similarly, $o(dot)$ and $omega(dot)$ induce a _strict partial order_ (an irreflexive, transtive relation). Finally, $Theta(dot)$ induces an _equivalence relation_ (a reflexive, symmetric, transitive relation). Consequently, $O(dot)$ and $Omega(dot)$ induce a _non-strict partial order_ (an antisymmetric preorder) on these equivalence classes.
 
  We think of $O(dot), Omega(dot), Theta(dot)$ as making claims about the _asymptotic bounds_ of functions. We think of $o(dot), omega(dot)$ as making claims about the _relative growth_ of functions. The following lemmas should illustrate this point.
 
@@ -92,7 +93,6 @@ The following is a common way to denote asymptotic equivalence.
 #proof[$ lim_(n to infinity) f(n)/g(n) = 1 <==> lim_(n to infinity) [f(n)/g(n) - 1] = 0 <==> f(n)/g(n) - 1 = o(1) $. ]
 
 
-
 A convenient result is that we can _sandwich_ our function to obtain a result of asymptotic equivalence.
 
 #lemma[Suppose there are functions $"LB" tilde g, "UB" tilde g$ such that $ "LB"(n) <= f(n) <= "UB"(n). $ Then, $f tilde g$. ]
@@ -103,6 +103,7 @@ A convenient result is that we can _sandwich_ our function to obtain a result of
 
 Usually, we end up decomposing a function into two terms---one which is asymptotically equivalent to our target and one that is negligble with respect to it.
 
+
 #lemma[If $f = f_1 + f_2$ where $f_1 tilde g$ and $f_2 = o(g)$, then $f tilde g$]
 #proof[
  $ lim_(n -> infinity) f(n)/g(n) = lim_(n -> infinity) (f_1(n))/g(n) + lim_(n -> infinity) (f_2(n))/g(n) = 1. $
@@ -110,7 +111,7 @@ Usually, we end up decomposing a function into two terms---one which is asymptot
 
 == the hierarchy
 
-Here is the dream.
+Here lies a dream of asymptopia. 
 
 #definition[A function is $g(n)$ is said to be in _standard form_ if it is the product of the following types
 + Constants #h(1fr) (eg. #h(3pt) $sqrt(2 pi), 6, e^(-2)$)
@@ -157,7 +158,7 @@ Now, consider
 
 ]
 
-#prop[ If $y = Theta(x^a ln^b x)$ then $x = Theta(y^(1 slash a) ln^(-b slash a) x)$.]
+#corollary[If $y = Theta(x^a ln^b x)$ then $x = Theta(y^(1 slash a) ln^(-b slash a) x)$.]
 
 == stirling's approximation
 

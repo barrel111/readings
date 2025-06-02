@@ -35,6 +35,7 @@ Correctness can also be proven without greedy stays ahead. Consider the followin
 \begin{proof}
   This can be proven by induction or by arguing in terms of loop invariants (really, both these approaches are the same). First, note that the variable $\ell$ is nondecreasing throughout the course of the loop. Furthermore, any time a value of $\ell$ is appended to $A$, we update $\ell \leftarrow \ell + 1$. Thus, for indices $i < j \le |A|$, we have $A[i] < A[j]$. The fact that $H_{A[\ell]} = L_{\ell}$ for all $\ell\in [|A|]$, follows from the fact that we only append $h$ to $A$ when the condition $L_\ell = H_h$ is true.
 
+  \ref{alg:cap}
 \end{proof}
 
 \begin{lemma}

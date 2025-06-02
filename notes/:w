@@ -1,0 +1,16 @@
+#import "@local/preamble:0.1.0": *
+
+#show: project.with(
+  course: "analysis of boolean functions",
+  sem: "spring",
+  title: "influence for decision trees",
+  subtitle: "a precursor to the Aaronson-Ambainis conjecture",
+  authors: ("-",),
+  contents: false,
+)
+
+= Introduction
+
+One of the fundamental questions that frequently arises in different contexts concerns the reliance of a given function $f$ on its inputs. Furthermore, how does this dependence relate to the perceived complexity or simplicity of the function? Setting aside how we precisely define complexity for the moment, what might we expect? The prototypical ideal for simplicity is the set of constant functions, which correspondingly have no reliance on their input whatsoever. That is, can we extend this idea to show that, in general, simple non-constant functions must still concentrate their reliance on a few inputs?
+
+For boolean function $f: {0, 1}^n -> {0, 1}$, work by O'Donnell, Saks, Schramm, and Servedio (2005) provides a formal answer when "simplicity" is measured by decision tree depth. 
