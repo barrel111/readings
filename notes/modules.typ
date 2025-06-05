@@ -130,11 +130,11 @@ Thus, set intersection is the infimum operation for our lattice. Now, we introdu
 
 The lattice of submodules is actually modular. 
 
-#prop[If $M$ is an $R$-module and if $A, B, C$ are submodules of $M$ with $C subset.eq A$ then $ A sect (B + C) = (A sect B) + C. $]
+#prop[If $M$ is an $R$-module and if $A, B, C$ are submodules of $M$ with $C subset.eq A$ then $ A inter (B + C) = (A inter B) + C. $]
 #proof[
-  As $C subset.eq A$, we know that $A + C = A$. Note that $(A sect B) + C subset.eq A + C = A$ and $(A sect B) + C subset.eq B + C$. That is, 
-  $ (A sect B) + C subset.eq A  sect (B + C). $
-  For the reverse inclusion, let $a in A sect (B + C)$ and $b in B, c in C$ such that $a = b + c$. Then, $b = a - c in A + C = A$. Thus, $a = b + c subset.eq (A sect B) + C$.
+  As $C subset.eq A$, we know that $A + C = A$. Note that $(A inter B) + C subset.eq A + C = A$ and $(A inter B) + C subset.eq B + C$. That is, 
+  $ (A inter B) + C subset.eq A  inter (B + C). $
+  For the reverse inclusion, let $a in A inter (B + C)$ and $b in B, c in C$ such that $a = b + c$. Then, $b = a - c in A + C = A$. Thus, $a = b + c subset.eq (A inter B) + C$.
 ]
 
 = Morphisms and exact sequences
@@ -170,12 +170,12 @@ Particularly, this lets us define mappings $f: L(M) -> L(N)$ and $f^(-1): L(N) -
 We now expand on some properties of the map induced on the lattice of submodules.
 
 #lemma[Let $f: M -> N$ be an $R$-morphism. If $A$ is a submodule of $M$ and $B$ is a submodule of $N$ then 
-+ $f(A sect f^(-1)(B)) = f(A) sect B;$
++ $f(A inter f^(-1)(B)) = f(A) inter B;$
 + $f^(-1)(B + f(A)) = f^(-1)(B) + A.$]
 
 The following is a useful application of this, 
 #prop[If $A$ is a submodule of $M$ and $B$ is a subdmodule of $N$ then 
-+ $f(f^(-1)(B)) = B sect "Im" f;$
++ $f(f^(-1)(B)) = B inter "Im" f;$
 + $f^(-1)(f(A)) = A + "Ker" f.$]
 
 It is useful to remember certain facts about composition.
@@ -190,6 +190,7 @@ It is useful to remember certain facts about composition.
 With respect to composition, we are interested in "diagram completing" problems. That is, suppose we have a diagram of the form
 
 #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
   node((0, 0), $A$),
   node((0, 1), $C$),
   node((1, 0), $B$),
@@ -202,6 +203,7 @@ With respect to composition, we are interested in "diagram completing" problems.
 and we want to know the conditions under which there exists an $R$-morphism $h: B -> C$ such that $h compose f = g$. We also have the "dual" problem, where we have a diagram of the form
 
 #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
   node((1, 1), $A$),
   node((0, 1), $C$),
   node((1, 0), $B$),
@@ -222,8 +224,269 @@ As a warmup, we consider these problems when $A, B, C$ are sets and $f, g$ are s
   + If $A, B, C$ are non-empty sets and $f: B -> A$ and $g: C -> A$ are mappings then the following statements are equivalent
     - there exists a mapping $h: C -> B$ such that $f compose h = g$;
     - $"Im" g subset.eq "Im" f$.
+]<prop:complete-set>
+
+This gives us the following characterization for monomorphisms and epimorphisms for sets.
+
+#corollary[
+
+  a. If $A, B$ are non-empty sets and $f: A -> B$ is a mapping then the following statements are equivalent: 
+- $f$ is injective;
+- there exists $g: B -> A$ such that $g compose f = id_A$;
+- $f$ is left-cancellable; that is, for every non-empty set $C$ and all mappings $h, k: C -> A$, $ f compose h = f compose k => h = k. $
+b. If $A,B$ are non-empty sets and $f: A -> B$ is a mapping then the following statements are equivalent:
+- $f$ is surjective; 
+- there exists $g: B -> A$ such that $f compose g = id_B$; 
+- $f$ is right-cancellable; that is, for every non-empty set $C$ and all mappings $h, k: B -> C$, $ h compose f = k compose f => h = k. $]
+
+These theorems do not directly extend for modules.
+
+#example[
+  + #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
+  node((0, 0), $ZZ$, "A"),
+  node((0, 1), $ZZ$, "B"),
+  node((1, 0), $ZZ$, "C"),
+  arr("A", "B", $id_ZZ$, label-pos: left),
+  arr("A", "C", $times 2$, label-pos: right),
+  // arr("quot", (0, 1), $tilde(f)$, label-pos: right, "dashed", "inj"),
+  // arr($X$, "quot", $pi$),
+)] The prior theorem gives us that there exists a mapping $h: ZZ -> ZZ$ such that $(times 2) compose h = id_ZZ$. However, no such $ZZ$-morphism can exist as: $h(2n) = n implies 2h(n) = n$. Taking $n = 1$, we get a contradiction as $2 x = 1$ has no solution in $ZZ$.
++ Consider the $p$-adics $QQ_p$ that are defined as a subgroup of $QQ$, $ QQ_p = {x in QQ | exists k in ZZ. exists n in NN. #h(10pt) x = k/p^n}. $ Since $ZZ$ is a subgroup of $QQ_p$, we consider the quotient $QQ_p slash ZZ$ and the diagram #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
+  node((0, 1), $QQ_p slash ZZ$, "A"),
+  node((1, 0), $QQ_p slash ZZ$, "B"),
+  node((1, 1), $QQ_p slash ZZ$, "C"),
+  arr("A", "C", $id$),
+  arr("B", "C", $f$, label-pos: right),
+)] where $f$ is the morphism $x |-> p x$. For all $k$ and $n$, we have $ k/p^n + ZZ = p(k/p^(n + 1) + ZZ). $ That is $"Im" f = QQ_p slash ZZ = "Im" id$. So the prior theorem gives us that, there exists $h:QQ_p slash ZZ -> QQ_p slash ZZ$ such that $f compose h = id$. No such $ZZ$-morphism can exist as $ 1/p + ZZ = f [h(1/p + ZZ)] &= p[h(1/p + ZZ)] \ &= h(1 + ZZ) = 0 + ZZ. $ However, $x + ZZ = 0 + ZZ$ if and only if $x in ZZ$.
 ]
 
+Fortunately, under additional hypothesis we can recover a similar result for $ZZ$-modules.
+
+#prop[Consider the diagram #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
+  node((0, 0), $A$),
+  node((0, 1), $C$),
+  node((1, 0), $B$),
+  arr($A$, $C$, $g$),
+  arr($A$, $B$, $f$, label-pos: right),
+)] of $R$-modules and $R$-morphisms in which $f$ is an $R$-epimorphism. The following conditions are equivalent:
++ there is a unique $R$-morphism $h: B -> C$ such that $h compose f = g$; 
++ $"Ker" f subset.eq "Ker" g$.
+Moreover, such an $R$-morphism $h$ is a monomorphism if and only if $"Ker" f = "Ker" g$.]
+*Sketch*. $(a) => (b)$ is obvious. We use $(b)$ with @prop:complete-set to get the unique morphism $h: B -> C$. Then, the fact that $f$ is an $R$-epimorphism allows us to use the fact that $g$ is an $R$-morphism to prove that $h$ is an $R$-morphism too.
+
+#prop[Consider the diagram #align(center)[#commutative-diagram(
+  node-padding: (50pt, 50pt),
+  node((1, 1), $A$),
+  node((0, 1), $C$),
+  node((1, 0), $B$),
+  arr($C$, $A$, $g$),
+  arr($B$, $A$, $f$, label-pos: right),
+)] of $R$-modules and $R$-morphisms in which $f$ is an $R$-monomorphism. The following conditions are equivalent:
++ there is a unique $R$-morphism $h: C -> B$ such that $f compose h = g$; 
++ $"Im" g subset.eq "Im" f$.
+Moreover, such an $R$-morphism $h$ is an epimorphism if and only if $"Im" f = "Im" g$.]
+*Sketch*. $(a) => (b)$ is obvious. We use $(b)$ with @prop:complete-set to get the unique morphism $h: C -> B$. Then, the fact that $f$ is an $R$-monomorphism allows us to use the fact that $g$ is an $R$-morphism to prove that $h$ is an $R$-morphism too. 
+
+To formalize this idea of "completing diagrams" we introduce the notion of commutative diagrams.
+
+#definition[Given a diagram of sets and mappings, we say that the diagram is _commutative_ if all composite mappings from any given departure set to any arrival set is equal.]
+
+#definition[By _a sequence of $R$-modules and $R$-morphisms_ we shall mean a diagram of the form #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt), 
+    node((0, 0), $...$, "pre"),
+    node((0, 1), $M_(i - 1)$),
+    node((0, 2), $M_(i)$),
+    node((0, 3), $M_(i + 1)$),
+    node((0, 4), $...$, "post"),
+    arr("pre", $M_(i - 1)$, ""),
+    arr($M_(i - 1)$, $M_(i)$, $f_(i - 1)$),
+    arr($M_i$, $M_(i + 1)$, $f_i$),
+    arr($M_(i + 1)$, "post", ""),
+  )
+] Such a sequence is said to be _exact at $M_i$_ if $"Im" f_(i - 1) = "Ker" f_i$, and to be _exact_ if it is exact at each $M_i$.]
+
+The language of exact sequences allows us to succinctly and elegantly represent a lot of properties. 
+
+#prop[If $f: M -> N$ is an $R$-morphism and if $0 -> M, N -> 0$ denote the inclusion map and the zero map respectively then $f$ is 
++ a monomorphism if and only if $0 --> M -->^f N$ is exact; 
++ an epimorphism if and only if $M -->^f N --> 0$ is exact;
++ an isomorphism if and only if $0 --> M -->^f N --> 0$ is exact.]
+
+#example[
+  Exact sequences of the form #align(center)[
+    #commutative-diagram(
+      node-padding: (50pt, 50pt), 
+      node((0, 0), $0$, "pre"),
+      node((0, 1), $M$),
+      node((0, 2), $M'$),
+      node((0, 3), $M''$),
+      node((0, 4), $0$, "post"),
+      arr("pre", $M$, $$),
+      arr($M$, $M'$, $f$), 
+      arr($M'$, $M''$, $g$),
+      arr($M''$, "post", $$)
+    )
+  ]
+  are of especial importance. They are called _short exact sequences_. For example, if $f: A -> B$ is a morphism of abelian groups then we have the following (short) exact sequences 
+  #align(center)[
+    #commutative-diagram(
+      node-padding: (50pt, 50pt), 
+      node((0, 0), $0$, "pre"),
+      node((0, 1), $"Ker"f$),
+      node((0, 2), $A$),
+      node((0, 3), $A slash "Ker"f$), 
+      node((0, 4), $0$, "post"), 
+      node((1, 0), $0$, "pre1"),
+      node((1, 1), $"Im"f$),
+      node((1, 2), $B$),
+      node((1, 3), $B slash "Im"f$), 
+      node((1, 4), $0$, "post1"),     
+      arr("pre", $"Ker"f$, ""),
+      arr($A slash "Ker"f$, "post", ""),
+      arr("pre1", $"Im"f$, ""),
+      arr($B slash "Im"f$, "post1", ""),
+      arr($"Ker"f$, $A$, $iota$),
+      arr($A$, $A slash "Ker"f$, $pi$),
+      arr($"Im"f$, $B$, $iota$), 
+      arr($B$, $B slash "Im"f$, $pi$)
+    )
+  ]
+]
+
+Note that in an exact sequence the composite of two successive morphisms is the zero morphism. The converse of this is not true, as $f compose g = 0$ is equivalent to $"Im"f subset.eq "Ker"f$. Such sequences are instead called _semi-exact_.
+
+We can apply these ideas to derive a useful property of the kernel of an $R$-morphism.
+
+#prop[Given the diagram $R$-modules and $R$-morphisms #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt), 
+    node((0, 2), $A$),
+    node((1, 0), $0$), 
+    node((1, 1), $X$), 
+    node((1, 2), $Y$),
+    node((1, 3), $Z$),
+    arr($0$, $X$, $$),
+    arr($X$, $Y$, $f$),
+    arr($Y$, $Z$, $g$),
+    arr($A$, $Y$, $nu$)
+  )
+] in which the row is exact and $g compose nu = 0$, there is a unique $R$-morphism $h: A -> X$ such that the completed diagram is commutative.]
+
+#prop[Let $f: M -> N$ be an $R$-morphism. If $iota: "Ker"f -> M$ is the inclusion map then 
++ $f compose iota = 0$;
++ if $P$ is an $R$-module and if $g:P -> M$ is an $R$-morphism such that $f compose g = 0$ then there is a unique $R$-morphism $nu: P -> "Ker"f$ such that the following diagram is commutative #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt), 
+    node((1, 0), $"Ker"f$),
+    node((1, 1), $M$),
+    node((1, 2), $N$),
+    node((0, 1), $P$),
+    arr($"Ker"f$, $M$, $iota$, label-pos: right),
+    arr($M$, $N$, $f$, label-pos: right),
+    arr($P$, $M$, $g$),
+    arr($P$, $"Ker"f$, $nu$, label-pos: right)
+  ) 
+]]
+
+In fact, this can be used to give a complete characterization of $("Ker"f, iota)$ in terms of just morphisms.
+
+We now get a taste of some _diagram chasing_.
+
+#prop[Suppose that the diagram of $R$-modules nad $R$-morphisms #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt), 
+    node((0, 0), $A$),
+    node((0, 1), $B$),
+    node((0, 2), $C$),
+    node((0, 3), $D$),
+    node((1, 0), $A'$),
+    node((1, 1), $B'$),
+    node((1, 2), $C'$),
+    node((1, 3), $D'$),  
+    arr($A$, $B$, $f$),
+    arr($B$, $C$, $g$),
+    arr($C$, $D$, $h$),
+    arr($A'$, $B'$, $f'$, label-pos: right),
+    arr($B'$, $C'$, $g'$, label-pos: right),
+    arr($C'$, $D'$, $h'$, label-pos: right),
+    arr($A$, $A'$, $alpha$),
+    arr($B$, $B'$, $beta$),
+    arr($C$, $C'$, $gamma$),
+    arr($D$, $D'$, $delta$),
+  )
+] is commutative and has exact rows. Then the following hold:
++ if $alpha, gamma$ are epimorphisms and $delta$ is a monomorphism then $beta$ is an epimorphism; 
++ if $alpha$ is an epimorphism and $beta, delta$ are monomorphisms then $gamma$ is a monomorphism.]
+#proof[ + Let $b' in B'$. Then let $c' = g'(b')$. By exactness at $C'$, we have $h'(c') = 0$. Let $c in C$ be such that $gamma(c) = c'$. By commutativity, $delta compose h (c) = h' compose gamma (c) = 0$. Since $delta$ is a monomorphism, we have $h(c) = 0$. By exactness at $C$, we have that there exists $b in B$ such that $g(b) = c$. We have by commutativity that $ g' compose beta(b) = gamma compose g (b) = c' = g'(b'). $ So, $b' - beta(b) in "Ker" g'$. By exactness at $B'$, we know that there exists $a' in A'$ such that $f'(a') = b' - beta(b)$. Let $a in A$ such that $alpha(a) = a'$. Then, by commutativity, we have $beta (f(a)) = f' compose alpha (a) = b' - beta(b). $ Thus, $b' = beta(f(a) + b) in "Im"beta$.
++ Let $c in "Ker"gamma$. Then, by commutativity, $delta compose h (c) = h' compose gamma (c) = 0$. As $delta$ is a monomorphism, we have $h(c) = 0$. By exactness at $C$, we know that there exists $b in B$ such that $g(b) = c$. Again, by commutativity, $g' compose beta (b) = gamma compose g (b) = 0$. By exactness at $B'$, we have an $a' in A'$ such that $f' (a') = beta(b)$. Then, as $alpha$ is an epimorphism, we have $a in A$ such that $alpha (a) = a'$. By commutativity, $ beta compose f (a) = f' compose alpha (a) = beta(b). $ As $beta$ is a monomorphism, $f(a) = b$. Then, $c = g(b) = g compose f (a) = 0$. ]
+
+Furthermore, applying this proposition twice, we also get the five-lemma.
+#prop[Suppose that the diagram of $R$-modules and $R$-morphisms #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt),
+    node((0, 0), $A$),
+    node((0, 1), $B$),
+    node((0, 2), $C$),
+    node((0, 3), $D$),
+    node((0, 4), $E$),
+    node((1, 0), $A'$),
+    node((1, 1), $B'$),
+    node((1, 2), $C'$),
+    node((1, 3), $D'$),
+    node((1, 4), $E'$),  
+    arr($A$, $B$, $$),
+    arr($B$, $C$, $$),
+    arr($C$, $D$, $$),
+    arr($D$, $E$, $$),
+    arr($A'$, $B'$, $$),
+    arr($B'$, $C'$, $$),
+    arr($C'$, $D'$, $$),
+    arr($D'$, $E'$, $$),  
+    arr($A$, $A'$, $alpha_1$),
+    arr($B$, $B'$, $alpha_2$),
+    arr($C$, $C'$, $alpha_3$),
+    arr($D$, $D'$, $alpha_4$),
+    arr($E$, $E'$, $alpha_5$),
+  )
+]
+  is commutative with exact rows. If $alpha_1, alpha_2, alpha_4, alpha_5$ are isomorphisms then so is $alpha_3$.
+]
+
+A direct application of this gives us the short five-lemma.
+#corollary[Suppose that the diagram of $R$-modules and $R$-morphisms #align(center)[
+  #commutative-diagram(
+    node-padding: (50pt, 50pt),
+    node((0, 0), $0$, "0t"),
+    node((0, 1), $A$),
+    node((0, 2), $B$),
+    node((0, 3), $C$),
+    node((0, 4), $0$, "0t2"),
+    node((1, 0), $0$, "0l"),
+    node((1, 1), $A'$),
+    node((1, 2), $B'$),
+    node((1, 3), $C'$),
+    node((1, 4), $0$, "0l2"),  
+    arr("0t", $A$, $$),
+    arr($A$, $B$, $$),
+    arr($B$, $C$, $$),
+    arr($C$, "0t2", $$),
+    arr("0l", $A'$, $$),
+    arr($A'$, $B'$, $$),
+    arr($B'$, $C'$, $$),
+    arr($C'$, "0l2", $$),  
+    arr($A$, $A'$, $alpha$),
+    arr($B$, $B'$, $beta$),
+    arr($C$, $C'$, $gamma$),
+  )
+]
+  is commutative with exact rows. If $alpha$ and $gamma$ are isomorphisms then so is $alpha_3$.
+]
 = Quotient modules and isomorphism theorems
 
 = Chain conditions and Jordan-Hölder towers
+
+= Products and Coproducts
