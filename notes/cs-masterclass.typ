@@ -250,7 +250,7 @@ $ (norm(bold(w)) bold(v) - norm(bold(v)) bold(w))^2 = 2 norm(bold(v))^2 norm(bol
 Let $x$ be a complex number with modulus $abs(x) = 1$ and the property that $inner(bold(w), x bold(v))$ is
 real and non-negative. Consequently, $inner(bold(w), x bold(v)) = abs(inner(bold(w), bold(v)))$.
 We readily get that $abs(inner(bold(w), bold(v))) = inner(bold(w), x bold(v)) <= norm(bold(v)) norm(bold(w))$ with
-equality iff $norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
+equality iff $x norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
 
 = The AM-GM Inequality
 
