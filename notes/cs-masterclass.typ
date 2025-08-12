@@ -54,7 +54,7 @@
   ) ]
 
 #proof(
-  "of Cauchy-Schwarz (via eqn. (1))",
+  "of Cauchy-Schwarz (via (1))",
 )[
   Assume that neither ${a_k}$ not ${b_k}$ are made of zeroes. Then define the
   sequences, $ hat(a)_k = a_k / (sum_(k = 1)^infinity a_k^2)^(1/2) #h(25pt) hat(b)_k = b_k / (sum_(k = 1)^infinity b_k^2)^(1/2). $
@@ -171,7 +171,7 @@ To prove this, we start off with the additive bound,
 
 $ 0 <= inner(bold(v) - bold(w), bold(v) - bold(w)) \ implies Re inner(bold(v), bold(w)) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w))). $
 
-This is a weaker bound than Cauchy-Schwarz as $Re inner(bold(v), bold(w)) <= inner(bold(v), bold(w)) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w)))$.
+This is a weaker bound than Cauchy-Schwarz as $Re inner(bold(v), bold(w)) <= abs(inner(bold(v), bold(w))) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2) <= 1/2 (inner(bold(v), bold(v)) + inner(bold(w), bold(w)))$.
 The last inequality follows from the AM-GM inequality (see next chapter for more
 details).
 
@@ -198,7 +198,7 @@ right-hand side. This gives us,
 
 $ abs(inner(bold(v), bold(w))) <= inner(bold(v), bold(v))^(1/2) inner(bold(w), bold(w))^(1/2). $
 
-== Yet Another Proof ™
+== Another Perspective
 
 This material is from #link(
   "https://web.archive.org/web/20240215164458/https://www.dpmms.cam.ac.uk/~wtg10/csineq.html",
@@ -254,4 +254,145 @@ equality iff $x norm(bold(w)) bold(v) - norm(bold(v)) bold(w) = 0$.
 
 = The AM-GM Inequality
 
+== Geometric Perspective
 
+The following additive bound that we used for a proof of Cauchy-Schwarz has more to offer still,
+$ x y <= x^2/2 + y^2/2. $
+
+A geometric interpretation for this would be that a rectangle's area is bounded by average area of the two squares whose sidelengths coincide with the rectangle. For nonnegative $(x, y)$, the substitution $(x, y) |-> (sqrt(x), sqrt(y))$ gives the classic AM-GM inequality that has richer interpretations, 
+$ sqrt(x y) <= (x + y)/2. $
+
+Note that, equivalently, $4 sqrt(x y) <= 2 (x + y)$. The right hand side can be interpreted as the perimeter of any rectangle with the area $x y$ and the left hand side can be interpreted as the perimeter of the unique square of area $x y$. Thus, this inequality tells us that the square has the least perimeter among all rectangles of the same area. The inequality is also equivalent to $x y <= ((x + y)/2)^2$. We can interpret the left hand side as the area of any rectangle with fixed perimeter $p = 2(x + y)$. The right hand side is then the area of the square with perimeter $p$. Thus, the inequality also tells us that among all rectangles having fixed perimeter, the square attains the maximum area. Such reframings furnish the interpretation of the AM-GM inequality as an _isoperimetric_ property of rectangles.
+
+== Moving Towards Generality
+
+We can show that the $n$-cube with edge length $S/n$ will have the largest volume among all boxes for which $sum_[n] a_i = S$.
+
+#prop[For any sequence of nonnegative real numbers $a_1, a_2, ..., a_n$ one has $ (a_1 a_2 ... a_n)^(1/n) <= (a_1 + a_2 + ... + a_n)/n. $]
+#proof[We prove this by _Cauchy induction_. We prove this for all powers of $2$ first. Note that $n = 2$ already follows from our prior discussion. Now assuming it holds for $n = 2^k$, let us show that it holds for $2 n = 2^( k + 1 )$. Then, $ 1/(2n) sum_(i = 1)^(2n) a_i &>= 1/2 ((product_(i = 1)^n a_i)^(1/n) + (product_(i = n + 1)^(2n) a_i)^(1/n)) \ &>= (product_(i = 1)^(2n) a_i)^(1/(2n)). $ Thus, the AM-GM inequality holds for all powers of $2$. Now, let $n, k in NN$ be such that $2^(k - 1) < n < 2^k$. Let $overline(a) = 1/n sum_[n] a_i$. Define a sequence ${alpha_i}_[2^k]$ of length $2^k$ as follows: $ alpha_i = cases(a_i #h(10pt) &"if" i in [n]\,, overline(a) &"otherwise".) $ Then apply AM-GM here, $ (product_(i = 1)^n a_i)^(1/2^k) overline(a)^((1-n/2^k)) = (product_(i = 1)^(2^k)alpha_i)^(1/2^k) &<= 1/2^k sum_(i = 1)^2^k alpha_i = (n overline(a) + (2^k - n) overline(a))/2^k = overline(a). \ implies (product_(i = 1)^n a_i)^(1/2^k) &<= overline(a)^(2^k/n) \ implies (product_(i = 1)^n a_i)^(1/n) &<= overline(a) = 1/n sum_(i = 1)^n a_i. $ This proves the AM-GM inequality for all $n in NN$. \ ]
+
+Next, we consider a weighted AM-GM inequality.
+#prop[Suppose $p_1, p_2, ..., p_n in QQ_(>= 0)$ are such that $sum_[n] p_i = 1$. Then for any sequence of nonnegative real numbers $a_1, a_2, ..., a_n$ one has $ a_1^(p_1) a_2^(p_2) ... a_n^(p_n) <= p_1 a_1 + p_2 a_2 + ... + p_n a_n. $]
+#proof[
+  Let $M in ZZ$ be a large enough integer such that each $p_i$ admits a representation $p_i = k_i/M$. Then, consider the sequence ${alpha_i}_([M])$ of $M$ positive integers comprising of $k_i$ copies of $a_i$. Then, the result follows by applying AM-GM to ${alpha_i}_([M])$.
+]
+
+We move on to the general AM-GM inequality. 
+First, it may be presented as a consequence of the prior result, via an instructive density/continuity argument. 
+
+#corollary[Suppose $p_1, p_2, ..., p_n in RR_(>= 0)$ are such that $sum_[n] p_i = 1$. Then for any sequence of nonnegative real numbers $a_1, a_2, ..., a_n$ one has $ a_1^(p_1) a_2^(p_2) ... a_n^(p_n) <= p_1 a_1 + p_2 a_2 + ... + p_n a_n. $]
+#proof[We give a continuity/density proof. Let $Delta_n = {bold(x) in RR^n_(>= bold(0)) | sum_[n] x_i = 1}$ denote the $n$-simplex. 
+
+It essentially suffices to argue that $QQ^n inter Delta_n$ is dense in $Delta_n$. Note that $overline(QQ^n inter Delta_n) = overline(QQ^n) inter Delta_n = RR^n inter Delta_n = Delta_n$. Thus, $QQ^n inter Delta_n$ is dense in $Delta_n$. 
+
+This means that for any $(p_1, ..., p_n) in Delta_n$ we may find sequences $p_1(t), ..., p_2(t)$ such that $(p_1(t), ..., p_2(t)) in QQ^n inter Delta_n$. Then, for every $t in NN$, by our rationally-weighted AM-GM, we have $ product_(i = 1)^n a_i^(p_i (t)) <= sum_(i = 1)^n p_i (t) a_i $ $ implies lim_(t -> oo) product_(i = 1)^n a_i^(p_i (t)) <= lim_(t -> oo) sum_(i = 1)^n p_i (t) a_i \ implies product_(i = 1)^n a_i^(p_i) <= sum_(i = 1)^n p_i a_i. $
+]
+
+== An Elementary Path to Generality
+
+Despite it's elegance, the continuity argument often loses the strictness of an equality and doesn't elucidate much about the circumstances in which equality is attained. It is instructive to thus look for a more elementary proof.
+
+We start by giving a proof of perhaps that some would dub as being _one of the most useful inequalities in practice_.
+
+#lemma[The inequality $1 + x <= e^x$ holds for all $x in RR$, and the inequality is strict except when $x = 0$.]
+#proof[We give a proof by the Mean Value Theorem and case analysis. When $x = 0$, clearly the equality holds. When $x > 0$, we are asserting $1 < (e^x - 1)/x$. This follows by applying the MVT on the interval $(0, x)$ to $f(x) = e^x$, $ (e^x - 1)/x = (f(x) - f(0))/x = f'(y) = e^y $ for some $y in (0, x)$. As $y > 0$, we have $e^y > 1$ from which the result follows.
+
+When $x < 0$, we are asserting $1 > (e^x - 1)/x$. Again, apply MVT on the interval $(x, 0)$ to $f(x) = e^x$, $ (e^x - 1)/x = (f(x) - f(0))/x = f'(y) $ for some $y in (x, 0)$. As $y < 0$, we have $e^y < 1$ from which the result follows.]
+
+#prop[Suppose $p_1, p_2, ..., p_n in RR_(>= 0)$ are such that $sum_[n] p_i = 1$. Then for any sequence of nonnegative real numbers $a_1, a_2, ..., a_n$ one has $ a_1^(p_1) a_2^(p_2) ... a_n^(p_n) <= p_1 a_1 + p_2 a_2 + ... + p_n a_n. $]
+
+#proof[ First, note that the inequality $x <= e^(x - 1)$ allows us to bound the left-hand side, a product of terms, by an exponential of a sum, similar to the one we find on the right hand side. Particularly, $ product_(i = 1)^n a_i^(p_i) <= product_(i = 1)^n e^(a_i p_i - p_i) = e^((sum_(i = 1)^n p_i a_i) - 1). $ In fact, the right hand side of the AM-GM inequality can also be bounded by the same term. $ sum_(i = 1)^n p_i a_i <= e^((sum_(i = 1)^n p_i a_i) - 1). $ Now, we are met with a challenge: can we convert a common bound for two quantities to a bound between the two quantities? $ max(product_(i = 1)^n a_i^(p_i) , sum_(i = 1)^n p_i a_i) <= e^((sum_(i = 1)^n a_i p_i) - 1). $ However, note that this does provide a relationship between our desired quantities at least when one of them is equal to the right hand side. Particularly, the case where $sum_(i = 1)^n a_i p_i = 1$ draws attention. Normalization allows us to exploit this structure. Particularly, let $A = sum_(i = 1)^n a_i p_i$ and define $alpha_i = a_i/A$. Then, we get $ product_(i = 1)^n alpha_i^(p_i) <= 1 \ implies product_(i = 1)^n (a_i/(A))^(p_i) = (1/(A)) product_(i = 1)^n a_i^p_i <= 1 \ implies product_(i = 1)^n a_i^p_i <= sum_(i = 1)^n a_i p_i. $ We recover the equality case by lookig back and noting that $a_k/A <= exp(a_k/A - 1)$ with equality if and only if $a_k/A = 1$. That is, if and only if, $a_1 = a_2 = ... = a_k$. ]
+
+Similar to an approach we used for Cauchy-Schwarz, normalization was quite useful here. We can try to further justify this intuition on slightly more rigorous terms.
+
++ For inequalities that can be expressed as $F(bold(x)) >= 0$ with a homogenous $F$ (i.e. there exists $k$ such that for all $bold(x)$ we have $F(lambda bold(x)) = lambda^k F(bold(x))$), we can without loss of generality scale our variables.
+
++ A normalization like $G(bold(x)) = 1$, for continuous $G$, restricts $bold(x)$ to the compact set $G^(-1)({1})$. Often times, this restriction to a compact set helps us identify when the inequality is tight.
+
+== A Showcase: Carleman's Inequality
+
+We showcase the power of AM-GM by presenting a proof of the Carleman inequality.
+#prop[For any sequence $a_1, a_2, ..., in RR_(>= 0)$ we have $ sum_(k = 1)^oo (a_1 a_2 ... a_k)^(1/k) <= e sum_(k = 1)^oo a_k. $]
+
+#proof[
+A useful first approach would be trying to prove the qualitative assertion that $ e sum_(k = 1)^oo a_k < oo => sum_(k = 1)^oo (a_1 a_2 .. a_k)^(1/k). $
+
+A natural approach would be to recognize that we may apply AM-GM to each term on the latter sum. This unfortunately doesn't help us.
+$ sum_(k = 1)^n (a_1 a_2 ... a_k)^(1/k) <= sum_(k = 1)^n 1/k (sum_(i = 1)^k a_i) = sum_(i = 1)^n a_i sum_(j = i)^k 1/k  $
+
+Particularly, this upperbound diverges as $n -> oo$. This moves us to consider _the principle of maximal effectiveness_: use our tools precisely when they are at their best. Note that the convergence of the sum requires that in any long block $a_1, ..., a_n$ there must be terms that are "highly unequal". Unfortunately, this is the regime where the AM-GM inequality is a bit inefficient. We may then think about rescaling each $a_k$ by a $c_k$ so that the terms in the sequence $c_i a_i$ are approximately equal. Then, 
+$ sum_(k = 1)^oo (a_1 a_2 ... a_k)^(1/k) &= sum_(k = 1)^oo (a_1 c_1 a_2 c_2 ... a_k c_k)^(1/k)/(c_1 c_2 ... c_k)^(1/k) \ &<= sum_(k = 1)^oo (a_1 c_1 + ... + a_k c_k)/(k(c_1 c_2 ... c_k)^(1/k)) \ &= sum_(k = 1)^oo 1/(k(c_1 c_2 ... c_k)^(1/k)) sum_(j = 1)^k a_j c_j \ &= sum_(j = 1)^oo a_j c_j sum_(k = j)^oo 1/(k(c_1 c_2 ... c_k)^(1/k)) $
+
+The qualitative conjecture then follows if we can show that the sums $c_j sum_(k = j)^oo 1/(k(c_1 c_2 ... c_k)^(1/k))$ are bounded. The simplest choice for a tail sum that goes to zero comes from considering the telescoping identity $ sum_(k = j)^oo 1/b_k - 1/b_(k + 1) = 1/b_j $ for sequences $b_j -> oo$. We choose the simplest candidate possible $b_k = k$. We then define ${c_i}$ via the recursion, $ (c_1 c_2 ... c_k)^(1/k) = k + 1. $
+We can explicitly resolve this recursion via, $ c_1 c_2 ... c_(k - 1) = k^(k - 1), #h(10pt) c_1 c_2 ... c_k = (k + 1)^k implies c_k = (k + 1)^k/k^(k - 1) = k (1 + 1/k)^k. $ Substituting this to our prior work, 
+
+$ sum_(k = 1)^oo (a_1 a_2 ... a_k)^(1/k) <= sum_(j = 1)^oo a_j c_j sum_(k = j)^oo 1/(k(c_1 c_2 ... c_k)^(1/k)) = sum_(j = 1)^oo (1 + 1/j)^j a_j < e sum_(j = 1)^oo a_j $
+
+]
+
+= Lagrange's Identity and Minkowski's Conjecture
+
+The inductive proof of Cauchy-Schwarz involved (implicitly) using the polynomial identity $ (a_1^2 + a_2^2)(b_1^2 + b_2^2) = (a_1 b_1 + a_2 b_2)^2 + (a_1 b_2 - a_2 b_1)^2. $ However, we were wasteful in never using $(a_1 b_2 - a_2 b_1)^2$, other than noting its non-negativity. At the very least, this helps us characterize the equality case of Cauchy-Schwarz by noting that, assuming $(b_1, b_2) != (0, 0)$ we have $(a_1 b_2 - a_2 b_1)^2 = 0 <==> a_1/b_1 = a_2/b_2.$ 
+
+We now wonder if similar polynomial identities can be used to characterize the case of equality for the $n$-dimensional Cauchy-Schwarz. 
+
+== Detecting Defects 
+
+We simply start by defining a polynomial that detects the defect in the Cauchy-Schwarz inequality, $ Q_n = (sum_(i = 1)^n a_i^2)(sum_(j = 1)^n b_j^2) - (sum_(i = 1)^n a_i b_i)^2 = sum_(1 <= i, j <= n) a_i^2 b_j^2  - sum_(1 <= i, j <= n) a_i b_i a_j b_j. $
+
+Similarly to how $Q_2 = (a_1 b_2 - a_2 b_1)^2$, can we represent $Q_n$ in terms of squares? Here, the _principle of symmetry_ is a useful guide. Consider the following representation, that makes the symmetry abundantly clear.
+$ Q_n &= 1/2 sum_(1 <= i, j <= n) (a_i^2 b_j^2 + a_j^2 b_i^2) - sum_(1 <= i, j <= n) a_i b_i a_j b_j \ &= 1/2 sum_(1 <= i, j <= n) (a_i^2 b_j^2 - 2 a_i b_i a_j b_j + a_j^2 b_i^2) \ &= 1/2 sum_(1<= i, j <= n) (a_i b_j - a_j b_i)^2. $
+
+In fact, we have rediscovered, _Lagrange's identity_. 
+$ (sum_(i = 1)^n a_i b_i)^2 = sum_(i = 1)^n a_i^2 sum_(j = 1)^n b_j^2 - 1/2 sum_(i = 1)^n sum_(j = 1)^n (a_i b_j - a_j b_i)^2. $
+
+We now resolve the equality case for Cauchy-Schwarz. Note if $(b_1, ..., b_n) != bold(0)$ there exists $b_k != 0$. Note that all terms in $Q_n$ must be equal to zero. That is, for all terms containing $b_k$, we must have $a_i b_k = a_k b_i$ for all $1 <= i <= n$. Taking $lambda = a_k / b_k$, we get that $a_i = lambda b_i$ for all $1 <= i <= n$. In hindsight, this also gives rise to the interpretation of $Q_n$ as a measure of the proportionality of two sequences (this was in fact the intuition used in the proof from Gowers we covered before).
+
+== Sums of Squares
+
+Our prior discussion motivates the following question: _Can one always write a nonnegative polynomial as a sum of squares? That is, if the real polynomial $P(x_1, x_2, ..., x_n)$, for all $(x_1, ..., x_n) in RR^n$ satisfies $ P(x_1, x_2, ..., x_n) >= 0, $ can one find a set of real polynomials $Q_k (x_1, x_2, ..., x_n), #h(5pt) 1 <= k <= s$ such that $ P = Q_1^2 + ... + Q_s^2 ? $_
+
+We first consider the simple case where $deg (P(x)) = 2$.
+
+#lemma[If $deg(P(x)) = 2$ then if $P >= 0$ there exists polynomials $Q_1, Q_2$ such that $P = Q_1^2 + Q_2^2$.]
+#proof[
+  We may write $ P(x) = a x^2 + b x + c = a (x + b/(2a))^2 + (4 a c - b^2)/(4a). $ For large enough $x$, $P >= 0$ implies $a > 0$. Next, taking $x_0 = -b/(2a)$ note that $P(x_0) >= 0$ implies $4a c - b^2 >= 0$. Thus, both these terms are positive and can be written as a sum of squares, $ Q_1 (x) = sqrt(a) (x + b/2a) #h(10pt) Q_2 (x) = 1/2 sqrt((4a c - b^2)/a). $
+]
+
+Recalling the $n = 2$ case of Lagrange's identity, we get 
+$ (a_1 b_1 + a_2 b_2)^2 = (a_1 + a_2)^2 (b_1 + b_2)^2 - (a_1 b_2 - a_2 b_1)^2. $
+
+Substituting in polynomials, gives us a very nice algebraic property for (univariate) polynomials that can be represented as a sume of two squares.
+
+#lemma[If $Q(x)$ and $R(x)$ can be written as a sum of two squares, so can $Q(x) R(x)$.]
+#proof[ Write $ Q = Q_1^2 + Q_2^2, #h(15pt) R = R_1^2 + R_2^2. $ Then, by Lagrange's identity $ Q R = (Q_1^2 + Q_2^2) (R_1^2 + R_2^2) = (Q_1 R_1 + Q_2 R_2)^2 + (Q_1 R_2 - Q_2 R_1)^2. $ ]
+
+This representation is suggestive of an inductive proof.
+
+#prop[Any nonnegative univariate real polynomial can be written as the sum of squares of two real polynomials.]
+#proof[
+  We have already shown that this holds for univariate quadratic polynomials.
+
+  Now suppose $P$ is a univariate polynomial with $deg P > 2$. 
+
+  If $P$ has a real root $a$ of degree $m > 0$, then we have $P = (x - a)^m R(x)$ with $R(a) != 0$. If we set $x = a + epsilon$, then we equivalently have $P(x + epsilon) = epsilon^m R(a + epsilon)$. By continuity of $R$, there is a $delta$ such that $R(a + epsilon)$ has the same sign for all $|epsilon| <= delta$ (specifically, the same sign as $R(a)$). Since $P$ is always nonnegative, $epsilon^m$ must also have the same sign for all $|epsilon| <= delta$. Thus, $m = 2k$ for some $k in NN$. Thus, with $Q = (x - a)^k$, we have $P = Q^2 R$. Furthermore, as $P >= 0$, we must have $R >= 0$ too.
+
+  If $P$ has no real roots, then by the fundamental theorem of algebra, we must have a complex root $r$. As $P(overline(r)) = overline(P(r)) = 0$, the conjugate $overline(r)$ is also a root. Thus, for $Q = (x - r) (x - overline(r))$, we have the factorization $P = Q R$. Furthermore, for $x >= abs(r)$, $Q >= 0$. Since $Q$ has no real zeros, $Q >= 0$ everywhere. As $P$ is nonnegative, $R$ must be nonnegative too.
+
+Thus, in either case, we may represent $P$ as a product of lower degree polynomials. By induction, these lower degree polynomials can be written as the sum of squares. Consequently, $P$ is also the sum of squares.
+
+]
+
+== Minkowski's Conjecture
+
+Unlike the case for univariate polynomials where it reduces to a set of discrete points, the zero set $P(x, y) = 0$ may be some complicated geometric shape. Minkowski conjectured that there exists nonnegative polynomials of two variables that cannot be written as the sum of squares of real polynomials. 
+
+We can start by considering some sources of nonnegative polynomials over two variables. Obviously, considering polynomials that are a sum of squares of two real polynomials would be unhelpful. Alternatively, we may consider squaring both sides of the Cauchy-Schwarz inequality. However, Lagrange's identity rules this out as being a counterexample. Finally, we could try polynomials that the AM-GM inequality tells us must be nonnegative. We try to produce such a polynomial in the simplest manner possible. The simplest choice for nonnegative variables is $a_1 = x^2, a_2 = y^2$. Furthermore, to simplify the product we may choose $a_3 = 1/(x^2 y^2)$. Thus, $ 1 <= 1/3 (x^2 + y^2 + 1/(x^2y^2)) => -3x^2 y^2  + x^4 y^2 + x^2 y^4 + 1 >= 0. $ Let $P(x, y) = x^4 y^2 + x^2 y^4 - 3x^2 y^2 + 1$. By AM-GM, we have shown $P(x, y) >= 0$. If $P(x, y) = Q_1^2 (x, y) + ... + Q_s^2 (x, y)$ then we can make two observations.
+- $deg Q_i <= 3$.
+- $P(x, 0) = 1 = P(y, 0)$. Thus, $Q_i (0, x), Q_i (0, y)$ are both bounded.
+
+As a result, each $Q_i$ can be expressed as $ Q_i = a_i + b_i x y + c_i x^2 y + d_i x y^2. $
+
+Note now that the coefficient of $x^2 y^2$ in $sum _i Q_i^2$ is $sum_i b_i^2 >= 0$. However, the coefficient of $x^2 y^2$ in $P$ is $-3$. Thus, $P$ cannot be written as the sum of squares of real polynomials.
+
+= On Geometry and Sums of Squares

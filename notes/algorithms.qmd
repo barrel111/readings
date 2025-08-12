@@ -1,0 +1,730 @@
+---
+title: "Design & Analysis of Algorithms"
+---
+
+A tour of common motifs in the design and analysis of algorithms, guided by the principle that discrete problems are hard and continuous relaxations yield an easier path to insights. In its present form, mostly based on the Fall 2024 iteration of Cornell's CS6820 taught by Bobby Kleinberg.
+
+## Matchings
+
+### Bipartite Maximum Matching
+
+::: {#def-matching}
+# Matching
+A _matching_ in an undireted graph is an edge set such that every vertex belongs to either one (_matched vertex_) or $\emptyset$ (_free vertex_) edges of the matching.
+:::
+
+**Maximum Matching Problem.** Given a graph $G$, find a matching with as many edges as possible.
+
+We start by considering a natural question: given a graph $G$ and a suboptimal matching $M$, how should we improve it? Answering this leads to a natural iterative mechanism for producing the maximum matching. 
+
+We start by introducing structures in the graph that correspond to ways in which we may alter our matching.
+
+::: {#def-alt-comp}
+# Alternating Component
+An $M$-alternating component is an edge set that forms a connected subgraph of $G$ of maximum degree $2$, in which every degree-$2$ vertex belongs to exactly one edge of $M$.
+:::
+
+A connected subgraph of $G$ of maximum degree $2$ must be either a cycle or a path. It is a cycle iff every vertex has degree $2$. A proof for this can be furnished by considering the longest path in the subgraph.
+
+::: {#def-alt-path}
+# $M$-Augmenting Path
+Suppose $G$ is a graph and $M$ is a matching. Then, an _$M$-augmenting path_ in $G$ is a path $P$ in $G$ that starts and ends at free vertices and alternates between edges in $M$ and not in $M$.
+:::
+
+The following are some easy but useful properties of an $M$-augmenting path.
+
+::: {#rem-edit-1}
+# Todo 1
+Should probably turn this into properties of alternatig paths and use an identical argument to show that alternating cycles are of even length. 
+:::
+
+::: {#lem-alt-prop} 
+
+# Properties of $M$-Augmenting Paths
+
+Let $P$ be an $M$-augmenting path. Then 
+
++ $P$ has odd length;
+
++ $|P \backslash M| = |M \cap P| + 1.$
+:::
+
+::: {.proof key=@lem-aug-prop}
+  + Let $P = v_0 v_1 \dots v_k$. Then $v_i v_{ i + 1 } \in M$ iff $i \equiv 1 \; (\mathrm{mod} \; 2)$. As $v_k$ is free, we have $v_{ k - 1 } v_k \notin M$ which implies $(k - 1) \equiv 0 \; (\mathrm{mod} \; 2)$ so that $\ell(P) = k \equiv 1 \; (\mathrm{mod} \; 2)$.
+  + Let $P = v_0 v_1 \dots v_k$. It suffices to show that $P' = v_0 v_1 \dots v_{ k - 1 }$ is such that $|P' \backslash M| = |P' \cap M|$. For this just consider the $P' \cap M \rightarrow P' \backslash M$ bijection defined by $v_i v_{ i + 1 } \rightarrow v_{ i - 1 } v_i$.
+:::
+
+The following result then demonstrates how the presence of a _suitable_ $M$-alternating component allows us to alter our matching. Informally, by suitable, we want the alternating component to "never lose track of already matched vertices"-- that is the alternating component can contain a vertex from the matching only if it contains the edge the vertex is matched to too.
+
+::: {#prp-augment-ap} 
+
+# Augmenting by an $M$-Alternating Component
+
+Suppose $C$ is an $M$-alternating component such that $v \in V(M) \cap V(C) \implies v \in V(M \cap C)$.  Then, $M \oplus C$ is a matching such that 
+\begin{align*}
+|M \oplus C| = |M| + |C \backslash M| - |M \cap C|.
+\end{align*}
+:::
+
+::: {.proof key=@prp-augment-ap}
+
+We first show that $M \oplus C$ is a matching. Consider a vertex $v \in M \oplus C$. It suffices to prove that $v$ is adjacent to exactly one edge of $M \oplus C$. Note that $M \oplus C = (M \backslash C) \sqcup (C \backslash M)$. Note that $M \backslash C$ is a matching as $M$ is a matching. Furthermore, $C \backslash M$ is a matching since every $v \in V(C \backslash M)$ is adjacent to exactly one edge in $C \backslash M$. So, it suffices to show that $M \backslash C$ and $C \backslash M$ are vertex disjoint. If $v \in V(M \backslash C)$ then there is a unique $e \in M$ such that $v \in e$. Note that $e \notin M \cap C$ and so $v \notin V(C)$. 
+
+Thus, 
+\begin{align*}
+|M \oplus C| &= |(M \backslash C) \sqcup (C \backslash M)| \\ &= |M \backslash C| + |C \backslash M| \\ &= |M| + |C \backslash M| - |M \cap C|. 
+\end{align*}
+
+:::
+
+Consequently, an $M$-augmenting path is an alternating component that  increases the size of the matching.
+
+::: {#cor-augment-by-one} 
+# Augmenting by an $M$-Augmenting Path
+
+If $P$ is an $M$-augmenting path then $M \oplus P$ is a matching and $|M \oplus P| = |M| + 1$. Furthermore, every vertex matched in $M$ is also matched in $M \oplus P$.
+:::
+
+::: {.proof key=@cor-augment-by-one} 
+
+Note that if $v \in V(P) \cap V(M)$ then by definition of an $M$-augmenting path $v$ must be an interior vertex that is adjacent to an edge in $M \cap P$. Thus, $M \oplus P$ is a matching. Furthermore, as $|P \backslash M| = |M \cap P| + 1$ we have $|M \oplus P| = |M| + 1$.
+
+Now, we show $V(M) \subseteq V(M \oplus P)$. Suppose $v \in M$. Note that if $v \notin P$, then clearly $v \in M \backslash P \subseteq M \oplus P$. Otherwise, $v \in P$ and as $v$ is not $M$-free, it must be an interior vertex that is adjacent to an edge in $P \backslash M$ which implies $v \in P \backslash M \subseteq M \oplus P$.
+
+:::
+
+In fact, $M$-alternating components completely characterize the maximum matching problem.
+
+::: {#lem-change-match-1} 
+# Changes in Matching I
+If $M$ and $M'$ are matchings in $G$ then $M \oplus M'$ is a union of $M$-alternating components.
+:::
+
+::: {.proof key=@lem-char-max-match}
+Every $v \in M \oplus M'$ has degree $\in \{1, 2\}$ as every vertex has degree at most $1$ in each of $M, M'$, with degree $1$ in at least one or the other. Furthermore, a vertex $v \in M \oplus M'$ can only be adjacent to at most one edge in $M$ as $M$ is a matching. Thus, $M \oplus M'$ is a union of $M$-alternating components.
+:::
+
+::: {#lem-change-match-2} 
+# Changes in Matching II
+If $M$ and $M'$ are matchings in $G$ with $|M| < |M'|$ then $M \oplus M'$ contains an $M$-augmenting path.
+:::
+
+::: {.proof key=@lem-augment-characterize}
+
+$M \oplus M'$ is a union of $M$-alternating components. An $M$-alternating component where all vertices have degree-$2$ must be a cycle. Since the edges must alternate between edges in $M$ and in $M'$, the cycle must have an equal number of edges from $M$ and $M'$. Since $|M| < |M'|$ we must then have an $M$-alternating component that is a path and contains more edges from $M'$ than $M$.
+
+:::
+
+This motivates a family of algorithms for the maximum matching problem.
+
+```pseudocode
+\begin{algorithm}
+\caption{Computing a Maximum-Matching}
+\begin{algorithmic}
+\State{\textbf{initialize} $M = \emptyset$}
+    \Repeat
+    \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path}
+    \State{$M \leftarrow M \oplus P$}
+    \Until{there is no $M$-augmenting path}
+\end{algorithmic}
+\end{algorithm}
+```
+
+This algorithm terminates in at most $\mathcal{O}(n/2)$ iterations as each iteration increases the size of the matching by $1$ and a maximum matching has size at most $n/2$.
+
+Different strategies for finding the $M$-augmenting path $P$ yield different algorithms. 
+
+::: {#def-bipartite}
+# Bipartite
+A graph $G$ is said to be _bipartite_ if there exists a partition $V(G) = L \sqcup R$ such that every edge has exactly one endpoint in $L$ and $R$.
+:::
+
+We now present a simple strategy that works when $G$ is bipartite.
+
+::: {#def-g-m}
+# $G_M$
+Let $G=(L, R, E)$ be a bipartite graph and $M$ be a matching. The graph $G_M$ is defined as the directed graph formed from $G$ by orienting each edge from $L$ to $R$ if it does not belong to $M$ and from $R$ to $L$, otherwise.
+:::
+
+::: {#lem-g-m-aug-path}
+Let $M$ be a matching in a bipartite graph $G$ and $F$ be the set of free vertices. The $M$-augmenting paths are in one-to-one correspondence with directed paths from $L \cap F$ to $R \cap F$ in $G_M$.
+:::
+
+::: {.proof key=@lem-g-m-aug-path}
+  Let $P$ be a directed path from $L \cap F$ to $R \cap F$ in $G_M$. First, its endpoints are free with respect to $M$. Since $G_M$ is bipartite, its edges alternate from edges $L \to R$ and edges $R \to L$. That is, the edges alternate from edges in $M$ and not in $M$. Thus, the undirected edge set corresponding to $P$ is an $M$-augmenting path.
+  
+  Next, let $P$ be an augmenting path. Note that $P$ has odd length, and hence, its endpoints are on opposite sides of the partition $(L, R)$. Since its endpoints are also free, it suffices to show that $P$ corresponds to a directed path in $G_M$. Note that every interior vertex of $P$ has exactly one edge in $M$ and one edge not in $M$. The former edge corresponds to a directed edge $R \to L$  and the latter corresponds to a directed edge $L \to R$. Thus, $P$ corresponds to a directed path in $G_M$ from $L \cap F$ and $R \cap F$. 
+:::
+
+This gives us a natural algorithm for maximum-matching in a bipartite graph. We merely build $G_M$ and find a path from $L \cap F$ to $R \cap F$ using BFS/DFS. Building $G_M$ and performing BFS/DFS both take $\mathcal{O}(m + n)$ time. We may also assume $m \ge n/2$; otherwise, the graph contains isolated edges which can be removed in a preprocessing step taking $\mathcal{ O }(n)$ times. Thus, overall, we get a $\mathcal{ O }(m n)$ algorithm for maximum-matching in bipartite graphs.
+
+### Hopcroft-Karp Algorithm
+
+Choosing only one augmenting path at a time is quite wasteful. The Hopcroft-Karp algorithm improves upon this by attempting to find many disjoint augmenting paths in every iteration. We start with the following generalization of @cor-augment-by-one and @lem-change-match-2.
+
+As a brief aside, vertex disjoint may refer to different notions depending on the source. 
+
+::: {#def-vertex-disjoint}
+# Vertex Disjoint
+A set of subgraphs $\{G_i\}$ are _(externally) vertex-disjoint_ if they share no vertices. A set of paths $\{P_i\}$ are said to be _internally vertex-disjoint_ if they share no vertices other than their endpoints.
+:::
+
+::: {#lem-equiv-matching}
+# Characterization of Augmentable Matchings
+If $G$ is a graph and $M$ is a matching in $G$ then the following are equivalent for all $k \in \mathbb{N}$
+
+a. there exists a matching $M'$ with $|M| + k$ edges;
+b. $G$ contains $k$ vertex-disjoint $M$-augmenting paths;
+c. there exists a matching $M'$ such that the edge set $M \oplus M'$ contains at least $k$ vertex-disjoint $M$-augmenting paths.
+:::
+
+::: {.proof key=@lem-equiv-matching}
+- $a. \Rightarrow c.$ 
+
+Consider $M'$ such that $|M'| = |M| + k$. Note that $M \oplus M' = (M \backslash M') \sqcup (M' \backslash M)$ with $|M' \backslash M| = |M \backslash M'| + k$. Every vertex $v \in M \oplus M'$ has degree $\in \{1, 2\}$ as every vertex has degree at most $1$ in each of $M$, $M'$ and degree $1$ in at least one of $M$, $M'$. Thus, $M \oplus M'$ must be a union of vertex-disjoint paths and cycles. 
+
+As $M$ and $M'$ are matchings, each vertex of degree $2$ in $M \oplus M'$ is adjacent to exactly one edge from $M$ and one edge from $M'$. Since a cycle can be alternating only if it has even length, it has an equal number of edges from $M$ and $M'$. Since $|M' \backslash M| = |M \backslash M'| + k$, there must be at least $k$-many $M$-alternating paths in $M \oplus M'$.
+
+- $c. \Rightarrow b.$ 
+
+This is immediate by noting that $M \oplus M' \subseteq E(G)$.
+
+- $b. \Rightarrow a.$ 
+
+It suffices to show that if $P$ and $P'$ are vertex disjoint $M$-augmenting paths then $P'$ is also a $(M \oplus P)$-augmenting path. As $P$ and $P'$ are vertex-disjoint, they are edge disjoint too. Since endpoints of $P'$ aren't adjacent to edges in $M$ or $P$, they will be free with respect to $M \oplus P$ too. Next, any edge of $M \cap P' \subseteq M \\ P$ is still in $M \oplus P$. Furthermore, any edge of $P' \backslash M$ isn't contained in $M$ or $P$ and hence, isn't an edge in $M \oplus P$. Thus, $P'$ is $(M \oplus P)$-alternating. 
+:::
+
+Again, we shall assume $G$ is bipartite. As always, we start with some helpful definitions to frame our algorithm. 
+
+::: {#def-bfs-levels} 
+
+# BFS Levels
+
+In the graph $G_M$, define $L_0, L_1, ..., L_\infty$ to be the levels in a breadth-first traversal rooted at $L \cap F$. That is, 
+
+\begin{align*}
+ L_0 = & L \cap F, \\ L_{i + 1} = &\text{ all vertices } v \notin \bigcup_{ k = 0 }^i L_k \text{ s.t. } G_M \\ &\text{ contains an edge from } L_i \text{ to } v, \\ L_\infty = &\text{ all vertices } v \notin \bigcup_{k = 1}^n L_k. 
+\end{align*}
+
+:::
+
+::: {#def-adv-ret} 
+
+# Advancing and Retreating Edges
+
+An edge $e = (u, v) \in G_M$ is an _advancing edge_ if $u \in L_i$ and $v \in L_{i + 1}$. Otherwise, we call it a _retreating edge_. A path composed entirely of advancing edges is called an _advancing path_.
+:::
+
+The following lemma then somewhat clarifies the importance of advancing edges.
+
+::: {#lem-advancing-as-shortest}
+If $e = (u, v)$ is an advancing edge we must have $d(v) > d(u) \Rightarrow d(v) = d(u) + 1$. 
+Consequently, an $s$-$t$ path $P$ is an advancing path if and only if it is a shortest $s$-$t$ path.
+:::
+
+::: {.proof key=@lem-advancing-as-shortest}
+By definition, if $e$ is an edge going from $L_i$ to $L_j$ for $j > i$, then we must have $j = i + 1$. Furthermore, $L_i$ consists of all vertices that are at a distance of $i$ from $L_0$.
+:::
+
+::: {#def-blocking-set} 
+# Blocking Set
+A _blocking set_ of $M$-augmenting paths is a maximal (under set-inclusion) set of vertex-disjoint advancing $M$-augmenting paths.
+:::
+
+
+```pseudocode
+\begin{algorithm}
+\caption{Hopcroft-Karp Algorithm}
+\begin{algorithmic}
+\State{\textbf{initialize} $M = \emptyset$}
+    \Repeat
+    \State{$\{P_i\} \leftarrow$ \textbf{find} a blocking set of $M$-augmenting paths}
+    \State{$M \leftarrow M \oplus P_1 \oplus \dots P_k$}
+    \Until{there is no $M$-augmenting path}
+\end{algorithmic}
+\end{algorithm}
+```
+
+As before, we know that this algorithm terminates in at most $n/2$ iterations as each iteration increases the cardinality of $M$ by at least $1$. To obtain a superior bound, we need to also integrate an alternative measure of progress. Particularly, we shall show that the length of the shortest augmenting path is strictly increasing every iteration. Intuitively, this occurs because augmenting by a path reverses the orientation of all its edges and hence, any future $s$-$t$ path taking these edges must be longer than the shortest $s$-$t$ paths available prior.
+
+
+::: {#lem-incr-aug-path-length}
+# Increasing Augmenting Path Lengths
+If $M_t$ and $M_{ t + 1 }$ are the matchings in two consecutive iterations of the Hopcroft-Karp algorithm, the length of the shortest $M_{ t + 1 }$-augmenting path is strictly greater than the length of the shortest $M_t$-augmenting path.
+::: 
+
+Our strategy will be to "follow" along a path $P$ in $G_{M_{t + 1}}$ while keeping track of the distances as we would in $G_{M_t}$! Note that the undirected edge structure of both $G_{M_t}$ and $G_{M_{t + 1}}$ are identical, the only distinction lie in the orientation of an edge and the BFS layers. The latter is really a consequence of the former: the availibility of directed edges is what changes the shortest path. Furthermore, the notion of advancing and retreating edges help us compare the path $P$ in $G_{M_{t + 1}}$ to the shortest paths in $G_{M_t}$.
+
+::: {.proof key=@lem-incr-aug-path-length}
+Let $L_0, L_1, \dots,$ denote the BFS layers of $G_{ M_t }$ and suppose $d \in \mathbb{N}$ is minimal such that $L_d$ intersects $R \cap F$. Furthermore, suppose $P = u_0 u_1 \dots u_j$ is a shortest $M_{ t + 1 }$-augmenting path. 
+Note that $u_0, u_j$ must be free with respect to $M_t$ as once a vertex is matched, it remains matched after augementation too. Below $d(\cdot)$ denotes the distance in $G_{ M_t }$ from $L \cap F$. Edges $(u_i, u_{ i + 1 })$ were either:
+
++ advancing edges in $G_{M_t}$ whose orientation is reversed in $G_{M_{t + 1}}$ (because $(u_{i + 1}, u_i)$ belonged to a blocking set $\mathcal{ P }$) 
+\begin{align*}
+d(u_{i}) = d(u_{i + 1}) + 1,
+\end{align*}
+
++ advancing edges in $G_{M_t}$ whose orientation is preserved in $G_{M_{t + 1}}$ 
+\begin{align*}
+d(u_{i + 1}) = d(u_i) + 1,
+\end{align*}
++ reversing edges in $G_{M_t}$
+\begin{align*}
+d(u_{ i + 1 }) < d(u_i). 
+\end{align*}
+
+Thus, in all cases we have $d(u_{ i + 1 }) \le d(u_i) + 1$. Inductively, $d \le d(u_j) \le j$. 
+
+Note that $d(u_j) = j$ if and only if $P$ is an advancing path in $G_{M_t}$. This implies that $P$ is edge disjoint from the blocking set of $M_{t}$-augmenting paths, $M_t \oplus M_{ t + 1 }$. Since $P$ wasn't used as an augmenting path in iteration $t$, it must be the case that there exists $v \in V(M_t \oplus M_{ t + 1 }) \cap V(P)$. 
+Since all vertices in $V(M_t \oplus M_{t+1})$ are matched in $M_{t+1}$, vertex $v$ cannot be an endpoint of $P$ (which are $M_{t+1}$-free). Since $M_t \oplus M_{t + 1}$ is a blocking set, each vertex therein is adjacent to an edge $e \in M_{t + 1} \backslash M_t$.
+
+As $P$ is $M_{ t + 1 }$-augmenting and $v$ is an interior vertex of $P$, the unique edge of $M_{ t + 1 }$ adjacent to $v$, namely $e$, is contained in $P$. That is, $e \in (M_t \backslash M_{ t + 1 }) \cap P$, contradicting the edge-disjointness of $P$ from $M_t \oplus M_{ t + 1 }$. 
+
+Thus, $d \le d(u_j) < j$.
+:::
+
+Note that as augmenting paths are of odd length, each iteration increases the length of the shortest $M$-augmenting path by at least two.
+Using these measures of progress independently, we get the same bound of $n/2$ on the number of iterations. Using these two measures in different phases of the algorithm yields a superior bound than using either one alone.
+
+::: {#prp-runtime} 
+# Hopcroft-Karp Iterations
+
+For any $t \le n/2$, the number of iterations of Hopcraft-Karp is bounded by $t + n/2t$.
+:::
+::: {.proof key=@prp-runtime}
+After $t$ iterations, the length of the shortest $M$-augmenting path is at least $2 t$. Then let $k = |M^\star| - |M_t|$. Note that $M$ must have at least one augmenting path with vertices at most $n/k$. Hence, $2 t \le n/k \Rightarrow k \le n/(2t)$. Thus, the runtime is bounded by $t + k \le t + n/(2t)$.
+:::
+
+By the AM-GM inequality, we note that $\sqrt{ 2 n } \le t + n/2t$ with equality obtained when $t = \sqrt{n/2}$. 
+
+::: {#cor-hk-runtime}
+Hopcroft-Karp terminates in at most $\mathcal{ O }(\sqrt{ n })$ iterations.
+:::
+
+### Min-Cost Bipartite Perfect Matching, LP Relaxation
+
+**Minimum-Cost Bipartite Perfect Matching.** Given an undirected bipartite graph $G = (L, R, E)$ together with costs $c: E \to \mathbb{R}_{ \ge 0 }$ for each edge, find a perfect matching $M$ that minimizes $c(M) = \sum_{ e \in M } c(e)$.
+
+Without loss of generality, we shall assume that a perfect matching exists as we have already discussed algorithms capable of detecting this.
+
+::: {#def-induced-cost}
+# Induced Costs 
+Let $M$ be a matching. Then $M$ and $c: E \to \mathbb{R}_{ \ge 0 }$ induce a cost function $\Delta_M: E \to \mathbb{R}$ defined by 
+\begin{align*}
+\Delta_M (e) = \Bbb{1}\{e \notin M\} \cdot c(e) - \Bbb{1}\{e \in M\} \cdot c(e). 
+\end{align*}
+:::
+
+This induced cost is natural for $M$-augmenting paths due to the following lemma.
+
+::: {#lem-augment-cost}
+# Costs Under Augmentation
+If $P$ is an $M$-augmenting path then 
+\begin{align*}
+c(M \oplus P) = c(M) + \Delta_M (P).
+\end{align*}
+:::
+
+This motivates a greedy algorithm for our problem. Note that bipartiteness is not required yet.
+```pseudocode
+\begin{algorithm}
+\caption{Greedy Algorithm for Min-Cost Perfect Matching}
+\begin{algorithmic}
+    \State{\textbf{initialize} $M = \emptyset$}
+    \While{$M$ is not a perfect matching}
+    \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path minimizing $\Delta_M(\cdot)$}
+    \State{$M \leftarrow M \oplus P$}
+    \EndWhile
+\end{algorithmic}
+\end{algorithm}
+```
+Correctness follows from a proof by induction showing that at iteration $t$, we have the minimum-cost matching of cardinality $t$.
+
+::: {#lem-min-cost-correctness}
+
+# Correctness
+
+If $M_k$ is a minimum-cost matching of size $k$ in $G$ and $P$ is an $M_k$-augmenting path of minimum incremental cost, then $M_k \oplus P$ is a minimum-cost matching of size $k + 1$.
+:::
+:::{.proof key=@lem-min-cost-correctness} 
+Let $M_{ k + 1 }$ denote the minimum-cost matching of size $k + 1$. By definition, we must have $c(M_{ k + 1 }) \le c(M_k \oplus P)$. 
+
+Now, we prove the reverse inequality. $M_k \oplus M_{ k + 1 }$ is a union of alternating components that must contain at least one $M_k$-alternating path $Q$ as $|M_{ k + 1 }| = |M_k| + 1$. Let $R$ denote the union of the remaining alternating components. Note that $R$ must have the same number of edges in $M_k$ and in $M_{ k + 1 }$ since the path $Q$ already accounts for $|M_{ k + 1 }| = |M_k| + 1$. So, $M_k \oplus R$ is a $k$-matching and $M_{ k + 1 } \oplus R$ is a $(k + 1)$-matching. From this, it is immediate that $c_{M_k} (R), c_{M_{ k + 1 }}(R) \ge 0$ via
+\begin{align*} 
+c(M_k) \le c(M_k \oplus R) = c(M_k) + c_{ M_k }(R) \\ c(M_{ k + 1 }) \le c(M_{ k + 1 } \oplus R) = c(M_{ k + 1 }) + c_{ M_{ k + 1 } }(R).
+\end{align*}
+
+Furthermore, we have $c_{ M_k }(R) + c_{ M_{ k + 1 } }(R) = 0$ which implies $c_{ M_k }(R) = c_{ M_{ k + 1 } }(R) = 0$.
+\begin{align*} 
+c_{ M_k }(R) + c_{ M_{ k + 1 } }(R) &= c(R \backslash M_k) - c(R \cap M_k) + c(R \backslash M_{ k + 1 }) - c(R \cap M_{ k + 1 }) \\ &= c(R \cap M_{ k + 1 }) - c(R \cap M_k) + c(R \cap M_k) - c(R \cap M_{ k + 1 }) \\ &= 0. 
+\end{align*}
+
+Then, as $Q$ is an $M_k$-alternating path, we have $c_{ M_k }(P) \le c_{ M_k }(Q)$. Using this, we obtain our result
+\begin{align*} 
+c(M_k \oplus P) &= c(M_k) + c_{M_k} (P) \\ &\le c(M_k) + c_{M_k} (Q) \\ &= c(M_k) + c_{M_k} (Q) + c_{M_k} (R) \\ &= c(M_k) + c_{M_k} (M_k \oplus M_{ k + 1 }) \\ &= c(M_k \oplus (M_k \oplus M_{ k + 1 })) \\ &= c(M_{ k + 1 }). 
+\end{align*}
+:::
+
+Implementing this algorithm requires us to find shortest $\Delta_M$-weighted aternating paths. Assuming $G$ is bipartite, we can construct $G_M$ and reduce the problem to finding the minimum-cost path in $G_M$ from $L \cap F$ to $R \cap F$. The cost for a directed edge $(u, v)$ are just given by the cost for its undirected counterpart, $\Delta_M (u, v)$. 
+
+Note that as edges may have positive and negative costs, the appropriate algorithm to use here is the Bellman-Ford algorithm. However, Bellman-Ford to successfully solve the min-cost path problem, we require that $G_M$ contains no negative-cost cycles.
+
+::: {#lem-no-neg-cycle-gm}
+Suppose $M$ is the minimum-cost matching of size $|M|$ in $G$. Then there are no negative-cost cycles in $G_M$.
+:::
+::: {.proof key=@lem-no-neg-cycle-gm}
+Note that if $C$ is a cycle in $G_M$ then $C$ is an $M$-alternating cycle. All alternating cycles have even length. Thus, $M \oplus C$ is a matching with the same cardinality as $M$. Consequently, 
+\begin{align*}
+c(M) \le c(M \oplus C) = c(M) + \Delta_M(C) \implies 0 \le \Delta_M(C).
+\end{align*}
+:::
+
+So, we can find the min-cost incremental paths via Bellman-Ford. The runtime of Bellman-Ford is $\mathcal{O}(mn)$. There are $n/2$ iterations and so, the overall runtime of our min-cost perfect matching algorithm becomes $\mathcal{O}(mn^2)$.
+
+#### An Economic Perspective
+
+In this section, we only consider bipartite graphs. 
+
+We present an alternative approach to minimum-cost matching that has certaing economic motivations. Assume that $L$ represents a set of people who need to be assigned to do a set of jobs $R$. For an edge $e = (u, v)$, the cost $c_e$ is a cost associated with having person $u$ do job $v$. Furthermore, there is a price $p(u)$ associated with $u \in U$ that corresponds to a "signing bonus" for $u$ and a price $p(v)$ associated with $v \in V$ that corresponds to the reward associated with doing job $v$. Then, the net cost of assigning a person $u$ to do job $v$ becomes $p(u) + c_e - p(v)$. This merits a special name.
+
+::: {#def-reduced-cost}
+# Reduced Cost
+The reduced cost of an edge $e = (u, v)$ is 
+\begin{align*}
+c^p_e = p(u) + c_e - p(v).
+\end{align*}
+:::
+
+The benefit of using reduced costs is that it is "equivalent" to using the costs $c_e$ we originally cared about.
+
+::: {#lem-equiv-reduced-cost}
+Over the feasible set of perfect matchings, minimizing $M \mapsto \sum_{e \in M} c^p_e$ is equivalent to minimizing $M \mapsto \sum_{e \in M} c_e$.
+:::
+::: {.proof key=@lem-equiv-reduced-cost}
+It suffices to show that these two objective are monotone and particularly, just differ by a constant factor. Let $M$ be a perfect matching then,
+\begin{align*}
+\sum_{e \in M} c^p_e &= \sum_{e=(u, v) \in M} (p(u) + c_e - p(v)) \\
+&= \sum_{e \in M} c_e + \sum_{e = (u, v)} p(u) - \sum_{e = (u, v)} p(v) \end{align*} 
+Then as $M$ is a perfect matching,
+\begin{align*}
+&= \sum_{e \in M} c_e + \sum_{u \in L} p(u) - \sum_{v \in R} p(v).
+\end{align*}
+Finally, note that $\sum_{u \in L} p(u) - \sum_{v \in R} p(v)$ is constant across all perfect matchings. 
+:::
+
+The key thing about @lem-equiv-reduced-cost is it gives us a family of equivalent optimization problems, parametrized on our choice of the pricing $p$. What would be a convenient choice for the pricing $p$ then? First, it would be desirable if finding the augmenting path of minimum cost is equivalent to a shortest-path problem over non-negative weights. This would allow us to use the more efficient Dijkstra's algorithm over Bellman-Ford! For a matching $M$, the weighting of the edges on an augmenting path would be,
+\begin{align*}
+\Delta^p_M(e) = \Bbb{1} \{e \notin M\} \cdot c^p_e - \Bbb{1} \{e \in M\} \cdot c^p_e.
+\end{align*}
+
+Thus, it suffices to consider prices such that $c^p_e \ge 0$ for all edges and $c^p_e = 0$ for $e \in M$. 
+
+Furthermore, motivated by our economic analogy we will require that every person not doing any job does not have to be paid. This may not feel too natural and in fact, we don't really use it when we discuss the desirable properties that compatible pricings offer. Rather, this assertion reflects a property of the compatible pricing we will actually end up using in our algorithm. Not much is lost if the reader implicitly drops this requirement while reading the remainder of the section.
+
+<!-- ::: {#rem-edit-2} -->
+<!---->
+<!-- Economic intuition here leaves a bit to be desired. Either the presentation here needs to be slicker or we need to motivate it better. -->
+<!---->
+<!-- ::: -->
+
+We formalize these requirements as follows.
+
+::: {#def-compatible-prices}
+# Compatible Prices 
+Given a matching $M$, a pricing of the vertices, $p: V \to \mathbb{R}$, is said to be a _$M$-compatible pricing_ if 
+
+i. for all unmatched vertices $v \in L$ we have $p(v) = 0$;
+ii. for all edges $e$ we have $c_e^p \ge 0$;
+iii. for all edges $e \in M$ we have $c_e^p = 0$.
+:::
+
+We first show that a perfect matching $M$ along with a $M$-compatible pricing $p$ easily certify the optimality of $M$.
+
+::: {#lem-pricing-certify}
+# Compatible Prices Certify Optimality
+Let $M$ be a matching with $|M| = k$. If there exists a $M$-compatible pricing $p$, then $M$ is a min-cost matching of cardinality $k$.
+:::
+::: {.proof key=@lem-pricing-certify}
+
+Let $M'$ be any other matching of cardinality $k$. Note that $M \oplus M'$ is a union of alternating components. We then have, 
+\begin{align*}
+c^p(M') &= c^p(M) + \Delta^p_M(M \oplus M') \\
+&= c^p(M) + c^p(M' \backslash M) - c^p(M \backslash M') \\
+&= c^p(M' \backslash M) \\ 
+&\ge c^p(M) = 0.
+\end{align*}
+:::
+
+In summary, compatible pricings have two key offerings: (a) it allows us to efficiently compute an augmenting path of minimum cost (b) it alows us to easily certify the optimality of a perfect matching. 
+
+This leads to a natural candidate for an algorithm: at every iteration, we augment by the min-cost path for the current pricing and afterword, modify the pricing to be compatible with respect to the new matching. Note that initially when our matching is $M = \emptyset$, the zero pricing $p = 0$ is $M$-compatible. The only task remaining is to come up with a mechanism for maintaining compatibility of the pricing. 
+
+::: {#lem-update}
+# Maintaining Compatibility
+Let $M$ be a matching, let $p$ be a $M$-compatible pricing and let $M'$ be a matching obtained by augmenting along the augmenting path minimizing $\Delta_M^p$. By $d_M^p(v)$ denote the min-cost of a path from the unmatched set $L \backslash V(M)$ to $v$. 
+
+Then $p'(v) = d_{M}^p (v) + p(v)$ is a compatible set of prices for $M'$.
+:::
+::: {.proof key=@lem-update}
+Consider each of the requirements, 
+
+i. for all unmatched vertices $v \in L$ we have $p'(v) = 0$
+
+Suppose $v \in L \backslash V(M)$. Then $d^p_M (v) = 0$. Thus, $p'(v) = p(v) + d^p_M(v) = 0$.
+
+ii. for all edges $e$ we have $c_e^{p'} \ge 0$
+
+Consdier $e = (u, v)$ and then, 
+
+\begin{align*}
+d^p_M (v) &\le d^p_M (u) + c^p_e \\
+\implies 0 &\le d^p_M (u) + c^p_e - d^p_M (v) \\
+&= d^p_M (u) + p(u) + c_e - (p(v) + d^p_M(v)) \\
+&= p'(u) + c_e - p'(v) \\
+&= c^{p'}_e.
+\end{align*}
+
+iii. for all edges $e \in M'$ we have $c_e^{p'} = 0$
+
+Suppose $e = (u, v) \in M$. The only edge entering $u$ in $G_M$ is the directed edge $(v, u)$. Thus, 
+\begin{align*}
+d_M^p(u) &= d^p_M(v) - c^p_e  \\
+\implies 0 &= d_M^p(u) + c^p_e - d_M^p(v)  \\
+&= p'(u) + c_e - p'(v) \\
+&= c^{p'}_e.
+\end{align*}
+
+Now, suppose $e = (u, v) \in M' \backslash M$. Note that these edges are along the minimum-$\Delta_M^p$ augmenting paths in $G_M$. Thus, 
+\begin{align*}
+d^p_M(v) &= d^p_M(u) + c^p_e \\
+\implies 0 &= d^p_M(u) + c^p_e - d^p_M(v) \\
+&= p'(u) + c_e - p'(v) \\
+&= c_e^{p'}.
+\end{align*}
+
+:::
+
+We summarize the entire section by formally presenting the algorithm.
+
+```pseudocode
+\begin{algorithm}
+\caption{Pricing Algorithm for Min-Cost Perfect Matching}
+\begin{algorithmic}
+    \State{\textbf{initialize} $M = \emptyset$, $p = 0$}
+    \While{$M$ is not a perfect matching}
+    \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path minimizing $\Delta_M^p(\cdot)$}
+    \State{$d^p_M(v) \leftarrow$ min-cost of a path $\set{L \backslash V(M)} \to v$}
+    \State{$M \leftarrow M \oplus P$}
+    \State{$p \leftarrow d^p_M + p$}
+    \EndWhile
+\end{algorithmic}
+\end{algorithm}
+```
+
+In each iteration, computing $d^p_M$ takes $\mathcal{O}(m \log n)$ time via Dijkstra's and computing $P$ takes an additional $\mathcal{O}(n)$. There are at most $n/2$ iterations to reach a perfect matching. Thus, the overall runtime is $\mathcal{O}(mn \log n + n^2)$.
+
+#### LP Relaxation of Bipartite Matching
+
+The algorithm in the prior section is quite elegant but appears to come from nowhere. In this section, we present a more principled way of designing the very same algorithm.
+
+We start off by relaxing our notion of a matching.
+
+::: {#def-frac-match}
+# Fractional Matching
+
+A _fractional matching_ in a bipartite graph $(L, R, E)$ is a vector $\vec{x} = (x_{uv})_{\{u, v\} \in E}$ that satisfies 
+\begin{align*}
+\forall u \in L,&& \sum_v &x_{uv} \le 1,  \\
+\forall v \in R,&& \sum_u &x_{uv} \le 1, \\
+\forall \{u, v\} \in E,&& \quad &x_{uv} \ge 0.
+\end{align*}
+
+A _fractional perfect matching_ additionally satisfies 
+\begin{align*}
+\forall u \in L,&& \sum_v &x_{uv} = 1,  \\
+\forall v \in R,&& \sum_u &x_{uv} = 1.
+\end{align*}
+:::
+
+Restricting each $x_{uv} \in \{0, 1\}$ to be integral allows us to interpret $\vec{x}$ as an indicator vector for a set of edges $M \subseteq E$. The fractional matching constraints require $M$ to be a matching and the fractional perfect matching constraints require $M$ to be a perfect matching. This is the sense in which allowing $x_{uv} \in [0, 1]$, "relaxes" our discrete notion of a matching.
+
+::: {#lem-relaxation}
+# Integral Matching
+Suppose $\vec{x} \in \bits^{E}$. If $\vec{x}$ is a fractional matching then it is a matching. Furthermore, if $\vec{x}$ is a perfect fractional matching then it is a perfect matching.
+:::
+:::{.proof}
+:::
+
+Relaxing enlarges our feasible set and one may be concerned that properties of a relaxation may not represent the properties of the original objects we were studying. 
+
+::: {#exm-non-bipartite}
+# Non-Bipartite Relaxation
+In our definition for fractional matching, we required the underlying graph to be bipartite. If we allowed for non-bipartite graphs, one doesn't need to look beyond $K_3$ to see possible problems that may arise. 
+
+Indeed, the illustrated example we have a fractional matching where each edge has a positive value. This fractional matching appears to be "larger" than any actual matching availible in the underlying graph. 
+:::
+
+Fortunately, the following theorem guarantees a nice correspondence between matchings and fractional matchings for bipartite graphs.
+
+::: {#prp-birk-neuman}
+# Birkhoff-von Neumann
+In any bipartite graph, every fractional perfect matching is a convex combination of integral perfect matchings. 
+
+That is, for any fractional perfect matching $\vec{x} \in [0, 1]^E$ there exists a finite collection of integral perfect matchings $\vec{y_i} \in \bits^E$ such that 
+\begin{align*}
+\vec{x} = \sum_{i} \alpha_i y_i
+\end{align*}
+where $\alpha_i \ge 0$ and $\sum_i \alpha_i = 1$.
+:::
+
+::: {.proof key=@prp-birk-neuman}
+:::
+
+We are interested in the min-cost fractional perfect matching problem.
+
+**Minimum-Cost Fractional Perfect Matching.** Given an undirected bipartite graph $G = (L, R, E)$ together with costs $c: E \to \RR_{\ge 0}$ for each edge, find a fractional perfect matching $\vec{x}$ that minimizes $c(\vec{x}) = \sum_{\{u, v\} \in E} c_{uv} x_{uv}$.
+
+Alternatively, we can express this problem as a _linear program_, dubbed the _primal_.
+
+\begin{align*}
+& \text{minimize} &&\sum_{\{u, v\} \in E} c_{uv} x_{uv} \\
+& \text{subject to} &&\sum_{v} x_{uv} = 1, &\forall u \in L, \\
+& &&\sum_{v} x_{uv} = 1, &\forall v \in R, \\
+& && x_{uv} \ge 0, &\forall \{u, v\} \in E.
+\end{align*}
+
+By the Birkhoff-von Neumann theorem, we note that the objective value of this problem is the same as the objective value for its integral perfect matching counterpart.
+
+::: {#cor-equivalence}
+\begin{align*}
+\text{cost}(\text{min-cost fractional perfect matching}) = \text{cost}(\text{min-cost integral perfect matching})
+\end{align*}
+:::
+
+::: {.proof key=@cor-equivalence}
+:::
+
+We start by first considering how we can prove lower bounds on the optimum. A nice trick is to take linear combinations of the constraints of our primal program to "algebraically reconstruct" the objective function. More precisely, for every vertex $u \in L$ and $v \in R$, define variables $y_u, y_v$ by which we scale the corresponding degree constraints,
+
+\begin{align*}
+\sum_v y_u x_{uv} = y_u, \quad \sum_u y_v x_{uv} = y_v.
+\end{align*}
+
+Summing these equations we obtain 
+\begin{align*}
+\sum_{(u, v) \in L \times R} (y_u + y_v) x_{uv} = \sum_{u \in L} y_u + \sum_{v \in R} y_v.
+\end{align*}
+
+If we have $y_u + u_v \le c_{uv}$ for every $(u, v) \in L \times R$ then we have the lower bound on the optimum,
+\begin{align*}
+\sum_{\{u,v\} \in E} c_{uv} x_{uv} \ge \sum_{(u, v) \in L \times R} (y_u + y_v) x_{uv} = \sum_{u \in L} y_u + \sum_{v \in R} y_v.
+\end{align*}
+
+We can represent the strongest lower bound obtainable via this method as a solution to a different linear program, dubbed the _dual_.
+
+\begin{align*}
+& \text{maximize} && \sum_{w \in L \sqcup R} y_w \\
+& \text{subject to} && y_u + y_v \le c_{uv}, &\forall \{u, v\} \in E, \\
+& && y_w \in \mathbb{R}, &\forall w \in L \sqcup R.
+\end{align*}
+
+Our prior discussion motivating the dual corresponds to a special case of _weak duality_.  
+
+::: {#prp-weak-dual}
+# Weak Duality for Min-Cost Fractional Matching
+
+For any primal-feasible $\vec{x}$ and dual-feasible $\vec{y}$ we have, 
+\begin{align*}
+\sum_{w \in L \sqcup R} y_w \le \sum_{\{u, v\} \in E} c_{uv} x_{uv}.
+\end{align*}
+:::
+
+::: {#rem-edit-2}
+Add the primal-dual exposition.
+:::
+
+### _Mise en Place_ : Ski-Rental Problem
+
+We now take a brief excursion from discussing matching to introduce online algorithms and primal-dual approaches for such problems. We will take the ski-rental problem as being a prototypic example for this model.
+
+**Ski-Rental Problem.** A skier will make $T$ ski trips this season. Each trip they must either rent a ski, for a cost of $1$ per trip, or buy a ski, for a cost of $B$ the first time you choose this option, and $\emptyset$ after. The goal is minimize total cost.
+
+If $T$ is known, there is an easy solution. 
+\begin{align*}
+\begin{cases}
+\, \text{buy a ski at } t = 0 &\text{if } T > B, \\
+\, \text{rent a ski at all timesteps } t &\text{if } T \le B.
+\end{cases}
+\end{align*}
+
+In the _online_ version, 
+
+### Online Matching
+
+### Algebraic Algorithms
+
+## Linear Programming
+
+### Basics
+
+### Duality
+
+### Simplex Method
+
+### Strong Duality
+
+### Separation Oracles
+
+### Ellipsoid Algorithm
+
+## Network Flow
+
+### Minimum Cut
+
+### Maximum Flow
+
+### Ford-Fulkerson
+
+### Dinitz's Algorithm
+
+### Applications
+
+## Multicommodity Flow
+
+### Sparsest Cut & Multicommodity Flow
+
+### _Mise en Place_: The Chernoff Bound
+
+### Randomized Rounding for Approximate Congestion Minimization
+
+### Approximate Max-Flow Min-Cut
+
+## Multiplicative Weights
+
+### Halving & Weighted Majority
+
+### Hedge
+
+### Minimax Theorem
+
+### Solving Multicommodity Flow
+
+## Spectral Methods
+
+### Graph Laplacian
+
+### Degree-weighting & Normalization
+
+### Cheeger's Inequality
+
+### Max-Cut and the Goemans-Williamson Algorithm
+
+## Markov Chains
+
+### Sampling Problems
+
+### Metropolis Algorithm
+
+### Mixing Times and Couplings
+
+### Sampling Matchings

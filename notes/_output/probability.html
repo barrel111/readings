@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Probability Theory</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="probability_files/libs/clipboard/clipboard.min.js"></script>
+<script src="probability_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="probability_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="probability_files/libs/quarto-html/popper.min.js"></script>
+<script src="probability_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="probability_files/libs/quarto-html/anchor.min.js"></script>
+<link href="probability_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="probability_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="probability_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="probability_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="probability_files/libs/bootstrap/bootstrap-2a447fc7de18009f8c88f682380fb0bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="probability_files/libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="probability_files/libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<script src="probability_files/libs/quarto-contrib/thms-1.0.0/thms.js"></script>
+<link href="probability_files/libs/quarto-contrib/thms-1.0.0/thms.scss" rel="stylesheet">
+<script src="mathjax-config.js"></script>
+    <style type="text/css">
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="custom.scss">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#a-curious-paradox" id="toc-a-curious-paradox" class="nav-link" data-scroll-target="#a-curious-paradox">A Curious Paradox</a></li>
+  <li><a href="#sigma-fields" id="toc-sigma-fields" class="nav-link" data-scroll-target="#sigma-fields"><span class="math inline">\(\sigma\)</span>-Fields</a></li>
+  <li><a href="#measures" id="toc-measures" class="nav-link" data-scroll-target="#measures">Measures</a></li>
+  </ul></li>
+  <li><a href="#constructing-a-premeasure" id="toc-constructing-a-premeasure" class="nav-link" data-scroll-target="#constructing-a-premeasure">Constructing a Premeasure</a>
+  <ul class="collapse">
+  <li><a href="#premeasure" id="toc-premeasure" class="nav-link" data-scroll-target="#premeasure">Premeasure</a></li>
+  <li><a href="#stieltjes-premeasure" id="toc-stieltjes-premeasure" class="nav-link" data-scroll-target="#stieltjes-premeasure">Stieltjes Premeasure</a></li>
+  <li><a href="#outer-measures" id="toc-outer-measures" class="nav-link" data-scroll-target="#outer-measures">Outer Measures</a></li>
+  </ul></li>
+  <li><a href="#constructing-the-measure" id="toc-constructing-the-measure" class="nav-link" data-scroll-target="#constructing-the-measure">Constructing the Measure</a>
+  <ul class="collapse">
+  <li><a href="#extending-finite-premeasures" id="toc-extending-finite-premeasures" class="nav-link" data-scroll-target="#extending-finite-premeasures">Extending Finite-Premeasures</a></li>
+  <li><a href="#the-standard-approach" id="toc-the-standard-approach" class="nav-link" data-scroll-target="#the-standard-approach">The Standard Approach</a></li>
+  </ul></li>
+  <li><a href="#measures-on-mathbbr" id="toc-measures-on-mathbbr" class="nav-link" data-scroll-target="#measures-on-mathbbr">Measures on <span class="math inline">\(\mathbb{R}\)</span></a>
+  <ul class="collapse">
+  <li><a href="#radon-measure" id="toc-radon-measure" class="nav-link" data-scroll-target="#radon-measure">Radon Measure</a></li>
+  <li><a href="#lebesgue-measure" id="toc-lebesgue-measure" class="nav-link" data-scroll-target="#lebesgue-measure">Lebesgue Measure</a></li>
+  </ul></li>
+  <li><a href="#integration-theory" id="toc-integration-theory" class="nav-link" data-scroll-target="#integration-theory">Integration Theory</a>
+  <ul class="collapse">
+  <li><a href="#random-variables" id="toc-random-variables" class="nav-link" data-scroll-target="#random-variables">Random Variables</a></li>
+  <li><a href="#robustness-of-measurability" id="toc-robustness-of-measurability" class="nav-link" data-scroll-target="#robustness-of-measurability">Robustness of Measurability</a></li>
+  <li><a href="#riemann-stieltjes-integration" id="toc-riemann-stieltjes-integration" class="nav-link" data-scroll-target="#riemann-stieltjes-integration">Riemann-Stieltjes Integration</a></li>
+  <li><a href="#lebesgue-integral-monotone-convergence" id="toc-lebesgue-integral-monotone-convergence" class="nav-link" data-scroll-target="#lebesgue-integral-monotone-convergence">Lebesgue Integral, Monotone Convergence</a></li>
+  <li><a href="#fatou-and-borel-cantelli" id="toc-fatou-and-borel-cantelli" class="nav-link" data-scroll-target="#fatou-and-borel-cantelli">Fatou and Borel-Cantelli</a></li>
+  <li><a href="#l1mathbbr-dominated-convergence" id="toc-l1mathbbr-dominated-convergence" class="nav-link" data-scroll-target="#l1mathbbr-dominated-convergence"><span class="math inline">\(L^1(\mathbb{R})\)</span>, Dominated Convergence</a></li>
+  <li><a href="#comparing-lebesgue-and-riemann-integrals" id="toc-comparing-lebesgue-and-riemann-integrals" class="nav-link" data-scroll-target="#comparing-lebesgue-and-riemann-integrals">Comparing Lebesgue and Riemann Integrals</a></li>
+  <li><a href="#radon-nikodym-lebesgue-decomposition-probability-laws" id="toc-radon-nikodym-lebesgue-decomposition-probability-laws" class="nav-link" data-scroll-target="#radon-nikodym-lebesgue-decomposition-probability-laws">Radon-Nikodym, Lebesgue Decomposition, Probability Laws</a></li>
+  </ul></li>
+  <li><a href="#independence-law-of-large-numbers" id="toc-independence-law-of-large-numbers" class="nav-link" data-scroll-target="#independence-law-of-large-numbers">Independence, Law of Large Numbers</a>
+  <ul class="collapse">
+  <li><a href="#l2mathbbr-weak-law-of-large-numbers" id="toc-l2mathbbr-weak-law-of-large-numbers" class="nav-link" data-scroll-target="#l2mathbbr-weak-law-of-large-numbers"><span class="math inline">\(L^2(\mathbb{R})\)</span>, Weak Law of Large Numbers</a></li>
+  <li><a href="#convergence-lpmathbbr" id="toc-convergence-lpmathbbr" class="nav-link" data-scroll-target="#convergence-lpmathbbr">Convergence, <span class="math inline">\(L^p(\mathbb{R})\)</span></a></li>
+  <li><a href="#product-measure" id="toc-product-measure" class="nav-link" data-scroll-target="#product-measure">Product Measure</a></li>
+  <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence">Independence</a></li>
+  <li><a href="#kolmogrovs-extension-theorem" id="toc-kolmogrovs-extension-theorem" class="nav-link" data-scroll-target="#kolmogrovs-extension-theorem">Kolmogrov’s Extension Theorem</a></li>
+  <li><a href="#kolomogrov-0-1-law" id="toc-kolomogrov-0-1-law" class="nav-link" data-scroll-target="#kolomogrov-0-1-law">Kolomogrov <span class="math inline">\(0\)</span>-<span class="math inline">\(1\)</span> Law</a></li>
+  <li><a href="#convolution" id="toc-convolution" class="nav-link" data-scroll-target="#convolution">Convolution</a></li>
+  <li><a href="#strong-law-of-large-numbers" id="toc-strong-law-of-large-numbers" class="nav-link" data-scroll-target="#strong-law-of-large-numbers">Strong Law of Large Numbers</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Probability Theory</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These notes on probability emerge from a familiar struggle: the compulsive search for resources that align perfectly with one’s mathematical background and aesthetic sensibilities. Rather than continuing this perhaps utile pursuit, I’ve decided to synthesize my own understanding from the various imperfect sources I’ve encountered.</p>
+<p>Drawing loosely on Erdős’s notion of “the Book”—that celestial collection of the most elegant proofs—I imagine these notes as fragments toward some idealized treatment of probability theory. They represent an attempt to distill what resonates most clearly from my reading, organized according to my own developing intuitions about the subject.</p>
+<p>The result is necessarily incomplete and reflects my current limitations, but perhaps that’s appropriate for a subject built on uncertainty.</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="motivation" class="level3">
+<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
+<p>Informally, the basis of probability theory is the notion of <em>experiments</em>– processes whose outcomes are uncertain to us. As a prototypic example, we may be interested in phenonmenon associated with tossing a fair coin an infinite number of times.</p>
+<p>The <em>sample space</em>, <span class="math inline">\(\Omega\)</span>, is the set of all possible outcomes of our experiment. For our prior example, it is suitable to take it to be the space of all <span class="math inline">\(\{H, T\}\)</span>-valued sequences, <span class="math inline">\(\Omega = \{ \omega:\mathbb{N} \to \{H, T\}\}\)</span>. An <em>event</em> is a subset <span class="math inline">\(E \subseteq \Omega\)</span> of outcomes. We are interested in computing the <em>probability</em> of an event, i.e.&nbsp;a measure of the likelihood with respect to the level of uncertainty we have.</p>
+<p>As a motivating example, consider the event <span class="math display">\[E = \{\text{after tossing a coin until tail comes up the total number of tosses is odd}\}.\]</span></p>
+<p>It is easiest to deal with this by appropriately partitioning the event into disjoint subevents. Let <span class="math display">\[E_j = \{ \omega: \mathbb{N} \to \{H, T\} \, \mid \, \omega(1) = \dots = \omega(2j) = H, \omega(2j + 1) = T\}.\]</span></p>
+<p>Then,</p>
+<p><span class="math display">\[\begin{align*}
+E = \bigsqcup_{j = 0}^\infty E_j \implies \Pr[E] = \sum_{j = 0}^\infty \Pr[E_j] = \sum_{j = 0}^\infty \frac{1}{2^{2j + 1}} = \frac{1}{2} \sum_{j = 0}^\infty \frac{1}{4^j} = \frac{2}{3}.
+\end{align*}\]</span></p>
+<p>There are certain assumptions implicit in what may appear to be an unassuming calculation. Particularly, it was crucial for us to allow ourselves to consider representing events as a countable disjoint union of other events. Furthermore, we assumed that probability behaves in a <em>countably additive</em> manner. Our intuition says that when events are mutually exclusive and exhaustive, their probabilities should sum to the probability of their union.</p>
+<p>In practice, finite relative frequencies, which is often taken as an emperical measurement of probability, supports the claim of at least finite additivity. There is also the <em>subjective</em> interpretation of probability that may be used to motivate finite additivity.</p>
+<p>Such a <em>Dutch book</em> argument can also be extended to the countably infinite case. Though, such an argument requires us to develop a bit of the countably additive theory so we defer it until then.</p>
+<p>Make no mistake, the choice of countable additivity or even finite additivity is not a logical necessity but rather a normative choice in our axiomatization–there is no deeper ground truth from which to derive it, only our intuition (and some foresight, credit to a 100 or so years of modern probability) about what properties a reasonable theory of uncertainty ought to possess. We end this section with the most popular of such axiomatizations, consistent with our discussion above.</p>
+<div id="def-kolmogrov-axioms" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1 (Kolmogrov Axioms)</strong></span> <br>
+A <em>probability space</em> is a triple <span class="math inline">\((\Omega, \mathcal{F}, P)\)</span>, with sample space <span class="math inline">\(\Omega\)</span>, event space <span class="math inline">\(\mathcal{F}\)</span> and a probability measure <span class="math inline">\(P\)</span>, satisfying</p>
+<ol type="1">
+<li><span class="math inline">\(P(E) \in \mathbb{R}, \, P(E) \ge 0. \quad \forall E \in \mathcal{F},\)</span></li>
+<li><span class="math inline">\(P(\Omega) = 1\)</span>,</li>
+<li>For any countable sequence of disjoint sets, <span class="math inline">\(\{E_i\}\)</span>, we have <span class="math display">\[\Pr \left(\bigcup_{i = 1}^\infty E_i\right) = \sum_{i = 1}^\infty \Pr (E_i).\]</span></li>
+</ol>
+</div>
+</section>
+<section id="a-curious-paradox" class="level3">
+<h3 class="anchored" data-anchor-id="a-curious-paradox">A Curious Paradox</h3>
+<p>The Kolmogrov Axioms require us to assign probabilities on events in <span class="math inline">\(\mathcal{F}\)</span> as opposed to any possible subset of <span class="math inline">\(\Omega\)</span>. One of the most fundamental probability spaces we may be interested in is the uniform probability space on <span class="math inline">\(\Omega = [0, 1]\)</span>, where for <span class="math inline">\(a \le b\)</span>, we would want <span class="math inline">\(\Pr([a, b]) = b - a\)</span>. Without delving into formalizing this probability space, our point here is that it may be of natural interest to consider probability spaces with properties in addition to those mandated by the Kolmogrov Axioms; for example, translation-invariance. Here is where our problems begin.</p>
+<div id="prp-no-t-invariant" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 (Imposibility on <span class="math inline">\([0, 1]\)</span>)</strong></span> <br>
+Let <span class="math inline">\(\Omega = [0, 1]\)</span>. Then, there is no translation-invariant probability measure <span class="math inline">\(\Pr: 2^\Omega \to [0, 1]\)</span>.</p>
+</div>
+<p>Similar ideas give us negative theorems for other spaces too. As an example, consider the following.</p>
+<div id="prp-no-spinners" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 (Impossibility on the Circle)</strong></span> <br>
+Let <span class="math inline">\(\Omega = \{z \in \mathbb{C} \, \mid \, |z| = 1\}\)</span> be the unit circle. Then there is no rotation-invariant probability measure <span class="math inline">\(\Pr: 2^\Omega \to [0, 1]\)</span>.</p>
+</div>
+</section>
+<section id="sigma-fields" class="level3">
+<h3 class="anchored" data-anchor-id="sigma-fields"><span class="math inline">\(\sigma\)</span>-Fields</h3>
+<p>The Kolmogrov Axioms suggest some natural structures for <span class="math inline">\(\mathcal{F}\)</span>. The first axiom necessitates <span class="math inline">\(\Omega \in \mathcal{F}\)</span>. Furthermore, by finite additivity, there is a natural way of assigning a measure to <span class="math inline">\(A^c\)</span> if <span class="math inline">\(A \in \mathcal{F}\)</span>. <span class="math display">\[ 1 = \Pr(\Omega) = \Pr(A \cup A^c) = \Pr(A) + \Pr(A^c) \implies \Pr(A^c) = 1 - \Pr(A). \]</span> That is, it would be desirable for <span class="math inline">\(\mathcal{F}\)</span> to be closed under complements too. Similarly, the third axiom also suggest that <span class="math inline">\(\mathcal{F}\)</span> be closed under countable unions.</p>
+<div id="def-sigma-fields" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2 (<span class="math inline">\(\sigma\)</span>-Field)</strong></span> <br>
+A collection <span class="math inline">\(\mathcal{F} \subseteq 2^\Omega\)</span> is a <em><span class="math inline">\(\sigma\)</span>-field</em> if</p>
+<ol type="1">
+<li><span class="math inline">\(\Omega \in \mathcal{F}\)</span>;</li>
+<li>If <span class="math inline">\(E \in \mathcal{F}\)</span>, then <span class="math inline">\(E^c \in \mathcal{F}\)</span>;</li>
+<li>If <span class="math inline">\(\{E_j\}\)</span> is a countable set of events in <span class="math inline">\(\mathcal{F}\)</span>, then <span class="math inline">\(\bigcup_{j = 1}^\infty E_j \in \mathcal{F}\)</span>.</li>
+</ol>
+</div>
+<p><span class="math inline">\(\sigma\)</span>-fields are closed under intersection, which allows us to conveniently talk about the smallest <span class="math inline">\(\sigma\)</span>-field containing any old family of sets we may be naturally interested in.</p>
+<div id="lem-closure-intersect" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 1 (Closure Under Intersection)</strong></span> <br>
+If <span class="math inline">\(I\)</span> is any index set and <span class="math inline">\(\{\mathcal{F}_i \, \mid \, i \in I\}\)</span> are <span class="math inline">\(\sigma\)</span>-fields over <span class="math inline">\(\Omega\)</span>, then <span class="math inline">\(\bigcap_{i \in I} \mathcal{F}_i\)</span> is a <span class="math inline">\(\sigma\)</span>-field.</p>
+</div>
+<div id="prp-generated-sigma" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 3 (Smallest <span class="math inline">\(\sigma\)</span>-Field)</strong></span> <br>
+Let <span class="math inline">\(\mathcal{E} \in 2^\Omega\)</span> be any collection of subsets of <span class="math inline">\(\Omega\)</span>. There is a unique smallest <span class="math inline">\(\sigma\)</span>-field, <span class="math inline">\(\sigma(\mathcal{E})\)</span>, that contains <span class="math inline">\(\mathcal{E}\)</span>. It is called the <span class="math inline">\(\sigma\)</span>-field generated by <span class="math inline">\(\mathcal{E}\)</span>.</p>
+</div>
+<div id="lem-compare-sigma" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 2 (Comparing Generated <span class="math inline">\(\sigma\)</span>-Fields)</strong></span> <br>
+Let <span class="math inline">\(\mathcal{E}_1, \mathcal{E}_2 \in 2^\Omega\)</span>. Then <span class="math inline">\(\sigma(\mathcal{E}_1) = \sigma(\mathcal{E}_2)\)</span> if and only if <span class="math inline">\(\mathcal{E}_1 \subseteq \sigma(\mathcal{E}_2)\)</span> and <span class="math inline">\(\mathcal{E}_2 \subseteq \sigma(\mathcal{E}_1)\)</span>.</p>
+</div>
+<p>When working over a topological space, it is often convenient for the measure to be compatible with the underlying topology; especially with respect to being able to assign a measure to open and closed sets.</p>
+<div id="def-borel" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3 (Borel <span class="math inline">\(\sigma\)</span>-algebra)</strong></span> <br>
+Let <span class="math inline">\(X\)</span> be a topological space. The <em>Borel <span class="math inline">\(\sigma\)</span>-algebra</em>, <span class="math inline">\(\mathcal{B}(X)\)</span>, is the <span class="math inline">\(\sigma\)</span>-field generated by the open subsets in <span class="math inline">\(X\)</span>. Events in <span class="math inline">\(\mathcal{B}(X)\)</span> are called <em>Borel sets</em>.</p>
+</div>
+<p>In practice, constructing a measure over <span class="math inline">\(\sigma\)</span>-fields directly becomes quite difficult. It will be more useful to first construct finitely-additive measures which we then extend appropriately to the full generality required by the Kolmogrov Axioms.</p>
+<div id="def-fields" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4 (Field)</strong></span> <br>
+A collection <span class="math inline">\(\mathcal{F} \subseteq 2^\Omega\)</span> is a <em>field</em> if</p>
+<ol type="1">
+<li><span class="math inline">\(\Omega \in \mathcal{F}\)</span>;</li>
+<li>If <span class="math inline">\(E \in \mathcal{F}\)</span>, then <span class="math inline">\(E^c \in \mathcal{F}\)</span>;</li>
+<li>If <span class="math inline">\(E_1, \dots, E_n \in \mathcal{F}\)</span>, then <span class="math inline">\(\bigcup_{j = 1}^n E_j \in \mathcal{F}\)</span>.</li>
+</ol>
+</div>
+<p>Again, motivated by a desire to play nice with the underlying topology, we draw special interest to the following family.</p>
+<div id="def-borel-field" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 5 (Borel Field)</strong></span> <br>
+The <em>Borel field</em>, denoted <span class="math inline">\(\mathcal{B}_{(\,]}(\mathbb{R})\)</span>, is the field <span class="math inline">\(\mathcal{A}(\mathcal{I}_{(\,]})\)</span> generated by the half-open intervals, <span class="math display">\[ \mathcal{I}_{(\,]} = \{(a, b] \, \mid \, -\infty \le a \le b \le \infty\}. \]</span></p>
+</div>
+<p>First, half-intervals are able to <em>arbitrarily approximate</em> both open and closed intervals; that is, more precisely, any open or closed interval is a countable union of half-open intervals. However, in contrast to the family of just open sets or just closed sets, the set of half-open intervals, <span class="math inline">\(\mathcal{I}_{(\,]}\)</span>, and the field they generate have very nice algebraic properties that are easier to work with.</p>
+<div id="def-semi-algebra" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6 (Semi-Algebra of Sets)</strong></span> <br>
+A collection <span class="math inline">\(\mathcal{S} \subseteq 2^\Omega\)</span> is a <em>semi-algebra</em> or <em>elementary class</em> if 1. <span class="math inline">\(\emptyset \in \mathcal{S}\)</span>; 2. If <span class="math inline">\(A, B \in \mathcal{S}\)</span> then <span class="math inline">\(A \cap B \in \mathcal{S}\)</span>; 3. If <span class="math inline">\(A \in \mathcal{S}\)</span> then <span class="math inline">\(A^c\)</span> is a finite disjoint union of elements from <span class="math inline">\(\mathcal{S}\)</span>.</p>
+</div>
+<div id="lem-half-interval-salgebra" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 3</strong></span> <br>
+The family of half-open intervals, <span class="math inline">\(\mathcal{I}_{(\,]}\)</span>, is a semi-algebra.</p>
+</div>
+<div id="lem-semi-algebra" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 4 (Semi-algebra Representation)</strong></span> <br>
+If <span class="math inline">\(\mathcal{S}\)</span> is a semi-algebra over <span class="math inline">\(\Omega\)</span>, then the field <span class="math inline">\(\mathcal{A}(\mathcal{S})\)</span> it generates is equal to <span class="math display">\[\mathrm{DU}(\mathcal{S}) = \{ \text{all finite disjoint unions of sets from } \mathcal{S} \}.\]</span></p>
+</div>
+</section>
+<section id="measures" class="level3">
+<h3 class="anchored" data-anchor-id="measures">Measures</h3>
+<div id="def-measures" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7 (Measures)</strong></span> <br>
+A pair <span class="math inline">\((\Omega, \mathcal{F})\)</span> is a <em>measurable space</em> if <span class="math inline">\(\mathcal{F} \subseteq 2^\Omega\)</span> is a <span class="math inline">\(\sigma\)</span>-algebra and a set <span class="math inline">\(E \in \mathcal{F}\)</span> is called a <em>measurable set</em>. A function <span class="math inline">\(\mu: \mathcal{F} \to [0, \infty]\)</span> is called a <em>measure</em> if it is countably additive. The triple <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span> is then called a <em>measure space</em>.</p>
+<p>If <span class="math inline">\(\mu(\Omega) &lt; \infty\)</span>, we say <span class="math inline">\(\mu\)</span> is a <em>finite measure</em>.</p>
+<p>If <span class="math inline">\(\Omega = \bigcup_{i = 1}^\infty A_i\)</span> with <span class="math inline">\(A_i \in \mathcal{F}\)</span> and <span class="math inline">\(\mu(A_i) &lt; \infty\)</span> then <span class="math inline">\(\mu\)</span> is a <em><span class="math inline">\(\sigma\)</span>-finite measure</em>.</p>
+<p>If <span class="math inline">\(\mu(\Omega) = 1\)</span>, we say <span class="math inline">\(\mu\)</span> is a <em>probability measure</em> and <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span> is a <em>probability space</em>.</p>
+</div>
+<div id="lem-new-measures" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 5 (New Measures from Old)</strong></span> <br>
+Fix a measurable space <span class="math inline">\((\Omega, \mathcal{F})\)</span>. If <span class="math inline">\(\mu\)</span> is a measure, so is <span class="math inline">\(\alpha \mu\)</span> for any <span class="math inline">\(\alpha \ge 0\)</span>. If <span class="math inline">\(\{\mu_j\}_{j \in \mathbb{N}}\)</span> is a countable set of measures then <span class="math inline">\(\mu = \sum_{j \in \mathbb{N}} \mu_j\)</span> is a measure too.</p>
+</div>
+<div id="prp-finite-from-sigma-finite" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 4 (Decomposing <span class="math inline">\(\sigma\)</span>-Finite Premeasure Space to Finite Premeasure Spaces)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a <span class="math inline">\(\sigma\)</span>-finite premeasure space. That is, there exists a sequence <span class="math inline">\(\{A_n\}\)</span> in <span class="math inline">\(\mathcal{A}\)</span>, such that <span class="math display">\[\Omega = \bigcup_{n = 1}^\infty A_n\]</span> with all <span class="math inline">\(\mu(A_n) &lt; \infty\)</span>. Take <span class="math inline">\(\Omega_1 = A_1, \Omega_n = A_n \backslash A_{n - 1}\)</span>. Furthermore, <span class="math inline">\(\mu(\Omega_n) \le \mu(A_n) &lt; \infty\)</span>, <span class="math inline">\(\Omega = \bigsqcup_{n = 1}^\infty \Omega_n\)</span>. Define <span class="math inline">\(\mu_n: \mathcal{A} \to [0, \infty)\)</span> by <span class="math inline">\(\mu_n(A) = \mu(A \cap \Omega_n)\)</span>. Then, <span class="math inline">\((\Omega_n, \mathcal{A}, \mu_n)\)</span> is a finite premeasure space.</p>
+</div>
+<div id="def-inc-dec" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 8 (Increasing, Decreasing Families)</strong></span> <br>
+We write <span class="math inline">\(A_i \uparrow A\)</span> to mean that <span class="math inline">\(A_i \subseteq A_{i + 1}\)</span> and <span class="math inline">\(A = \bigcup_{i = 1}^\infty A_i\)</span>. Similarly, we write <span class="math inline">\(A_i \downarrow A\)</span> to mean that <span class="math inline">\(A_i \supseteq A_{i + 1}\)</span> and <span class="math inline">\(A = \bigcap_{i = 1}^\infty A_i\)</span>.</p>
+</div>
+<div id="prp-measure-prperties" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 5 (prperties of Measure)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span> be a measure space. Then,</p>
+<ol type="1">
+<li>If <span class="math inline">\(E_1, E_2 \in \mathcal{F}\)</span> with <span class="math inline">\(E_1 \subseteq E_2\)</span> then <span class="math inline">\(\mu(E_1) \le \mu(E_2)\)</span> <em>(montonicity)</em>;</li>
+<li>Suppose <span class="math inline">\(\{E_i\}_{i \in \mathbb{N}}\)</span> is a countable sequence of measurable sets. Then <span class="math inline">\(\mu \left(\bigcup_{i = 1}^\infty E_i\right) \le \sum_{i = 1}^\infty \mu(E_i)\)</span> <em>(countable subadditivity)</em>;</li>
+<li>Suppose <span class="math inline">\(E_i \uparrow E\)</span>. Then <span class="math inline">\(\mu \left(E\right) = \lim_{i \to \infty} \mu(E_i)\)</span> <em>(continuity from below)</em>;</li>
+<li>Suppose <span class="math inline">\(E_i \downarrow E\)</span> and there exist <span class="math inline">\(j \in \mathbb{N}\)</span> such that <span class="math inline">\(\mu(E_j) &lt; \infty\)</span>. Then <span class="math inline">\(\mu\left(E\right) = \lim_{i \to \infty} \mu(E_i)\)</span> <em>(continuity from above)</em>.</li>
+</ol>
+</div>
+</section>
+</section>
+<section id="constructing-a-premeasure" class="level2">
+<h2 class="anchored" data-anchor-id="constructing-a-premeasure">Constructing a Premeasure</h2>
+<section id="premeasure" class="level3">
+<h3 class="anchored" data-anchor-id="premeasure">Premeasure</h3>
+<div id="def-premeasure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 9 (Premeasure)</strong></span> <br>
+A pair <span class="math inline">\((\Omega, \mathcal{A})\)</span> is a <em>premeasurable space</em> if <span class="math inline">\(\mathcal{A}\)</span> is a field over <span class="math inline">\(\Omega\)</span>. A countably additive function <span class="math inline">\(\mu: \mathcal{A} \to [0, \infty]\)</span> is a <em>premeasure</em>. If we assume <span class="math inline">\(\chi\)</span> is only finitely additive, we call it a <em>finitely additive measure</em>.</p>
+</div>
+<div id="prp-finitely-additive-measure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6 (Countable Superadditivity of Finitely Additive Measures)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \chi)\)</span> be a finitely additive measure space. If <span class="math inline">\(\{A_i\}_{i \in \mathbb{N}}\)</span> are disjoint in <span class="math inline">\(\mathcal{A}\)</span>, and <span class="math inline">\(A = \bigsqcup_{i \in \mathbb{N}} A_i \in \mathcal{A}\)</span> then <span class="math display">\[ \chi(A) \ge \sum_{i \in \mathbb{N}} \chi(A_i). \]</span></p>
+</div>
+<div id="prp-semialgebra-extension" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7 (Extension I: Finitely-Additive Measure from Semialgebra <span class="math inline">\(\to\)</span> Field)</strong></span> <br>
+Let <span class="math inline">\(\mathcal{S}\)</span> be a semi-algebra over <span class="math inline">\(\Omega\)</span>. Let <span class="math inline">\(\chi: \mathcal{S} \to [0, \infty]\)</span> be finitely additive. Then <span class="math inline">\(\chi\)</span> extends to a unique finitely additive measure on <span class="math inline">\(\mathcal{A}(\mathcal{S})\)</span>, defined by <span class="math display">\[ A = \bigsqcup_{i = 1}^n E_i, \, E_i \in \mathcal{S} \implies \chi(A) = \sum_{i = 1}^n \chi(E_i). \]</span></p>
+</div>
+<div id="prp-finite-additive-to-premeasure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 8 (Extension II: Finitely-Additive Meaure on Field <span class="math inline">\(\to\)</span> Premeasure)</strong></span> <br>
+Let <span class="math inline">\(\mathcal{S} \subseteq 2^\Omega\)</span> be a semi-algebra. A finitely-additive measure <span class="math inline">\(\chi: \mathcal{A}(\mathcal{S}) \to [0, \infty]\)</span> is a premeaure if and only if it is countably subadditive on <span class="math inline">\(\mathcal{S}\)</span>, <span class="math display">\[ E = \bigsqcup_{j = 1}^\infty E_j \in \mathcal{S} \implies \chi(E) \le \sum_{j = 1}^\infty \chi(E_j). \]</span></p>
+</div>
+<div id="prp-convergence-sets" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 9 (Continuity of Premeasures)</strong></span> <br>
+Let <span class="math inline">\(\mu\)</span> be a finitely additive measure on <span class="math inline">\((\Omega, \mathcal{A})\)</span>. The following are equivalent:</p>
+<ol type="1">
+<li><span class="math inline">\(\mu\)</span> is a premeasure on <span class="math inline">\(\mathcal{A}\)</span>;</li>
+<li>If <span class="math inline">\(A_n, A \in \mathcal{A}\)</span> and <span class="math inline">\(A_n \uparrow A\)</span> then <span class="math inline">\(\mu(A_n) \uparrow \mu(A)\)</span>.</li>
+</ol>
+<p>Moreover, in the case that <span class="math inline">\(\mu(\Omega) &lt; \infty\)</span>, the following are also equivalent</p>
+<ol start="3" type="1">
+<li>If <span class="math inline">\(A_n \downarrow A\)</span> in <span class="math inline">\(\mathcal{A}\)</span>, then <span class="math inline">\(\mu(A_n) \downarrow \mu(A)\)</span>;</li>
+<li>If <span class="math inline">\(A_n \uparrow \Omega\)</span> in <span class="math inline">\(\mathcal{A}\)</span>, then <span class="math inline">\(\mu(A_n) \uparrow \mu(\Omega)\)</span>;</li>
+<li>If <span class="math inline">\(A_n \downarrow \emptyset\)</span> in <span class="math inline">\(\mathcal{A}\)</span>, then <span class="math inline">\(\mu(A_n) \downarrow 0\)</span>.</li>
+</ol>
+</div>
+</section>
+<section id="stieltjes-premeasure" class="level3">
+<h3 class="anchored" data-anchor-id="stieltjes-premeasure">Stieltjes Premeasure</h3>
+<div id="prp-stieltjes-finitely-additive" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 10 (Stieltjes Set Function)</strong></span> <br>
+Let <span class="math inline">\(F: \mathbb{R} \to \mathbb{R}\)</span> be a non-decreasing functions. On the semi-algebra, <span class="math inline">\(\mathcal{I}_{(\,]}\)</span>, define <span class="math display">\[ \chi_F((a, b]) = F(b) - F(a). \]</span> Furthermore, this is nonnegative and finitely-additive on <span class="math inline">\(\mathcal{I}_{(\,]}\)</span>.</p>
+</div>
+<div id="prp-stieltjes-prmeasure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 11 (Extension III: Stieltjes Set Function <span class="math inline">\(\to\)</span> Premeasure)</strong></span> <br>
+The set function <span class="math inline">\(\chi_F\)</span> is a premeasure on <span class="math inline">\(\mathcal{B}_{(\,]}(\mathbb{R})\)</span> if and only if <span class="math inline">\(F\)</span> is right-continuous on <span class="math inline">\(\mathbb{R}\)</span>, <span class="math display">\[ \lim_{\delta \downarrow 0} F(a + \delta) = F(a). \]</span></p>
+</div>
+<div id="lem-lebesgue-prmeasure" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 6 (Lebesgue Premeasure)</strong></span> <br>
+When <span class="math inline">\(F(x) = x\)</span>, then <span class="math inline">\(\chi_F\)</span> is a premeasure on <span class="math inline">\(\mathcal{B}_{(\,]}(\mathbb{R})\)</span> and known as the <em>Lebesgue premeasure</em>.</p>
+</div>
+</section>
+<section id="outer-measures" class="level3">
+<h3 class="anchored" data-anchor-id="outer-measures">Outer Measures</h3>
+<p>Given a premeasurable space <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span>, we would like to ideally extend <span class="math inline">\(\mu\)</span> to a measure <span class="math inline">\(\overline{\mu}: \sigma(A) \to [0, \infty]\)</span>. That is, find a <span class="math inline">\(\sigma\)</span>-field <span class="math inline">\(\mathcal{F} \supseteq \sigma(\mathcal{A})\)</span> and a measure <span class="math inline">\(\overline{\mu}\)</span> on <span class="math inline">\(\mathcal{F}\)</span> such that <span class="math inline">\(\overline{\mu} \mid_{\mathcal{A}} = \mu\)</span>.</p>
+<div id="def-cara-extension" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 10 (Caratheodory Extension)</strong></span> <br>
+Let <span class="math inline">\(\Omega\)</span> be a set and <span class="math inline">\(\mathcal{E} \subseteq 2^{\Omega}\)</span> such that <span class="math inline">\(\emptyset, \Omega \in \mathcal{E}\)</span>. Let <span class="math inline">\(\rho: \mathcal{E} \to [0, \infty]\)</span> be such that <span class="math inline">\(\rho(\emptyset) = 0\)</span>. Define the Caratheodory Extension <span class="math inline">\(\rho^\star: 2^\Omega \to [0, \infty]\)</span>, by <span class="math display">\[\rho^\star(A) = \inf \left\{\sum_{j = 1}^\infty \rho(E_j) \, \mid \, E_j \in \mathcal{E}, A \subseteq \bigcup_{j = 1}^\infty E_j\right\}. \]</span></p>
+</div>
+<div id="def-outermeasure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 11 (Outer Measure)</strong></span> <br>
+Let <span class="math inline">\(\Omega\)</span> be a nonempty set. A function <span class="math inline">\(\nu: 2^\Omega \to [0, \infty]\)</span> is an <em>outer measure</em> if</p>
+<ol type="1">
+<li><span class="math inline">\(\nu(\emptyset) = 0\)</span>;</li>
+<li><span class="math inline">\(\nu\)</span> is monotone, <span class="math inline">\(A \subseteq B \implies \nu(A) \le \nu(B)\)</span>;</li>
+<li><span class="math inline">\(\nu\)</span> is countably subadditive, <span class="math inline">\(\nu\left(\bigcup_{n = 1}^\infty A_n\right) \le \sum_{n = 1}^\infty \nu(A_n).\)</span></li>
+</ol>
+</div>
+<div id="lem-pemeasure-measure" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 7 (Premeasure, Outer Measure, Measure)</strong></span> <br>
+If <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> is a premeasure space and <span class="math inline">\((\Omega, \sigma(\mathcal{A}), \nu)\)</span> is a measure space extending it, then <span class="math inline">\(\nu \le \mu^\star\)</span>, on <span class="math inline">\(\sigma(\mathcal{A})\)</span>.</p>
+</div>
+<div id="prp-finite-additive-premeasure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 12 (Premeasure, Outer Measure)</strong></span> <br>
+If <span class="math inline">\((\Omega, \mathcal{A}, \chi)\)</span> is a finitely-additive measure space, then <span class="math inline">\(\chi^\star \le \chi\)</span> on <span class="math inline">\(\mathcal{A}\)</span>. Furthermore, <span class="math inline">\(\chi^\star = \chi\)</span> on <span class="math inline">\(\mathcal{A}\)</span> if and only if <span class="math inline">\(\chi\)</span> is a premeasure.</p>
+</div>
+</section>
+</section>
+<section id="constructing-the-measure" class="level2">
+<h2 class="anchored" data-anchor-id="constructing-the-measure">Constructing the Measure</h2>
+<p>There are a few approaches to extending a premeasure to a measure. The standard approach takes the followin shape:</p>
+<ol type="1">
+<li>Define <span class="math display">\[ \mathcal{M}_\mu = \{ E \subseteq \Omega \, \mid \, \mu^\star(T) = \mu^\star(T \cap E) + \mu^\star(T \cap E^c), \forall T \subseteq \Omega \}. \]</span></li>
+<li>Show that <span class="math inline">\(\mathcal{M}\)</span> is a <span class="math inline">\(\sigma\)</span>-field containing <span class="math inline">\(\mathcal{A}\)</span>.</li>
+<li>Show <span class="math inline">\(\mu^\star\)</span> is countably additive on it.</li>
+</ol>
+<p>This approach requires some new tools: Monotone Class Theorem or Dynkin’s <span class="math inline">\(\pi\)</span>-<span class="math inline">\(\lambda\)</span> Theorem. Furthermore, it tends to feel a bit too clever and unmotivated!</p>
+<p>At least for finite premeasures, we have a more natural approach on the basis of topological ideas.</p>
+<ol type="1">
+<li>Define a topology over <span class="math inline">\(2^\Omega\)</span>.</li>
+<li>Define <span class="math inline">\(\overline{\mathcal{A}}\)</span> to be the closure of <span class="math inline">\(\mathcal{A}\)</span>.</li>
+<li>Show that <span class="math inline">\(\mu: \mathcal{A} \to (0, \infty]\)</span> is <em>sufficiently continuous</em> to extend it to the closure <span class="math inline">\(\mathcal{A}\)</span>.</li>
+<li>Use topological tools to show <span class="math inline">\(\overline{\mathcal{A}}\)</span> is a <span class="math inline">\(\sigma\)</span>-field and <span class="math inline">\(\overline{\mu}\)</span> is a measure such that <span class="math inline">\(\overline{\mu} = \mu^\star\)</span> on <span class="math inline">\(\overline{\mathcal{A}}\)</span>.</li>
+</ol>
+<section id="extending-finite-premeasures" class="level3">
+<h3 class="anchored" data-anchor-id="extending-finite-premeasures">Extending Finite-Premeasures</h3>
+<section id="metric-spaces" class="level4">
+<h4 class="anchored" data-anchor-id="metric-spaces">Metric Spaces</h4>
+<p>We start by recalling some metric space theory.</p>
+<div id="def-pseudo-metric-space" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12 (Pseudometric Spaces)</strong></span> <br>
+A function <span class="math inline">\(d: X \times X \to [0, \infty]\)</span> is a <em>pseudometric</em> on <span class="math inline">\(X\)</span> if</p>
+<ol type="1">
+<li><span class="math inline">\(x = y \implies d(x, y) = 0\)</span>;</li>
+<li><span class="math inline">\(d(x, y) = d(y, x)\)</span> <em>(symmetry)</em>;</li>
+<li><span class="math inline">\(d(x, z) \le d(x, y) + d(y, z)\)</span> <em>(triangle inequality)</em>.</li>
+</ol>
+</div>
+<div id="def-limit" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 13 (Limit)</strong></span> <br>
+A sequence <span class="math inline">\(\{x_n\}\)</span> in <span class="math inline">\(X\)</span> has a <em>limit</em> <span class="math inline">\(x\)</span> if <span class="math display">\[\forall \epsilon &gt; 0. \exists N \in \mathbb{N}. \forall n \ge N. \; d(x_n, x) &lt; \epsilon. \]</span></p>
+</div>
+<div id="def-closure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 14 (Closure, Closed Set)</strong></span> <br>
+Let <span class="math inline">\(X\)</span> be a pseudometric space. Given <span class="math inline">\(V \subseteq X\)</span>, the <em>closure</em> <span class="math inline">\(\overline{V}\)</span> is the set of limits of sequences in <span class="math inline">\(V\)</span>. A set <span class="math inline">\(V \subseteq X\)</span> is <em>closed</em> if <span class="math inline">\(\overline{V} = V\)</span>.</p>
+</div>
+<div id="def-lipschitz" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15 (Lipschitz)</strong></span> <br>
+Let <span class="math inline">\(X\)</span> be a pseudometric space. A function <span class="math inline">\(f: X \to \mathbb{R}\)</span> is <em>Lipschitz</em> if there exists <span class="math inline">\(K \in (0, \infty)\)</span> such that for all <span class="math inline">\(x, y \in X\)</span> we have <span class="math inline">\(|f(x) - f(y)| \le K \cdot d(x, y)\)</span>.</p>
+</div>
+<div id="prp-lipschitz-ext" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 13 (Lipschitz Extensions)</strong></span> <br>
+If <span class="math inline">\(f: V \to \mathbb{R}\)</span> is Lipschitz on a nonempty <span class="math inline">\(V \subseteq X\)</span>, then there is a unique Lipschitz extension <span class="math inline">\(\overline{f}: \overline{V} \to \mathbb{R}\)</span> with the same Lipschitz constant.</p>
+</div>
+<p>Now, we metrize <span class="math inline">\(2^\Omega\)</span>.</p>
+<div id="def-outer-pmetric" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 16 (Outer Pseudometric)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a finite premeaure space and <span class="math inline">\(\mu^\star: 2^\Omega \to [0, \mu(\Omega)]\)</span> be the Caratheodory outer measure. Then, we define <span class="math inline">\(d_\mu: 2^\Omega \times 2^\Omega \to [0, \mu(\Omega)]\)</span> by <span class="math inline">\(d_\mu(E, F) = \mu^\star (E \Delta F)\)</span>.</p>
+</div>
+<div id="prp-outer-pmetric" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 14 (Outer Pseudometric)</strong></span> <br>
+<span class="math inline">\(d_\mu\)</span> is a pseudometric on <span class="math inline">\(2^\Omega\)</span>.</p>
+</div>
+<div id="prp-prperties-pmetric" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 15 (Properties of the Pseudometric)</strong></span> &nbsp;</p>
+<ol type="1">
+<li><br>
+</li>
+<li><span class="math inline">\(\forall A, B \in 2^\Omega. \; d_\mu(A, B) = d_\mu(A^c, B^c)\)</span>;</li>
+<li><span class="math inline">\(\forall\)</span> sequences <span class="math inline">\(\{A_n\}_{n \in \mathbb{N}}, \{B\}_{n \in \mathbb{N}}\)</span> in <span class="math inline">\(2^\Omega\)</span>. Then,
+<ul>
+<li><span class="math inline">\(d_\mu(\bigcup_{n = 1}^\infty A_n, \bigcup_{n = 1}^\infty B_n) \le \sum_{n = 1}^\infty d_\mu(A_n, B_n)\)</span>;</li>
+<li><span class="math inline">\(d_\mu(\bigcap_{n = 1}^\infty A_n, \bigcap_{n = 1}^\infty B_n) \le \sum_{n = 1}^\infty d_\mu (A_n, B_n)\)</span>.</li>
+</ul></li>
+</ol>
+</div>
+<div id="lem-pmetric-continuity-below" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 8 (Outer Pseudometric: Continuity from Below)</strong></span> <br>
+If <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> is a finite premeasure space and <span class="math inline">\(A_n \in \mathcal{A}\)</span> with <span class="math inline">\(A_n \uparrow A\)</span>, then <span class="math inline">\(d_\mu(A_n, A) = \mu^\star(A) - \mu(A_n) \to 0\)</span>.</p>
+</div>
+</section>
+<section id="closure-in-the-pseudometric" class="level4">
+<h4 class="anchored" data-anchor-id="closure-in-the-pseudometric">Closure in the Pseudometric</h4>
+<div id="lem-characterize-closure" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 9 (Closure, Convergence from Below)</strong></span> <br>
+If <span class="math inline">\(A_n \in \mathcal{A}\)</span> and <span class="math inline">\(A_n \uparrow A\)</span>, then <span class="math inline">\(A \in \overline{\mathcal{A}}\)</span>.</p>
+</div>
+<div id="def-countable-closure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 17 (Countable Union Family)</strong></span> <br>
+Given <span class="math inline">\(\mathcal{E} \subseteq 2^\Omega\)</span>, <span class="math inline">\(\mathcal{E}_\sigma = \{\text{countable unions of elements of } \mathcal{E}\}\)</span>.</p>
+</div>
+<div id="prp-closure-sigma-field" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 16 (Closure, <span class="math inline">\(\sigma\)</span>-Field)</strong></span> <br>
+If <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> is a finite premeasure space, then</p>
+<ol type="1">
+<li><span class="math inline">\(\overline{A_\sigma} = \overline{A}\)</span>;</li>
+<li>the closure <span class="math inline">\(\overline{\mathcal{A}}\)</span> of the field <span class="math inline">\(\mathcal{A}\)</span> in the pseudometric space <span class="math inline">\((2^\Omega, d_\mu)\)</span> is a <span class="math inline">\(\sigma\)</span>-field.</li>
+</ol>
+</div>
+<div id="prp-measure-ext" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 17 (Lipschitz Extension of <span class="math inline">\(\mu\)</span>)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a finite premeasure space. Then <span class="math inline">\(\mu\)</span> extends to a unique Lip-<span class="math inline">\(1\)</span> function <span class="math inline">\(\overline{\mu}: \overline{A} \to [0, \infty]\)</span>. Furthermore, <span class="math inline">\(\overline{\mu} = \mu^\star\)</span> on <span class="math inline">\(A_\sigma\)</span>.</p>
+</div>
+<div id="prp-approximate-closure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 18 (Characterizing Closure)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a finite premeasure space. For <span class="math inline">\(B \in 2^\Omega\)</span>, the following are equivalent.</p>
+<ol type="1">
+<li><span class="math inline">\(B \in \overline{A}\)</span></li>
+<li><span class="math inline">\(\forall \epsilon &gt; 0. \exists C \in A_{\sigma}\)</span> such that <span class="math inline">\(B \subseteq C\)</span> and <span class="math inline">\(\mu^\star(C \backslash B) = d_\mu(B, C) &lt; \epsilon\)</span>.</li>
+</ol>
+</div>
+<div id="prp-closure-equality" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 19 (Equality of Extension on Closure)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a finite premeasure space. Then <span class="math inline">\(\overline{\mu} = \mu^\star\)</span> on <span class="math inline">\(\overline{\mathcal{A}}\)</span>.</p>
+</div>
+</section>
+<section id="constructing-the-measure-1" class="level4">
+<h4 class="anchored" data-anchor-id="constructing-the-measure-1">Constructing the Measure</h4>
+<div id="prp-measure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 20 (Existence of Measure)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a finite premeasure space. Then, <span class="math inline">\(\overline{\mu}: \overline{\mathcal{A}} \to [0, \mu(\Omega)]\)</span> is a measure.</p>
+</div>
+<div id="prp-measure-exist" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 21 (Uniqueness of Measure)</strong></span> <br>
+If <span class="math inline">\(\mathcal{F}\)</span> is a <span class="math inline">\(\sigma\)</span>-field with <span class="math inline">\(\mathcal{A} \subseteq \mathcal{F} \subseteq \overline{\mathcal{A}}\)</span> and <span class="math inline">\(\nu\)</span> is a measure on <span class="math inline">\(\mathcal{F}\)</span> with <span class="math inline">\(\nu\mid_{\mathcal{A}} = \mu\)</span>, the <span class="math inline">\(\nu = \overline{\mu}\mid_{\mathcal{F}}\)</span>.</p>
+</div>
+<div id="prp-sigma-finite-extension" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 22 (Existence and Uniqueness for <span class="math inline">\(\sigma\)</span>-Finite Measure Spaces)</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a <span class="math inline">\(\sigma\)</span>-finite premeasure space. Then, <span class="math inline">\(\overline{\mu} = \sum_{n = 1}^\infty \overline{\mu_n}\)</span> is the unique measure on <span class="math inline">\(\sigma(\mathcal{A})\)</span> extending <span class="math inline">\(\mu\)</span>.</p>
+</div>
+<div id="prp-measure-sigma-finite" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 23</strong></span> <br>
+Let <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span> be a <span class="math inline">\(\sigma\)</span>-finite premeasure space.</p>
+<ol type="1">
+<li><span class="math inline">\(\overline{\mu} = \mu^\star\)</span> on <span class="math inline">\(\sigma(\mathcal{A})\)</span>;</li>
+<li>If <span class="math inline">\(B \in \sigma(\mathcal{A})\)</span> and <span class="math inline">\(\epsilon &gt; 0\)</span>, <span class="math inline">\(\exists C \in \mathcal{A}_\sigma\)</span> such that <span class="math inline">\(B \subseteq C\)</span> and <span class="math inline">\(\overline{\mu}(C \backslash B) &lt; \epsilon\)</span>.</li>
+<li>If <span class="math inline">\(\overline{\mu}(B) &lt; \infty\)</span>, <span class="math inline">\(\exists A \in \mathcal{A}\)</span> such that <span class="math inline">\(\overline{\mu}(A \Delta B) &lt; \epsilon\)</span>.</li>
+</ol>
+</div>
+</section>
+</section>
+<section id="the-standard-approach" class="level3">
+<h3 class="anchored" data-anchor-id="the-standard-approach">The Standard Approach</h3>
+<section id="dynkins-pi-lambda-systems" class="level4">
+<h4 class="anchored" data-anchor-id="dynkins-pi-lambda-systems">Dynkin’s <span class="math inline">\(\pi\)</span>-<span class="math inline">\(\lambda\)</span> Systems</h4>
+<div id="def-lambda-sys" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 18 (<span class="math inline">\(\lambda\)</span>-System)</strong></span> <br>
+A collection <span class="math inline">\(\Lambda \subseteq 2^\Omega\)</span> is a <em><span class="math inline">\(\lambda\)</span>-system</em> over <span class="math inline">\(\Omega\)</span> if</p>
+<ol type="1">
+<li><span class="math inline">\(\emptyset \in \Lambda\)</span>;</li>
+<li><span class="math inline">\(A, B \in \Lambda\)</span>, with <span class="math inline">\(A \subseteq B \implies B \backslash A \in \Lambda\)</span>;</li>
+<li><span class="math inline">\(A_i \in \Lambda\)</span> and <span class="math inline">\(A_i \uparrow A \implies A \in \Lambda\)</span>.</li>
+</ol>
+</div>
+<div id="lem-closest-lambda" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 10 (Closure Under Intersection)</strong></span> <br>
+If <span class="math inline">\(I\)</span> is any index set and <span class="math inline">\(\{\Lambda_i \, \mid \, i \in I\}\)</span> are <span class="math inline">\(\lambda\)</span>-systems then <span class="math inline">\(\bigcap_{i \in I} \Lambda_i\)</span> is also a <span class="math inline">\(\lambda\)</span>-system.</p>
+</div>
+<div id="def-smallest-lambda" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 19</strong></span> <br>
+Let <span class="math inline">\(\mathcal{E} \in 2^\Omega\)</span> be any collection of subsets of <span class="math inline">\(\Omega\)</span>. There is a unique smallest <span class="math inline">\(\lambda\)</span>-field, <span class="math inline">\(\sigma(\mathcal{E})\)</span>, that contains <span class="math inline">\(\mathcal{E}\)</span>. It is called the <span class="math inline">\(\sigma\)</span>-field generated by <span class="math inline">\(\mathcal{E}\)</span>.</p>
+</div>
+<div id="def-pi-sys" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 20 (<span class="math inline">\(\pi\)</span>-System)</strong></span> <br>
+A collection <span class="math inline">\(\Pi \subseteq 2^\Omega\)</span> is a <em><span class="math inline">\(\pi\)</span>-system</em> over <span class="math inline">\(\Omega\)</span> if <span class="math inline">\(A, B \in \Pi \implies A \cap B \in \Pi\)</span>.</p>
+</div>
+<div id="lem-sigma-equiv-pi-lambda" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 11 (<span class="math inline">\(\sigma\)</span>-Fields = <span class="math inline">\(\pi\)</span>-Systems <span class="math inline">\(+\)</span> <span class="math inline">\(\lambda\)</span>-Systems)</strong></span> <br>
+A collection <span class="math inline">\(\mathcal{F}\)</span> is a <span class="math inline">\(\sigma\)</span>-algebra if and only if it is both a <span class="math inline">\(\pi\)</span>-system and <span class="math inline">\(\lambda\)</span>-system.</p>
+</div>
+<div id="lem-pi-to-sigma" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 12 (<span class="math inline">\(\lambda\)</span>-System Generated By <span class="math inline">\(\pi\)</span>-System)</strong></span> <br>
+Let <span class="math inline">\(\Pi\)</span> be a <span class="math inline">\(\pi\)</span>-system over <span class="math inline">\(\Omega\)</span>. Then, <span class="math inline">\(\lambda(\Pi)\)</span> is a <span class="math inline">\(\sigma\)</span>-field over <span class="math inline">\(\Omega\)</span>.</p>
+</div>
+<div id="prp-dynkin" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 24 (Dynkin’s <span class="math inline">\(\pi\)</span>-<span class="math inline">\(\lambda\)</span> Theorem)</strong></span> <br>
+If <span class="math inline">\(\Pi\)</span> is a <span class="math inline">\(\pi\)</span>-system and <span class="math inline">\(\Lambda\)</span> is a <span class="math inline">\(\lambda\)</span>-system that contains <span class="math inline">\(\Pi\)</span> then <span class="math inline">\(\sigma(\Pi) \subseteq \Lambda\)</span>.</p>
+</div>
+</section>
+<section id="caratheodorys-criterion" class="level4">
+<h4 class="anchored" data-anchor-id="caratheodorys-criterion">Caratheodory’s Criterion</h4>
+</section>
+<section id="constructing-the-measure-2" class="level4">
+<h4 class="anchored" data-anchor-id="constructing-the-measure-2">Constructing the Measure</h4>
+</section>
+</section>
+</section>
+<section id="measures-on-mathbbr" class="level2">
+<h2 class="anchored" data-anchor-id="measures-on-mathbbr">Measures on <span class="math inline">\(\mathbb{R}\)</span></h2>
+<section id="radon-measure" class="level3">
+<h3 class="anchored" data-anchor-id="radon-measure">Radon Measure</h3>
+<div id="def-radon" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 21 (Radon Measure on <span class="math inline">\(\mathbb{R}\)</span>)</strong></span> <br>
+A Borel measure <span class="math inline">\((\mathbb{R}, \mathcal{B}(\mathbb{R}), \mu)\)</span> on <span class="math inline">\(\mathbb{R}\)</span> is called a <em>Radon measure</em> if forall <span class="math inline">\(a &lt; b \in \mathbb{R}\)</span> we have <span class="math inline">\(\mu((a, b]) &lt; \infty\)</span>.</p>
+</div>
+<div id="prp-radon" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 25 (Characterizing Radon Measures on <span class="math inline">\(\mathbb{R}\)</span>)</strong></span> <br>
+If <span class="math inline">\(\mu\)</span> is a Radon measure on <span class="math inline">\(\mathbb{R}\)</span>, then there exists a non-decreasing right-continuous function <span class="math inline">\(F: \mathbb{R} \to \mathbb{R}\)</span>, unique up to additive constants, such that for <span class="math inline">\(-\infty \le a \le b \le \infty\)</span> we have <span class="math display">\[\mu((a, b]) = F(b) - F(a).\]</span></p>
+</div>
+<div id="def-cum-prob" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 22 (Cumulative Distribution Functions)</strong></span> <br>
+Let <span class="math inline">\(\mu\)</span> be a Borel probability measure on <span class="math inline">\(\mathbb{R}\)</span>. Then the <em>cumulative distribution function (cdf)</em> of <span class="math inline">\(\mu\)</span> is the function <span class="math inline">\(F_\mu: \mathbb{R} \to \mathbb{R}\)</span> defined by <span class="math display">\[F_\mu(x) = \mu((-\infty, x]).\]</span></p>
+</div>
+<div id="prp-cdf-borel" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 26 (Characterizing Radon Measures on <span class="math inline">\(\mathbb{R}\)</span>)</strong></span> <br>
+Any right-continuous, non-decreasing function <span class="math inline">\(F: \mathbb{R} \to \mathbb{R}\)</span> satisfying <span class="math display">\[\lim_{x \to -\infty} F(x) = 0, \lim_{x \to +\infty} F(x) = 1\]</span> is the cdf of a unique Borel probability measure on <span class="math inline">\(\mathbb{R}\)</span>.</p>
+</div>
+</section>
+<section id="lebesgue-measure" class="level3">
+<h3 class="anchored" data-anchor-id="lebesgue-measure">Lebesgue Measure</h3>
+<div id="def-lebesgue" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 23 (Lebesgue Measure)</strong></span> <br>
+The Radon measure on <span class="math inline">\(\mathbb{R}\)</span> satisfying <span class="math inline">\(\lambda((a, b]) = b - a\)</span> for <span class="math inline">\(-\infty &lt; a \le b &lt; \infty\)</span> is called the <em>Lebesgue measure</em>.</p>
+</div>
+<div id="prp-trans-invariatn" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 27 (Translation Invariance of the Lebesgue Measure)</strong></span> <br>
+The Lebesgue measure, <span class="math inline">\(\lambda\)</span>, is the unique translation invariant Borel measure such that <span class="math inline">\(\lambda((0, 1]) = 1\)</span>. If <span class="math inline">\(\mu\)</span> is any other translation invariant Borel measure, then <span class="math inline">\(\mu = \alpha \lambda\)</span> for some <span class="math inline">\(\alpha \ge 0\)</span>.</p>
+</div>
+<div id="def-null-set" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 24 (Null Set)</strong></span> <br>
+In a measure space <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span>, a measurable set <span class="math inline">\(N \in \mathcal{F}\)</span> is a <em>null set</em> if <span class="math inline">\(\mu(N) = 0\)</span>.</p>
+</div>
+<div id="lem-countable" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 13</strong></span> <br>
+If <span class="math inline">\(X \subseteq \mathbb{R}\)</span> is countable, then <span class="math inline">\(\lambda(X) = 0\)</span>.</p>
+</div>
+<div id="def-cantor" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 25 (Cantor Set)</strong></span> <br>
+Define</p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{C}_0 &amp;= [0, 1], \\
+\mathcal{C}_{n + 1} &amp;= \frac{\mathcal{C}_n}{3} \cup \left(\frac{2}{3} + \frac{\mathcal{C}_n}{3}\right).
+\end{align*}\]</span></p>
+<p>Then, the Cantor set is defined as</p>
+<p><span class="math display">\[ \mathcal{C} = \bigcap_{n = 0}^\infty \mathcal{C}_n. \]</span></p>
+</div>
+<div id="lem-cantor" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 14</strong></span> <br>
+If <span class="math inline">\(\mathcal C\)</span> is the Cantor set then <span class="math inline">\(\lambda(\mathcal{C}) = 0\)</span>.</p>
+</div>
+<div id="def-null-complete" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 26 (Null Completion)</strong></span> <br>
+A measure space <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span> is called <em>(null) complete</em> if, for every <span class="math inline">\(N \in \mathcal{F}\)</span> with <span class="math inline">\(\mu(N) = 0\)</span>, every subset <span class="math inline">\(\Lambda \subseteq N\)</span> is in <span class="math inline">\(\mathcal{F}\)</span>.</p>
+</div>
+<div id="prp-completion" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 28 (Completion of Measure Space)</strong></span> <br>
+For any measurable space <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span>, there is an extension <span class="math inline">\(\widetilde{\mathcal{F}} \supseteq \mathcal{F}\)</span>, <span class="math inline">\(\widetilde{\mu}\mid_{\widetilde{\mathcal{F}}}\)</span> such that <span class="math inline">\((\Omega, \mathcal{\widetilde{F}}, \widetilde{\mu})\)</span> is complete.</p>
+</div>
+<p>Often, the Lebesgue measure implies a particularly large <span class="math inline">\(\sigma\)</span>-field, <span class="math display">\[\begin{align*}
+\mathcal{M}_{\lambda} = \{E \subseteq \mathbb{R} \, \mid \, \forall \lambda \subseteq \mathbb{R}. \lambda^\star(A) = \lambda^\star(A \cap E) + \lambda^\star(A \cap E^c)\}.
+\end{align*}\]</span></p>
+<p>In fact, we have already encountered this.</p>
+<div id="prp-lebesgue-closure" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 29</strong></span> <br>
+In a finite premeasure space <span class="math inline">\((\Omega, \mathcal{A}, \mu)\)</span>, we have <span class="math inline">\(\mathcal{M}_\mu = \overline{\mathcal{A}}\)</span>.</p>
+</div>
+<p>In practice, we will not be using <span class="math inline">\(\mathcal{M}\)</span>. For us, the Lebesgue measure is pretty much a Borel measure. Worst case, we may possibly need to complete the Borel <span class="math inline">\(\sigma\)</span>-field in some applications.</p>
+</section>
+</section>
+<section id="integration-theory" class="level2">
+<h2 class="anchored" data-anchor-id="integration-theory">Integration Theory</h2>
+<section id="random-variables" class="level3">
+<h3 class="anchored" data-anchor-id="random-variables">Random Variables</h3>
+</section>
+<section id="robustness-of-measurability" class="level3">
+<h3 class="anchored" data-anchor-id="robustness-of-measurability">Robustness of Measurability</h3>
+</section>
+<section id="riemann-stieltjes-integration" class="level3">
+<h3 class="anchored" data-anchor-id="riemann-stieltjes-integration">Riemann-Stieltjes Integration</h3>
+</section>
+<section id="lebesgue-integral-monotone-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="lebesgue-integral-monotone-convergence">Lebesgue Integral, Monotone Convergence</h3>
+</section>
+<section id="fatou-and-borel-cantelli" class="level3">
+<h3 class="anchored" data-anchor-id="fatou-and-borel-cantelli">Fatou and Borel-Cantelli</h3>
+</section>
+<section id="l1mathbbr-dominated-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="l1mathbbr-dominated-convergence"><span class="math inline">\(L^1(\mathbb{R})\)</span>, Dominated Convergence</h3>
+</section>
+<section id="comparing-lebesgue-and-riemann-integrals" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-lebesgue-and-riemann-integrals">Comparing Lebesgue and Riemann Integrals</h3>
+</section>
+<section id="radon-nikodym-lebesgue-decomposition-probability-laws" class="level3">
+<h3 class="anchored" data-anchor-id="radon-nikodym-lebesgue-decomposition-probability-laws">Radon-Nikodym, Lebesgue Decomposition, Probability Laws</h3>
+</section>
+</section>
+<section id="independence-law-of-large-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="independence-law-of-large-numbers">Independence, Law of Large Numbers</h2>
+<section id="l2mathbbr-weak-law-of-large-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="l2mathbbr-weak-law-of-large-numbers"><span class="math inline">\(L^2(\mathbb{R})\)</span>, Weak Law of Large Numbers</h3>
+</section>
+<section id="convergence-lpmathbbr" class="level3">
+<h3 class="anchored" data-anchor-id="convergence-lpmathbbr">Convergence, <span class="math inline">\(L^p(\mathbb{R})\)</span></h3>
+</section>
+<section id="product-measure" class="level3">
+<h3 class="anchored" data-anchor-id="product-measure">Product Measure</h3>
+</section>
+<section id="independence" class="level3">
+<h3 class="anchored" data-anchor-id="independence">Independence</h3>
+</section>
+<section id="kolmogrovs-extension-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="kolmogrovs-extension-theorem">Kolmogrov’s Extension Theorem</h3>
+</section>
+<section id="kolomogrov-0-1-law" class="level3">
+<h3 class="anchored" data-anchor-id="kolomogrov-0-1-law">Kolomogrov <span class="math inline">\(0\)</span>-<span class="math inline">\(1\)</span> Law</h3>
+</section>
+<section id="convolution" class="level3">
+<h3 class="anchored" data-anchor-id="convolution">Convolution</h3>
+</section>
+<section id="strong-law-of-large-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="strong-law-of-large-numbers">Strong Law of Large Numbers</h3>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
+
+
+
+
+</body></html>

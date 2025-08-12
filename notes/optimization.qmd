@@ -1,0 +1,35 @@
+---
+title: "Optimization"
+---
+
+An introduction to functional analysis from an applied perspective centered around optimization.
+
+## Vector Spaces
+
+### The Basic Theory
+
+### Normed Vector Spaces
+
+## Hilbert Spaces
+
+### Inner Product Spaces
+
+### Approximation
+
+### Minimum Norm Problems
+
+## Dual Spaces
+
+### Linear Functionals
+
+### Hahn-Banach Theorem (Extension Form)
+
+### Hahn-Banach Theorem (Geometric Form)
+
+## Linear Operators and Adjoints
+
+### Inverse Operators
+
+### Adjoints
+
+### Optimization in a Hilbert Space

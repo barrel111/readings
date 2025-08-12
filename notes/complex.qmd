@@ -1,0 +1,97 @@
+---
+title: "Complex Analysis"
+number-sections: true
+---
+
+These notes grew out of a desire to reacquaint myself with complex analysis. The current focus is to cover the absolute basics, especially with a focus on covering the parts that regularly show up elsewhere in mathematics and theoretical CS. 
+
+## Foundations 
+
+### The Complex Plane
+
+#### The Field, $\mathbb{C}$
+
+::: {#def-add-mult}
+# Addition, Multiplication
+:::
+
+::: {#lem-division}
+# Division
+:::
+
+::: {#def-conjugate}
+# Complex Conjugate
+:::
+
+::: {#def-modulus}
+# Modulus
+:::
+
+::: {#def-exp}
+# Exponential
+:::
+
+::: {#prp-mat-repr}
+# Matrix Representation
+:::
+
+::: {#prp-field-ext}
+# Finite Field Extension of $\mathbb{R}$
+:::
+
+#### The Geometry of $\mathbb{C}$
+
+::: {#def-polar}
+# Polar Representation
+:::
+
+### Topology of $\mathbb{C}$
+
+#### Topology
+
+#### Limits
+
+#### Continuity
+
+### Holomorphic Functions
+
+#### Differentiability
+
+#### Cauchy-Riemann Equations
+
+### Application: Harmonic Functions
+
+#### Harmonic Functions
+
+#### Poincaré's Lemma
+
+## Complex Integration
+
+### Contour Integrals
+
+### Cauchy's Integral Theorem
+
+### Cauchy's Integral Formula
+
+### An Assortment of Miracles
+
+### Power Series and Taylor's Theorem
+
+## A Computational Toolkit
+
+### Zeros, Poles and Singularities
+
+### Laurent Series and Residues
+
+### The Residue Theorem
+
+### The Argument Principle & Rouché's Theorem
+
+## Asymptotic Methods
+
+### The Saddle-Point Method
+
+### Laplace's Method
+
+
+

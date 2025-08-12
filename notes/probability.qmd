@@ -1,0 +1,641 @@
+---
+title: "Probability Theory"
+---
+
+These notes on probability emerge from a familiar struggle: the compulsive search for resources that align perfectly with one's mathematical background and aesthetic sensibilities. Rather than continuing this perhaps utile pursuit, I've decided to synthesize my own understanding from the various imperfect sources I've encountered.
+
+Drawing loosely on Erdős's notion of "the Book"—that celestial collection of the most elegant proofs—I imagine these notes as fragments toward some idealized treatment of probability theory. They represent an attempt to distill what resonates most clearly from my reading, organized according to my own developing intuitions about the subject.
+
+The result is necessarily incomplete and reflects my current limitations, but perhaps that's appropriate for a subject built on uncertainty.
+
+## Introduction
+### Motivation
+
+Informally, the basis of probability theory is the notion of _experiments_-- processes whose outcomes are uncertain to us. As a prototypic example, we may be interested in phenonmenon associated with tossing a fair coin an infinite number of times.
+
+The _sample space_, $\Omega$, is the set of all possible outcomes of our experiment. For our prior example, it is suitable to take it to be the space of all $\{H, T\}$-valued sequences, $\Omega = \{ \omega:\mathbb{N} \to \{H, T\}\}$. An _event_ is a subset $E \subseteq \Omega$ of outcomes. We are interested in computing the _probability_ of an event, i.e. a measure of the likelihood with respect to the level of uncertainty we have.
+
+As a motivating example, consider the event $$E = \{\text{after tossing a coin until tail comes up the total number of tosses is odd}\}.$$
+
+It is easiest to deal with this by appropriately partitioning the event into disjoint subevents. Let $$E_j = \{ \omega: \mathbb{N} \to \{H, T\} \, \mid \, \omega(1) = \dots = \omega(2j) = H, \omega(2j + 1) = T\}.$$
+
+Then,
+
+\begin{align*}
+E = \bigsqcup_{j = 0}^\infty E_j \implies \Pr[E] = \sum_{j = 0}^\infty \Pr[E_j] = \sum_{j = 0}^\infty \frac{1}{2^{2j + 1}} = \frac{1}{2} \sum_{j = 0}^\infty \frac{1}{4^j} = \frac{2}{3}.
+\end{align*}
+
+There are certain assumptions implicit in what may appear to be an unassuming calculation. Particularly, it was crucial for us to allow ourselves to consider representing events as a countable disjoint union of other events. Furthermore, we assumed that probability behaves in a _countably additive_ manner. Our intuition says that when events are mutually exclusive and exhaustive, their probabilities should sum to the probability of their union. 
+
+In practice, finite relative frequencies, which is often taken as an emperical measurement of probability, supports the claim of at least finite additivity. There is also the _subjective_ interpretation of probability that may be used to motivate finite additivity. 
+
+
+Such a _Dutch book_ argument can also be extended to the countably infinite case. Though, such an argument requires us to develop a bit of the countably additive theory so we defer it until then.
+
+Make no mistake, the choice of countable additivity or even finite additivity is not a logical necessity but rather a normative choice in our axiomatization--there is no deeper ground truth from which to derive it, only our intuition (and some foresight, credit to a 100 or so years of modern probability) about what properties a reasonable theory of uncertainty ought to possess. We end this section with the most popular of such axiomatizations, consistent with our discussion above.
+
+::: {#def-kolmogrov-axioms}
+## Kolmogrov Axioms
+
+A _probability space_ is a triple $(\Omega, \mathcal{F}, P)$, with sample space $\Omega$, event space $\mathcal{F}$ and a probability measure $P$, satisfying 
+
+1. $P(E) \in \mathbb{R}, \, P(E) \ge 0. \quad \forall E \in \mathcal{F},$
+2. $P(\Omega) = 1$,
+3. For any countable sequence of disjoint sets, $\{E_i\}$, we have $$\Pr \left(\bigcup_{i = 1}^\infty E_i\right) = \sum_{i = 1}^\infty \Pr (E_i).$$
+
+:::
+
+### A Curious Paradox
+
+The Kolmogrov Axioms require us to assign probabilities on events in $\mathcal{F}$ as opposed to any possible subset of $\Omega$. One of the most fundamental probability spaces we may be interested in is the uniform probability space on $\Omega = [0, 1]$, where for $a \le b$, we would want $\Pr([a, b]) = b - a$. Without delving into formalizing this probability space, our point here is that it may be of natural interest to consider probability spaces with properties in addition to those mandated by the Kolmogrov Axioms; for example, translation-invariance. Here is where our problems begin. 
+
+::: {#prp-no-t-invariant}
+## Imposibility on $[0, 1]$
+
+Let $\Omega = [0, 1]$. Then, there is no translation-invariant probability measure $\Pr: 2^\Omega \to [0, 1]$.
+
+:::
+
+Similar ideas give us negative theorems for other spaces too. As an example, consider the following.
+
+::: {#prp-no-spinners}
+## Impossibility on the Circle
+
+Let $\Omega = \{z \in \mathbb{C} \, \mid \, |z| = 1\}$ be the unit circle. Then there is no rotation-invariant probability measure $\Pr: 2^\Omega \to [0, 1]$.
+:::
+
+### $\sigma$-Fields 
+
+The Kolmogrov Axioms suggest some natural structures for $\mathcal{F}$. The first axiom necessitates $\Omega \in \mathcal{F}$. Furthermore, by finite additivity, there is a natural way of assigning a measure to $A^c$ if $A \in \mathcal{F}$. $$ 1 = \Pr(\Omega) = \Pr(A \cup A^c) = \Pr(A) + \Pr(A^c) \implies \Pr(A^c) = 1 - \Pr(A). $$
+That is, it would be desirable for $\mathcal{F}$ to be closed under complements too. Similarly, the third axiom also suggest that $\mathcal{F}$ be closed under countable unions.   
+
+::: {#def-sigma-fields}
+## $\sigma$-Field
+
+A collection $\mathcal{F} \subseteq 2^\Omega$ is a _$\sigma$-field_ if 
+
+1. $\Omega \in \mathcal{F}$;
+2. If $E \in \mathcal{F}$, then $E^c \in \mathcal{F}$;
+3. If $\{E_j\}$ is a countable set of events in $\mathcal{F}$, then $\bigcup_{j = 1}^\infty E_j \in \mathcal{F}$.
+
+:::
+
+$\sigma$-fields are closed under intersection, which allows us to conveniently talk about the smallest $\sigma$-field containing any old family of sets we may be naturally interested in.
+
+::: {#lem-closure-intersect}
+## Closure Under Intersection
+
+If $I$ is any index set and $\{\mathcal{F}_i \, \mid \, i \in I\}$ are $\sigma$-fields over $\Omega$, then $\bigcap_{i \in I} \mathcal{F}_i$ is a $\sigma$-field.
+:::
+
+
+::: {#prp-generated-sigma}
+## Smallest $\sigma$-Field
+
+Let $\mathcal{E} \in 2^\Omega$ be any collection of subsets of $\Omega$. There is a unique smallest $\sigma$-field, $\sigma(\mathcal{E})$, that contains $\mathcal{E}$. It is called the $\sigma$-field generated by $\mathcal{E}$.
+::: 
+
+::: {#lem-compare-sigma}
+## Comparing Generated $\sigma$-Fields
+
+Let $\mathcal{E}_1, \mathcal{E}_2 \in 2^\Omega$. Then $\sigma(\mathcal{E}_1) = \sigma(\mathcal{E}_2)$ if and only if $\mathcal{E}_1 \subseteq \sigma(\mathcal{E}_2)$ and $\mathcal{E}_2 \subseteq \sigma(\mathcal{E}_1)$. 
+:::
+
+When working over a topological space, it is often convenient for the measure to be compatible with the underlying topology; especially with respect to being able to assign a measure to open and closed sets.
+
+::: {#def-borel}
+## Borel $\sigma$-algebra
+
+Let $X$ be a topological space. The _Borel $\sigma$-algebra_, $\mathcal{B}(X)$, is the $\sigma$-field generated by the open subsets in $X$. Events in $\mathcal{B}(X)$ are called _Borel sets_. 
+:::
+
+In practice, constructing a measure over $\sigma$-fields directly becomes quite difficult. It will be more useful to first construct finitely-additive measures which we then extend appropriately to the full generality required by the Kolmogrov Axioms. 
+
+::: {#def-fields}
+## Field
+
+A collection $\mathcal{F} \subseteq 2^\Omega$ is a _field_ if 
+
+1. $\Omega \in \mathcal{F}$;
+2. If $E \in \mathcal{F}$, then $E^c \in \mathcal{F}$;
+3. If $E_1, \dots, E_n \in \mathcal{F}$, then $\bigcup_{j = 1}^n E_j \in \mathcal{F}$.
+:::
+
+Again, motivated by a desire to play nice with the underlying topology, we draw special interest to the following family.
+
+::: {#def-borel-field}
+## Borel Field 
+
+The _Borel field_, denoted $\mathcal{B}_{(\,]}(\mathbb{R})$, is the field $\mathcal{A}(\mathcal{I}_{(\,]})$ generated by the half-open intervals, $$ \mathcal{I}_{(\,]} = \{(a, b] \, \mid \, -\infty \le a \le b \le \infty\}. $$
+:::
+
+First, half-intervals are able to _arbitrarily approximate_ both open and closed intervals; that is, more precisely, any open or closed interval is a countable union of half-open intervals. However, in contrast to the family of just open sets or just closed sets, the set of half-open intervals, $\mathcal{I}_{(\,]}$, and the field they generate have very nice algebraic properties that are easier to work with. 
+
+::: {#def-semi-algebra}
+## Semi-Algebra of Sets
+
+A collection $\mathcal{S} \subseteq 2^\Omega$ is a _semi-algebra_ or _elementary class_ if 
+1. $\emptyset \in \mathcal{S}$;
+2. If $A, B \in \mathcal{S}$ then $A \cap B \in \mathcal{S}$;
+3. If $A \in \mathcal{S}$ then $A^c$ is a finite disjoint union of elements from $\mathcal{S}$.
+:::
+
+::: {#lem-half-interval-salgebra}
+
+The family of half-open intervals, $\mathcal{I}_{(\,]}$, is a semi-algebra. 
+:::
+
+::: {#lem-semi-algebra}
+## Semi-algebra Representation
+
+If $\mathcal{S}$ is a semi-algebra over $\Omega$, then the field $\mathcal{A}(\mathcal{S})$ it generates is equal to $$\mathrm{DU}(\mathcal{S}) = \{ \text{all finite disjoint unions of sets from } \mathcal{S} \}.$$
+:::
+
+
+### Measures
+
+::: {#def-measures}
+## Measures 
+
+A pair $(\Omega, \mathcal{F})$ is a _measurable space_ if $\mathcal{F} \subseteq 2^\Omega$ is a $\sigma$-algebra and a set $E \in \mathcal{F}$ is called a _measurable set_. A function $\mu: \mathcal{F} \to [0, \infty]$ is called a _measure_ if it is countably additive. The triple $(\Omega, \mathcal{F}, \mu)$ is then called a _measure space_. 
+
+If $\mu(\Omega) < \infty$, we say $\mu$ is a _finite measure_. 
+
+If $\Omega = \bigcup_{i = 1}^\infty A_i$ with $A_i \in \mathcal{F}$ and $\mu(A_i) < \infty$ then $\mu$ is a _$\sigma$-finite measure_.
+
+If $\mu(\Omega) = 1$, we say $\mu$ is a _probability measure_ and $(\Omega, \mathcal{F}, \mu)$ is a _probability space_.
+:::
+
+::: {#lem-new-measures}
+## New Measures from Old
+
+Fix a measurable space $(\Omega, \mathcal{F})$.
+If $\mu$ is a measure, so is $\alpha \mu$ for any $\alpha \ge 0$. If $\{\mu_j\}_{j \in \mathbb{N}}$ is a countable set of measures then $\mu = \sum_{j \in \mathbb{N}} \mu_j$ is a measure too.
+:::
+
+::: {#prp-finite-from-sigma-finite}
+## Decomposing $\sigma$-Finite Premeasure Space to Finite Premeasure Spaces
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a $\sigma$-finite premeasure space. That is, there exists a sequence $\{A_n\}$ in $\mathcal{A}$, such that $$\Omega = \bigcup_{n = 1}^\infty A_n$$ with all $\mu(A_n) < \infty$. Take $\Omega_1 = A_1, \Omega_n = A_n \backslash A_{n - 1}$. Furthermore, $\mu(\Omega_n) \le \mu(A_n) < \infty$, $\Omega = \bigsqcup_{n = 1}^\infty \Omega_n$. Define $\mu_n: \mathcal{A} \to [0, \infty)$ by $\mu_n(A) = \mu(A \cap \Omega_n)$. Then, $(\Omega_n, \mathcal{A}, \mu_n)$ is a finite premeasure space. 
+:::
+
+::: {#def-inc-dec}
+## Increasing, Decreasing Families
+
+We write $A_i \uparrow A$ to mean that $A_i \subseteq A_{i + 1}$ and $A = \bigcup_{i = 1}^\infty A_i$.
+Similarly, we write $A_i \downarrow A$ to mean that $A_i \supseteq A_{i + 1}$ and $A = \bigcap_{i = 1}^\infty A_i$.
+
+:::
+
+::: {#prp-measure-prperties}
+## prperties of Measure
+
+Let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Then,
+
+1. If $E_1, E_2 \in \mathcal{F}$ with $E_1 \subseteq E_2$ then $\mu(E_1) \le \mu(E_2)$ _(montonicity)_;
+2. Suppose $\{E_i\}_{i \in \mathbb{N}}$ is a countable sequence of measurable sets. Then $\mu \left(\bigcup_{i = 1}^\infty E_i\right) \le \sum_{i = 1}^\infty \mu(E_i)$ _(countable subadditivity)_;
+3. Suppose $E_i \uparrow E$. Then $\mu \left(E\right) = \lim_{i \to \infty} \mu(E_i)$ _(continuity from below)_;
+4. Suppose $E_i \downarrow E$ and there exist $j \in \mathbb{N}$ such that $\mu(E_j) < \infty$. Then $\mu\left(E\right) = \lim_{i \to \infty} \mu(E_i)$ _(continuity from above)_.
+:::
+
+## Constructing a Premeasure
+
+### Premeasure
+
+::: {#def-premeasure}
+## Premeasure
+
+A pair $(\Omega, \mathcal{A})$ is a _premeasurable space_ if $\mathcal{A}$ is a field over $\Omega$. A countably additive function $\mu: \mathcal{A} \to [0, \infty]$ is a _premeasure_. If we assume $\chi$ is only finitely additive, we call it a _finitely additive measure_.
+:::
+
+::: {#prp-finitely-additive-measure}
+## Countable Superadditivity of Finitely Additive Measures
+
+Let $(\Omega, \mathcal{A}, \chi)$ be a finitely additive measure space. If $\{A_i\}_{i \in \mathbb{N}}$ are disjoint in $\mathcal{A}$, and $A = \bigsqcup_{i \in \mathbb{N}} A_i \in \mathcal{A}$ then $$ \chi(A) \ge \sum_{i \in \mathbb{N}} \chi(A_i). $$
+:::
+
+::: {#prp-semialgebra-extension}
+## Extension I: Finitely-Additive Measure from Semialgebra $\to$ Field
+
+Let $\mathcal{S}$ be a semi-algebra over $\Omega$. Let $\chi: \mathcal{S} \to [0, \infty]$ be finitely additive. Then $\chi$ extends to a unique finitely additive measure on $\mathcal{A}(\mathcal{S})$, defined by $$ A = \bigsqcup_{i = 1}^n E_i, \, E_i \in \mathcal{S} \implies \chi(A) = \sum_{i = 1}^n \chi(E_i). $$
+:::
+
+::: {#prp-finite-additive-to-premeasure}
+## Extension II: Finitely-Additive Meaure on Field $\to$ Premeasure 
+
+Let $\mathcal{S} \subseteq 2^\Omega$ be a semi-algebra. A finitely-additive measure $\chi: \mathcal{A}(\mathcal{S}) \to [0, \infty]$ is a premeaure if and only if it is countably subadditive on $\mathcal{S}$, $$ E = \bigsqcup_{j = 1}^\infty E_j \in \mathcal{S} \implies \chi(E) \le \sum_{j = 1}^\infty \chi(E_j). $$
+:::
+
+::: {#prp-convergence-sets}
+## Continuity of Premeasures
+
+Let $\mu$ be a finitely additive measure on $(\Omega, \mathcal{A})$. The following are equivalent:
+
+1. $\mu$ is a premeasure on $\mathcal{A}$;
+2. If $A_n, A \in \mathcal{A}$ and $A_n \uparrow A$ then $\mu(A_n) \uparrow \mu(A)$.
+
+Moreover, in the case that $\mu(\Omega) < \infty$, the following are also equivalent 
+
+3. If $A_n \downarrow A$ in $\mathcal{A}$, then $\mu(A_n) \downarrow \mu(A)$;
+4. If $A_n \uparrow \Omega$ in $\mathcal{A}$, then $\mu(A_n) \uparrow \mu(\Omega)$;
+5. If $A_n \downarrow \emptyset$ in $\mathcal{A}$, then $\mu(A_n) \downarrow 0$.
+:::
+
+### Stieltjes Premeasure
+
+::: {#prp-stieltjes-finitely-additive}
+### Stieltjes Set Function
+
+Let $F: \mathbb{R} \to \mathbb{R}$ be a non-decreasing functions. On the semi-algebra, $\mathcal{I}_{(\,]}$, define $$ \chi_F((a, b]) = F(b) - F(a). $$ Furthermore, this is nonnegative and finitely-additive on $\mathcal{I}_{(\,]}$.
+:::
+
+::: {#prp-stieltjes-prmeasure}
+## Extension III: Stieltjes Set Function $\to$ Premeasure
+
+The set function $\chi_F$ is a premeasure on $\mathcal{B}_{(\,]}(\mathbb{R})$ if and only if $F$ is right-continuous on $\mathbb{R}$, $$ \lim_{\delta \downarrow 0} F(a + \delta) = F(a). $$
+:::
+
+::: {#lem-lebesgue-prmeasure}
+## Lebesgue Premeasure
+
+When $F(x) = x$, then $\chi_F$ is a premeasure on $\mathcal{B}_{(\,]}(\mathbb{R})$ and known as the _Lebesgue premeasure_.
+:::
+
+### Outer Measures
+
+Given a premeasurable space $(\Omega, \mathcal{A}, \mu)$, we would like to ideally extend $\mu$ to a measure $\overline{\mu}: \sigma(A) \to [0, \infty]$. That is, find a $\sigma$-field $\mathcal{F} \supseteq \sigma(\mathcal{A})$ and a measure $\overline{\mu}$ on $\mathcal{F}$ such that $\overline{\mu} \mid_{\mathcal{A}} = \mu$.
+
+::: {#def-cara-extension}
+## Caratheodory Extension
+
+Let $\Omega$ be a set and $\mathcal{E} \subseteq 2^{\Omega}$ such that $\emptyset, \Omega \in \mathcal{E}$. Let $\rho: \mathcal{E} \to [0, \infty]$ be such that $\rho(\emptyset) = 0$. Define the Caratheodory Extension $\rho^\star: 2^\Omega \to [0, \infty]$, by $$\rho^\star(A) = \inf \left\{\sum_{j = 1}^\infty \rho(E_j) \, \mid \, E_j \in \mathcal{E}, A \subseteq \bigcup_{j = 1}^\infty E_j\right\}. $$
+:::
+
+::: {#def-outermeasure}
+## Outer Measure 
+
+Let $\Omega$ be a nonempty set. A function $\nu: 2^\Omega \to [0, \infty]$ is an _outer measure_ if 
+
+1. $\nu(\emptyset) = 0$;
+2. $\nu$ is monotone, $A \subseteq B \implies \nu(A) \le \nu(B)$;
+3. $\nu$ is countably subadditive, $\nu\left(\bigcup_{n = 1}^\infty A_n\right) \le \sum_{n = 1}^\infty \nu(A_n).$
+:::
+
+::: {#lem-pemeasure-measure}
+### Premeasure, Outer Measure, Measure
+
+If $(\Omega, \mathcal{A}, \mu)$ is a premeasure space and $(\Omega, \sigma(\mathcal{A}), \nu)$ is a measure space extending it, then $\nu \le \mu^\star$, on $\sigma(\mathcal{A})$.
+:::
+
+::: {#prp-finite-additive-premeasure}
+### Premeasure, Outer Measure
+
+If $(\Omega, \mathcal{A}, \chi)$ is a finitely-additive measure space, then $\chi^\star \le \chi$ on $\mathcal{A}$. Furthermore, $\chi^\star = \chi$ on $\mathcal{A}$ if and only if $\chi$ is a premeasure.
+:::
+
+## Constructing the Measure
+
+There are a few approaches to extending a premeasure to a measure. The standard approach takes the followin shape:
+
+1. Define $$ \mathcal{M}_\mu = \{ E \subseteq \Omega \, \mid \, \mu^\star(T) = \mu^\star(T \cap E) + \mu^\star(T \cap E^c), \forall T \subseteq \Omega \}. $$
+2. Show that $\mathcal{M}$ is a $\sigma$-field containing $\mathcal{A}$.
+3. Show $\mu^\star$ is countably additive on it.
+
+This approach requires some new tools: Monotone Class Theorem or Dynkin's $\pi$-$\lambda$ Theorem. Furthermore, it tends to feel a bit too clever and unmotivated!
+
+At least for finite premeasures, we have a more natural approach on the basis of topological ideas.
+
+1. Define a topology over $2^\Omega$.
+2. Define $\overline{\mathcal{A}}$ to be the closure of $\mathcal{A}$.
+3. Show that $\mu: \mathcal{A} \to (0, \infty]$ is _sufficiently continuous_ to extend it to the closure $\mathcal{A}$.
+4. Use topological tools to show $\overline{\mathcal{A}}$ is a $\sigma$-field and $\overline{\mu}$ is a measure such that $\overline{\mu} = \mu^\star$ on $\overline{\mathcal{A}}$.
+
+### Extending Finite-Premeasures
+
+#### Metric Spaces
+We start by recalling some metric space theory.
+
+::: {#def-pseudo-metric-space}
+## Pseudometric Spaces
+
+A function $d: X \times X \to [0, \infty]$ is a _pseudometric_ on $X$ if 
+
+1. $x = y \implies d(x, y) = 0$;
+2. $d(x, y) = d(y, x)$ _(symmetry)_;
+3. $d(x, z) \le d(x, y) + d(y, z)$ _(triangle inequality)_.
+:::
+
+::: {#def-limit}
+## Limit
+
+A sequence $\{x_n\}$ in $X$ has a _limit_ $x$ if $$\forall \epsilon > 0. \exists N \in \mathbb{N}. \forall n \ge N. \; d(x_n, x) < \epsilon. $$
+:::
+
+::: {#def-closure}
+## Closure, Closed Set
+
+Let $X$ be a pseudometric space. Given $V \subseteq X$, the _closure_ $\overline{V}$ is the set of limits of sequences in $V$.
+A set $V \subseteq X$ is _closed_ if $\overline{V} = V$.
+:::
+
+::: {#def-lipschitz}
+## Lipschitz 
+
+Let $X$ be a pseudometric space.
+A function $f: X \to \mathbb{R}$ is _Lipschitz_ if there exists $K \in (0, \infty)$ such that for all $x, y \in X$ we have $|f(x) - f(y)| \le K \cdot d(x, y)$.
+:::
+
+::: {#prp-lipschitz-ext}
+## Lipschitz Extensions
+
+If $f: V \to \mathbb{R}$ is Lipschitz on a nonempty $V \subseteq X$, then there is a unique Lipschitz extension $\overline{f}: \overline{V} \to \mathbb{R}$ with the same Lipschitz constant.
+:::
+
+Now, we metrize $2^\Omega$.
+
+::: {#def-outer-pmetric}
+## Outer Pseudometric
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a finite premeaure space and $\mu^\star: 2^\Omega \to [0, \mu(\Omega)]$ be the Caratheodory outer measure. Then, we define $d_\mu: 2^\Omega \times 2^\Omega \to [0, \mu(\Omega)]$ by $d_\mu(E, F) = \mu^\star (E \Delta F)$.
+:::
+
+::: {#prp-outer-pmetric}
+## Outer Pseudometric
+
+$d_\mu$ is a pseudometric on $2^\Omega$.
+:::
+
+::: {#prp-prperties-pmetric}
+## Properties of the Pseudometric
+1. $\forall A, B \in 2^\Omega. \; d_\mu(A, B) = d_\mu(A^c, B^c)$;
+2. $\forall$ sequences $\{A_n\}_{n \in \mathbb{N}}, \{B\}_{n \in \mathbb{N}}$ in $2^\Omega$. Then, 
+    - $d_\mu(\bigcup_{n = 1}^\infty A_n, \bigcup_{n = 1}^\infty B_n) \le \sum_{n = 1}^\infty d_\mu(A_n, B_n)$;
+    - $d_\mu(\bigcap_{n = 1}^\infty A_n, \bigcap_{n = 1}^\infty B_n) \le \sum_{n = 1}^\infty d_\mu (A_n, B_n)$.
+:::
+
+::: {#lem-pmetric-continuity-below}
+## Outer Pseudometric: Continuity from Below
+
+If $(\Omega, \mathcal{A}, \mu)$ is a finite premeasure space and $A_n \in \mathcal{A}$ with $A_n \uparrow A$, then $d_\mu(A_n, A) = \mu^\star(A) - \mu(A_n) \to 0$.
+:::
+
+#### Closure in the Pseudometric
+
+::: {#lem-characterize-closure}
+## Closure, Convergence from Below
+
+If $A_n \in \mathcal{A}$ and $A_n \uparrow A$, then $A \in \overline{\mathcal{A}}$.
+:::
+
+::: {#def-countable-closure}
+## Countable Union Family
+
+Given $\mathcal{E} \subseteq 2^\Omega$, $\mathcal{E}_\sigma = \{\text{countable unions of elements of } \mathcal{E}\}$.
+:::
+
+::: {#prp-closure-sigma-field}
+## Closure, $\sigma$-Field
+
+If $(\Omega, \mathcal{A}, \mu)$ is a finite premeasure space, then 
+
+1. $\overline{A_\sigma} = \overline{A}$;
+2. the closure $\overline{\mathcal{A}}$ of the field $\mathcal{A}$ in the pseudometric space $(2^\Omega, d_\mu)$ is a $\sigma$-field.
+:::
+
+::: {#prp-measure-ext}
+## Lipschitz Extension of $\mu$
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a finite premeasure space. Then $\mu$ extends to a unique Lip-$1$ function $\overline{\mu}: \overline{A} \to [0, \infty]$. Furthermore, $\overline{\mu} = \mu^\star$ on $A_\sigma$.
+:::
+
+::: {#prp-approximate-closure}
+## Characterizing Closure
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a finite premeasure space. For $B \in 2^\Omega$, the following are equivalent.
+
+1. $B \in \overline{A}$
+2. $\forall \epsilon > 0. \exists C \in A_{\sigma}$ such that $B \subseteq C$ and $\mu^\star(C \backslash B) = d_\mu(B, C) < \epsilon$.
+:::
+
+::: {#prp-closure-equality}
+## Equality of Extension on Closure
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a finite premeasure space. Then $\overline{\mu} = \mu^\star$ on $\overline{\mathcal{A}}$.
+:::
+
+#### Constructing the Measure
+
+::: {#prp-measure}
+## Existence of Measure
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a finite premeasure space. Then, $\overline{\mu}: \overline{\mathcal{A}} \to [0, \mu(\Omega)]$ is a measure.
+:::
+
+::: {#prp-measure-exist}
+## Uniqueness of Measure
+
+If $\mathcal{F}$ is a $\sigma$-field with $\mathcal{A} \subseteq \mathcal{F} \subseteq \overline{\mathcal{A}}$ and $\nu$ is a measure on $\mathcal{F}$ with $\nu\mid_{\mathcal{A}} = \mu$, the $\nu = \overline{\mu}\mid_{\mathcal{F}}$.
+:::
+
+::: {#prp-sigma-finite-extension}
+## Existence and Uniqueness for $\sigma$-Finite Measure Spaces
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a $\sigma$-finite premeasure space. Then, $\overline{\mu} = \sum_{n = 1}^\infty \overline{\mu_n}$ is the unique measure on $\sigma(\mathcal{A})$ extending $\mu$.
+:::
+
+::: {#prp-measure-sigma-finite}
+
+Let $(\Omega, \mathcal{A}, \mu)$ be a $\sigma$-finite premeasure space. 
+
+1. $\overline{\mu} = \mu^\star$ on $\sigma(\mathcal{A})$;
+2. If $B \in \sigma(\mathcal{A})$ and $\epsilon > 0$, $\exists C \in \mathcal{A}_\sigma$ such that $B \subseteq C$ and $\overline{\mu}(C \backslash B) < \epsilon$.
+3. If $\overline{\mu}(B) < \infty$, $\exists A \in \mathcal{A}$ such that $\overline{\mu}(A \Delta B) < \epsilon$.
+:::
+
+### The Standard Approach
+
+#### Dynkin's $\pi$-$\lambda$ Systems
+
+
+::: {#def-lambda-sys}
+## $\lambda$-System
+
+A collection $\Lambda \subseteq 2^\Omega$ is a _$\lambda$-system_ over $\Omega$ if 
+
+1. $\emptyset \in \Lambda$;
+2. $A, B \in \Lambda$, with $A \subseteq B \implies B \backslash A \in \Lambda$;
+3. $A_i \in \Lambda$ and $A_i \uparrow A \implies A \in \Lambda$.
+:::
+
+::: {#lem-closest-lambda}
+## Closure Under Intersection
+
+If $I$ is any index set and $\{\Lambda_i \, \mid \, i \in I\}$ are $\lambda$-systems then $\bigcap_{i \in I} \Lambda_i$ is also a $\lambda$-system.
+:::
+
+::: {#def-smallest-lambda}
+Let $\mathcal{E} \in 2^\Omega$ be any collection of subsets of $\Omega$. There is a unique smallest $\lambda$-field, $\sigma(\mathcal{E})$, that contains $\mathcal{E}$. It is called the $\sigma$-field generated by $\mathcal{E}$.
+:::
+
+::: {#def-pi-sys}
+## $\pi$-System
+
+A collection $\Pi \subseteq 2^\Omega$ is a _$\pi$-system_ over $\Omega$ if $A, B \in \Pi \implies A \cap B \in \Pi$.
+:::
+
+::: {#lem-sigma-equiv-pi-lambda}
+## $\sigma$-Fields = $\pi$-Systems $+$ $\lambda$-Systems
+
+A collection $\mathcal{F}$ is a $\sigma$-algebra if and only if it is both a $\pi$-system and $\lambda$-system.
+:::
+
+::: {#lem-pi-to-sigma}
+## $\lambda$-System Generated By $\pi$-System
+
+Let $\Pi$ be a $\pi$-system over $\Omega$. Then, $\lambda(\Pi)$ is a $\sigma$-field over $\Omega$.
+:::
+
+::: {#prp-dynkin}
+## Dynkin's $\pi$-$\lambda$ Theorem
+
+If $\Pi$ is a $\pi$-system and $\Lambda$ is a $\lambda$-system that contains $\Pi$ then $\sigma(\Pi) \subseteq \Lambda$.
+:::
+
+#### Caratheodory's Criterion
+
+#### Constructing the Measure
+
+
+## Measures on $\mathbb{R}$
+
+### Radon Measure
+
+:::{#def-radon}
+## Radon Measure on $\mathbb{R}$
+
+A Borel measure $(\mathbb{R}, \mathcal{B}(\mathbb{R}), \mu)$ on $\mathbb{R}$ is called a _Radon measure_ if forall $a < b \in \mathbb{R}$ we have $\mu((a, b]) < \infty$.
+:::
+
+::: {#prp-radon}
+## Characterizing Radon Measures on $\mathbb{R}$
+
+If $\mu$ is a Radon measure on $\mathbb{R}$, then there exists a non-decreasing right-continuous function $F: \mathbb{R} \to \mathbb{R}$, unique up to additive constants, such that for $-\infty \le a \le b \le \infty$ we have $$\mu((a, b]) = F(b) - F(a).$$
+:::
+
+
+::: {#def-cum-prob}
+## Cumulative Distribution Functions
+
+Let $\mu$ be a Borel probability measure on $\mathbb{R}$. Then the _cumulative distribution function (cdf)_ of $\mu$ is the function $F_\mu: \mathbb{R} \to \mathbb{R}$ defined by $$F_\mu(x) = \mu((-\infty, x]).$$
+:::
+
+::: {#prp-cdf-borel}
+## Characterizing Radon Measures on $\mathbb{R}$
+
+Any right-continuous, non-decreasing function $F: \mathbb{R} \to \mathbb{R}$ satisfying $$\lim_{x \to -\infty} F(x) = 0, \lim_{x \to +\infty} F(x) = 1$$ is the cdf of a unique Borel probability measure on $\mathbb{R}$.
+:::
+
+### Lebesgue Measure
+
+::: {#def-lebesgue}
+## Lebesgue Measure
+
+The Radon measure on $\mathbb{R}$ satisfying $\lambda((a, b]) = b - a$ for $-\infty < a \le b < \infty$ is called the _Lebesgue measure_.
+:::
+
+::: {#prp-trans-invariatn}
+## Translation Invariance of the Lebesgue Measure
+
+The Lebesgue measure, $\lambda$, is the unique translation invariant Borel measure such that $\lambda((0, 1]) = 1$. If $\mu$ is any other translation invariant Borel measure, then $\mu = \alpha \lambda$ for some $\alpha \ge 0$.
+:::
+
+::: {#def-null-set}
+## Null Set
+
+In a measure space $(\Omega, \mathcal{F}, \mu)$, a measurable set $N \in \mathcal{F}$ is a _null set_ if $\mu(N) = 0$.
+:::
+
+::: {#lem-countable}
+If $X \subseteq \mathbb{R}$ is countable, then $\lambda(X) = 0$.
+:::
+
+::: {#def-cantor}
+## Cantor Set
+
+Define
+
+\begin{align*}
+\mathcal{C}_0 &= [0, 1], \\
+\mathcal{C}_{n + 1} &= \frac{\mathcal{C}_n}{3} \cup \left(\frac{2}{3} + \frac{\mathcal{C}_n}{3}\right).
+\end{align*}
+
+Then, the Cantor set is defined as 
+
+$$ \mathcal{C} = \bigcap_{n = 0}^\infty \mathcal{C}_n. $$
+
+:::
+
+::: {#lem-cantor}
+If $\mathcal C$ is the Cantor set then $\lambda(\mathcal{C}) = 0$.
+:::
+
+::: {#def-null-complete}
+## Null Completion
+
+A measure space $(\Omega, \mathcal{F}, \mu)$ is called _(null) complete_ if, for every $N \in \mathcal{F}$ with $\mu(N) = 0$, every subset $\Lambda \subseteq N$ is in $\mathcal{F}$.
+:::
+
+::: {#prp-completion}
+## Completion of Measure Space
+
+For any measurable space $(\Omega, \mathcal{F}, \mu)$, there is an extension $\widetilde{\mathcal{F}} \supseteq \mathcal{F}$, $\widetilde{\mu}\mid_{\widetilde{\mathcal{F}}}$ such that $(\Omega, \mathcal{\widetilde{F}}, \widetilde{\mu})$ is complete.
+:::
+
+Often, the Lebesgue measure implies a particularly large $\sigma$-field, 
+\begin{align*}
+\mathcal{M}_{\lambda} = \{E \subseteq \mathbb{R} \, \mid \, \forall \lambda \subseteq \mathbb{R}. \lambda^\star(A) = \lambda^\star(A \cap E) + \lambda^\star(A \cap E^c)\}.
+\end{align*}
+
+In fact, we have already encountered this.
+
+::: {#prp-lebesgue-closure}
+In a finite premeasure space $(\Omega, \mathcal{A}, \mu)$, we have $\mathcal{M}_\mu = \overline{\mathcal{A}}$.
+:::
+
+In practice, we will not be using $\mathcal{M}$. For us, the Lebesgue measure is pretty much a Borel measure. Worst case, we may possibly need to complete the Borel $\sigma$-field in some applications.
+
+## Integration Theory
+
+### Random Variables
+
+### Robustness of Measurability
+
+### Riemann-Stieltjes Integration
+
+### Lebesgue Integral, Monotone Convergence
+
+### Fatou and Borel-Cantelli
+
+### $L^1(\mathbb{R})$, Dominated Convergence 
+
+### Comparing Lebesgue and Riemann Integrals
+
+### Radon-Nikodym, Lebesgue Decomposition, Probability Laws
+
+## Independence, Law of Large Numbers
+
+### $L^2(\mathbb{R})$, Weak Law of Large Numbers
+
+### Convergence, $L^p(\mathbb{R})$
+
+### Product Measure
+
+### Independence
+
+### Kolmogrov's Extension Theorem
+
+### Kolomogrov $0$-$1$ Law
+
+### Convolution
+
+### Strong Law of Large Numbers

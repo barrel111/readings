@@ -1,0 +1,17 @@
+---
+title: "Concentration Inequalities"
+number-sections: true
+---
+
+Our fundamentally concerns here are with obtaining upper bounds on the _tail probabilities_,  
+
+$$ \Pr \set{ |X - \mu| > t } \le \text{something small}, $$
+
+and applications of such results to combinatorics and theoretical computer science.
+
+
+## Sum of Independent Random Variables
+
+## Bounding the Variance
+
+## Random Vectors in High Dimensions

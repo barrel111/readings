@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Design &amp; Analysis of Algorithms</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="algorithms_files/libs/clipboard/clipboard.min.js"></script>
+<script src="algorithms_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="algorithms_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="algorithms_files/libs/quarto-html/popper.min.js"></script>
+<script src="algorithms_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="algorithms_files/libs/quarto-html/anchor.min.js"></script>
+<link href="algorithms_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="algorithms_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="algorithms_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="algorithms_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="algorithms_files/libs/bootstrap/bootstrap-2a447fc7de18009f8c88f682380fb0bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="algorithms_files/libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="algorithms_files/libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<script src="algorithms_files/libs/quarto-contrib/thms-1.0.0/thms.js"></script>
+<link href="algorithms_files/libs/quarto-contrib/thms-1.0.0/thms.scss" rel="stylesheet">
+<script src="mathjax-config.js"></script>
+    <style type="text/css">
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="custom.scss">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#matchings" id="toc-matchings" class="nav-link active" data-scroll-target="#matchings"><span class="header-section-number">1</span> Matchings</a>
+  <ul class="collapse">
+  <li><a href="#bipartite-maximum-matching" id="toc-bipartite-maximum-matching" class="nav-link" data-scroll-target="#bipartite-maximum-matching"><span class="header-section-number">1.1</span> Bipartite Maximum Matching</a></li>
+  <li><a href="#hopcroft-karp-algorithm" id="toc-hopcroft-karp-algorithm" class="nav-link" data-scroll-target="#hopcroft-karp-algorithm"><span class="header-section-number">1.2</span> Hopcroft-Karp Algorithm</a></li>
+  <li><a href="#min-cost-bipartite-perfect-matching-lp-relaxation" id="toc-min-cost-bipartite-perfect-matching-lp-relaxation" class="nav-link" data-scroll-target="#min-cost-bipartite-perfect-matching-lp-relaxation"><span class="header-section-number">1.3</span> Min-Cost Bipartite Perfect Matching, LP Relaxation</a></li>
+  <li><a href="#mise-en-place-ski-rental-problem" id="toc-mise-en-place-ski-rental-problem" class="nav-link" data-scroll-target="#mise-en-place-ski-rental-problem"><span class="header-section-number">1.4</span> <em>Mise en Place</em> : Ski-Rental Problem</a></li>
+  <li><a href="#online-matching" id="toc-online-matching" class="nav-link" data-scroll-target="#online-matching"><span class="header-section-number">1.5</span> Online Matching</a></li>
+  <li><a href="#algebraic-algorithms" id="toc-algebraic-algorithms" class="nav-link" data-scroll-target="#algebraic-algorithms"><span class="header-section-number">1.6</span> Algebraic Algorithms</a></li>
+  </ul></li>
+  <li><a href="#linear-programming" id="toc-linear-programming" class="nav-link" data-scroll-target="#linear-programming"><span class="header-section-number">2</span> Linear Programming</a>
+  <ul class="collapse">
+  <li><a href="#basics" id="toc-basics" class="nav-link" data-scroll-target="#basics"><span class="header-section-number">2.1</span> Basics</a></li>
+  <li><a href="#duality" id="toc-duality" class="nav-link" data-scroll-target="#duality"><span class="header-section-number">2.2</span> Duality</a></li>
+  <li><a href="#simplex-method" id="toc-simplex-method" class="nav-link" data-scroll-target="#simplex-method"><span class="header-section-number">2.3</span> Simplex Method</a></li>
+  <li><a href="#strong-duality" id="toc-strong-duality" class="nav-link" data-scroll-target="#strong-duality"><span class="header-section-number">2.4</span> Strong Duality</a></li>
+  <li><a href="#separation-oracles" id="toc-separation-oracles" class="nav-link" data-scroll-target="#separation-oracles"><span class="header-section-number">2.5</span> Separation Oracles</a></li>
+  <li><a href="#ellipsoid-algorithm" id="toc-ellipsoid-algorithm" class="nav-link" data-scroll-target="#ellipsoid-algorithm"><span class="header-section-number">2.6</span> Ellipsoid Algorithm</a></li>
+  </ul></li>
+  <li><a href="#network-flow" id="toc-network-flow" class="nav-link" data-scroll-target="#network-flow"><span class="header-section-number">3</span> Network Flow</a>
+  <ul class="collapse">
+  <li><a href="#minimum-cut" id="toc-minimum-cut" class="nav-link" data-scroll-target="#minimum-cut"><span class="header-section-number">3.1</span> Minimum Cut</a></li>
+  <li><a href="#maximum-flow" id="toc-maximum-flow" class="nav-link" data-scroll-target="#maximum-flow"><span class="header-section-number">3.2</span> Maximum Flow</a></li>
+  <li><a href="#ford-fulkerson" id="toc-ford-fulkerson" class="nav-link" data-scroll-target="#ford-fulkerson"><span class="header-section-number">3.3</span> Ford-Fulkerson</a></li>
+  <li><a href="#dinitzs-algorithm" id="toc-dinitzs-algorithm" class="nav-link" data-scroll-target="#dinitzs-algorithm"><span class="header-section-number">3.4</span> Dinitz’s Algorithm</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">3.5</span> Applications</a></li>
+  </ul></li>
+  <li><a href="#multicommodity-flow" id="toc-multicommodity-flow" class="nav-link" data-scroll-target="#multicommodity-flow"><span class="header-section-number">4</span> Multicommodity Flow</a>
+  <ul class="collapse">
+  <li><a href="#sparsest-cut-multicommodity-flow" id="toc-sparsest-cut-multicommodity-flow" class="nav-link" data-scroll-target="#sparsest-cut-multicommodity-flow"><span class="header-section-number">4.1</span> Sparsest Cut &amp; Multicommodity Flow</a></li>
+  <li><a href="#mise-en-place-the-chernoff-bound" id="toc-mise-en-place-the-chernoff-bound" class="nav-link" data-scroll-target="#mise-en-place-the-chernoff-bound"><span class="header-section-number">4.2</span> <em>Mise en Place</em>: The Chernoff Bound</a></li>
+  <li><a href="#randomized-rounding-for-approximate-congestion-minimization" id="toc-randomized-rounding-for-approximate-congestion-minimization" class="nav-link" data-scroll-target="#randomized-rounding-for-approximate-congestion-minimization"><span class="header-section-number">4.3</span> Randomized Rounding for Approximate Congestion Minimization</a></li>
+  <li><a href="#approximate-max-flow-min-cut" id="toc-approximate-max-flow-min-cut" class="nav-link" data-scroll-target="#approximate-max-flow-min-cut"><span class="header-section-number">4.4</span> Approximate Max-Flow Min-Cut</a></li>
+  </ul></li>
+  <li><a href="#multiplicative-weights" id="toc-multiplicative-weights" class="nav-link" data-scroll-target="#multiplicative-weights"><span class="header-section-number">5</span> Multiplicative Weights</a>
+  <ul class="collapse">
+  <li><a href="#halving-weighted-majority" id="toc-halving-weighted-majority" class="nav-link" data-scroll-target="#halving-weighted-majority"><span class="header-section-number">5.1</span> Halving &amp; Weighted Majority</a></li>
+  <li><a href="#hedge" id="toc-hedge" class="nav-link" data-scroll-target="#hedge"><span class="header-section-number">5.2</span> Hedge</a></li>
+  <li><a href="#minimax-theorem" id="toc-minimax-theorem" class="nav-link" data-scroll-target="#minimax-theorem"><span class="header-section-number">5.3</span> Minimax Theorem</a></li>
+  <li><a href="#solving-multicommodity-flow" id="toc-solving-multicommodity-flow" class="nav-link" data-scroll-target="#solving-multicommodity-flow"><span class="header-section-number">5.4</span> Solving Multicommodity Flow</a></li>
+  </ul></li>
+  <li><a href="#spectral-methods" id="toc-spectral-methods" class="nav-link" data-scroll-target="#spectral-methods"><span class="header-section-number">6</span> Spectral Methods</a>
+  <ul class="collapse">
+  <li><a href="#graph-laplacian" id="toc-graph-laplacian" class="nav-link" data-scroll-target="#graph-laplacian"><span class="header-section-number">6.1</span> Graph Laplacian</a></li>
+  <li><a href="#degree-weighting-normalization" id="toc-degree-weighting-normalization" class="nav-link" data-scroll-target="#degree-weighting-normalization"><span class="header-section-number">6.2</span> Degree-weighting &amp; Normalization</a></li>
+  <li><a href="#cheegers-inequality" id="toc-cheegers-inequality" class="nav-link" data-scroll-target="#cheegers-inequality"><span class="header-section-number">6.3</span> Cheeger’s Inequality</a></li>
+  <li><a href="#max-cut-and-the-goemans-williamson-algorithm" id="toc-max-cut-and-the-goemans-williamson-algorithm" class="nav-link" data-scroll-target="#max-cut-and-the-goemans-williamson-algorithm"><span class="header-section-number">6.4</span> Max-Cut and the Goemans-Williamson Algorithm</a></li>
+  </ul></li>
+  <li><a href="#markov-chains" id="toc-markov-chains" class="nav-link" data-scroll-target="#markov-chains"><span class="header-section-number">7</span> Markov Chains</a>
+  <ul class="collapse">
+  <li><a href="#sampling-problems" id="toc-sampling-problems" class="nav-link" data-scroll-target="#sampling-problems"><span class="header-section-number">7.1</span> Sampling Problems</a></li>
+  <li><a href="#metropolis-algorithm" id="toc-metropolis-algorithm" class="nav-link" data-scroll-target="#metropolis-algorithm"><span class="header-section-number">7.2</span> Metropolis Algorithm</a></li>
+  <li><a href="#mixing-times-and-couplings" id="toc-mixing-times-and-couplings" class="nav-link" data-scroll-target="#mixing-times-and-couplings"><span class="header-section-number">7.3</span> Mixing Times and Couplings</a></li>
+  <li><a href="#sampling-matchings" id="toc-sampling-matchings" class="nav-link" data-scroll-target="#sampling-matchings"><span class="header-section-number">7.4</span> Sampling Matchings</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Design &amp; Analysis of Algorithms</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A tour of common motifs in the design and analysis of algorithms, guided by the principle that discrete problems are hard and continuous relaxations yield an easier path to insights. In its present form, mostly based on the Fall 2024 iteration of Cornell’s CS6820 taught by Bobby Kleinberg.</p>
+<section id="matchings" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="matchings"><span class="header-section-number">1</span> Matchings</h2>
+<section id="bipartite-maximum-matching" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="bipartite-maximum-matching"><span class="header-section-number">1.1</span> Bipartite Maximum Matching</h3>
+<div id="def-matching" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1 (Matching)</strong></span> <br>
+A <em>matching</em> in an undireted graph is an edge set such that every vertex belongs to either one (<em>matched vertex</em>) or <span class="math inline">\(\emptyset\)</span> (<em>free vertex</em>) edges of the matching.</p>
+</div>
+<p><strong>Maximum Matching Problem.</strong> Given a graph <span class="math inline">\(G\)</span>, find a matching with as many edges as possible.</p>
+<p>We start by considering a natural question: given a graph <span class="math inline">\(G\)</span> and a suboptimal matching <span class="math inline">\(M\)</span>, how should we improve it? Answering this leads to a natural iterative mechanism for producing the maximum matching.</p>
+<p>We start by introducing structures in the graph that correspond to ways in which we may alter our matching.</p>
+<div id="def-alt-comp" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2 (Alternating Component)</strong></span> <br>
+An <span class="math inline">\(M\)</span>-alternating component is an edge set that forms a connected subgraph of <span class="math inline">\(G\)</span> of maximum degree <span class="math inline">\(2\)</span>, in which every degree-<span class="math inline">\(2\)</span> vertex belongs to exactly one edge of <span class="math inline">\(M\)</span>.</p>
+</div>
+<p>A connected subgraph of <span class="math inline">\(G\)</span> of maximum degree <span class="math inline">\(2\)</span> must be either a cycle or a path. It is a cycle iff every vertex has degree <span class="math inline">\(2\)</span>. A proof for this can be furnished by considering the longest path in the subgraph.</p>
+<div id="def-alt-path" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3 (<span class="math inline">\(M\)</span>-Augmenting Path)</strong></span> <br>
+Suppose <span class="math inline">\(G\)</span> is a graph and <span class="math inline">\(M\)</span> is a matching. Then, an <em><span class="math inline">\(M\)</span>-augmenting path</em> in <span class="math inline">\(G\)</span> is a path <span class="math inline">\(P\)</span> in <span class="math inline">\(G\)</span> that starts and ends at free vertices and alternates between edges in <span class="math inline">\(M\)</span> and not in <span class="math inline">\(M\)</span>.</p>
+</div>
+<p>The following are some easy but useful properties of an <span class="math inline">\(M\)</span>-augmenting path.</p>
+<div id="rem-edit-1" class="proof remark">
+<p><span class="proof-title"><em>Remark 1</em> (Todo 1). </span></p>
+<p>Should probably turn this into properties of alternatig paths and use an identical argument to show that alternating cycles are of even length.</p>
+</div>
+<div id="lem-alt-prop" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 1 (Properties of <span class="math inline">\(M\)</span>-Augmenting Paths)</strong></span> <br>
+Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(M\)</span>-augmenting path. Then</p>
+<ul>
+<li><p><span class="math inline">\(P\)</span> has odd length;</p></li>
+<li><p><span class="math inline">\(|P \backslash M| = |M \cap P| + 1.\)</span></p></li>
+</ul>
+</div>
+<div class="proof" data-key="@lem-aug-prop">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<ul>
+<li>Let <span class="math inline">\(P = v_0 v_1 \dots v_k\)</span>. Then <span class="math inline">\(v_i v_{ i + 1 } \in M\)</span> iff <span class="math inline">\(i \equiv 1 \; (\mathrm{mod} \; 2)\)</span>. As <span class="math inline">\(v_k\)</span> is free, we have <span class="math inline">\(v_{ k - 1 } v_k \notin M\)</span> which implies <span class="math inline">\((k - 1) \equiv 0 \; (\mathrm{mod} \; 2)\)</span> so that <span class="math inline">\(\ell(P) = k \equiv 1 \; (\mathrm{mod} \; 2)\)</span>.</li>
+<li>Let <span class="math inline">\(P = v_0 v_1 \dots v_k\)</span>. It suffices to show that <span class="math inline">\(P' = v_0 v_1 \dots v_{ k - 1 }\)</span> is such that <span class="math inline">\(|P' \backslash M| = |P' \cap M|\)</span>. For this just consider the <span class="math inline">\(P' \cap M \rightarrow P' \backslash M\)</span> bijection defined by <span class="math inline">\(v_i v_{ i + 1 } \rightarrow v_{ i - 1 } v_i\)</span>.</li>
+</ul>
+</div>
+<p>The following result then demonstrates how the presence of a <em>suitable</em> <span class="math inline">\(M\)</span>-alternating component allows us to alter our matching. Informally, by suitable, we want the alternating component to “never lose track of already matched vertices”– that is the alternating component can contain a vertex from the matching only if it contains the edge the vertex is matched to too.</p>
+<div id="prp-augment-ap" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 (Augmenting by an <span class="math inline">\(M\)</span>-Alternating Component)</strong></span> <br>
+Suppose <span class="math inline">\(C\)</span> is an <span class="math inline">\(M\)</span>-alternating component such that <span class="math inline">\(v \in V(M) \cap V(C) \implies v \in V(M \cap C)\)</span>. Then, <span class="math inline">\(M \oplus C\)</span> is a matching such that <span class="math display">\[\begin{align*}
+|M \oplus C| = |M| + |C \backslash M| - |M \cap C|.
+\end{align*}\]</span></p>
+</div>
+<div class="proof" data-key="@prp-augment-ap">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>We first show that <span class="math inline">\(M \oplus C\)</span> is a matching. Consider a vertex <span class="math inline">\(v \in M \oplus C\)</span>. It suffices to prove that <span class="math inline">\(v\)</span> is adjacent to exactly one edge of <span class="math inline">\(M \oplus C\)</span>. Note that <span class="math inline">\(M \oplus C = (M \backslash C) \sqcup (C \backslash M)\)</span>. Note that <span class="math inline">\(M \backslash C\)</span> is a matching as <span class="math inline">\(M\)</span> is a matching. Furthermore, <span class="math inline">\(C \backslash M\)</span> is a matching since every <span class="math inline">\(v \in V(C \backslash M)\)</span> is adjacent to exactly one edge in <span class="math inline">\(C \backslash M\)</span>. So, it suffices to show that <span class="math inline">\(M \backslash C\)</span> and <span class="math inline">\(C \backslash M\)</span> are vertex disjoint. If <span class="math inline">\(v \in V(M \backslash C)\)</span> then there is a unique <span class="math inline">\(e \in M\)</span> such that <span class="math inline">\(v \in e\)</span>. Note that <span class="math inline">\(e \notin M \cap C\)</span> and so <span class="math inline">\(v \notin V(C)\)</span>.</p>
+<p>Thus, <span class="math display">\[\begin{align*}
+|M \oplus C| &amp;= |(M \backslash C) \sqcup (C \backslash M)| \\ &amp;= |M \backslash C| + |C \backslash M| \\ &amp;= |M| + |C \backslash M| - |M \cap C|.
+\end{align*}\]</span></p>
+</div>
+<p>Consequently, an <span class="math inline">\(M\)</span>-augmenting path is an alternating component that increases the size of the matching.</p>
+<div id="cor-augment-by-one" class="theorem corollary">
+<p><span class="theorem-title"><strong>Corollary 1 (Augmenting by an <span class="math inline">\(M\)</span>-Augmenting Path)</strong></span> <br>
+If <span class="math inline">\(P\)</span> is an <span class="math inline">\(M\)</span>-augmenting path then <span class="math inline">\(M \oplus P\)</span> is a matching and <span class="math inline">\(|M \oplus P| = |M| + 1\)</span>. Furthermore, every vertex matched in <span class="math inline">\(M\)</span> is also matched in <span class="math inline">\(M \oplus P\)</span>.</p>
+</div>
+<div class="proof" data-key="@cor-augment-by-one">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Note that if <span class="math inline">\(v \in V(P) \cap V(M)\)</span> then by definition of an <span class="math inline">\(M\)</span>-augmenting path <span class="math inline">\(v\)</span> must be an interior vertex that is adjacent to an edge in <span class="math inline">\(M \cap P\)</span>. Thus, <span class="math inline">\(M \oplus P\)</span> is a matching. Furthermore, as <span class="math inline">\(|P \backslash M| = |M \cap P| + 1\)</span> we have <span class="math inline">\(|M \oplus P| = |M| + 1\)</span>.</p>
+<p>Now, we show <span class="math inline">\(V(M) \subseteq V(M \oplus P)\)</span>. Suppose <span class="math inline">\(v \in M\)</span>. Note that if <span class="math inline">\(v \notin P\)</span>, then clearly <span class="math inline">\(v \in M \backslash P \subseteq M \oplus P\)</span>. Otherwise, <span class="math inline">\(v \in P\)</span> and as <span class="math inline">\(v\)</span> is not <span class="math inline">\(M\)</span>-free, it must be an interior vertex that is adjacent to an edge in <span class="math inline">\(P \backslash M\)</span> which implies <span class="math inline">\(v \in P \backslash M \subseteq M \oplus P\)</span>.</p>
+</div>
+<p>In fact, <span class="math inline">\(M\)</span>-alternating components completely characterize the maximum matching problem.</p>
+<div id="lem-change-match-1" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 2 (Changes in Matching I)</strong></span> <br>
+If <span class="math inline">\(M\)</span> and <span class="math inline">\(M'\)</span> are matchings in <span class="math inline">\(G\)</span> then <span class="math inline">\(M \oplus M'\)</span> is a union of <span class="math inline">\(M\)</span>-alternating components.</p>
+</div>
+<div class="proof" data-key="@lem-char-max-match">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Every <span class="math inline">\(v \in M \oplus M'\)</span> has degree <span class="math inline">\(\in \{1, 2\}\)</span> as every vertex has degree at most <span class="math inline">\(1\)</span> in each of <span class="math inline">\(M, M'\)</span>, with degree <span class="math inline">\(1\)</span> in at least one or the other. Furthermore, a vertex <span class="math inline">\(v \in M \oplus M'\)</span> can only be adjacent to at most one edge in <span class="math inline">\(M\)</span> as <span class="math inline">\(M\)</span> is a matching. Thus, <span class="math inline">\(M \oplus M'\)</span> is a union of <span class="math inline">\(M\)</span>-alternating components.</p>
+</div>
+<div id="lem-change-match-2" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 3 (Changes in Matching II)</strong></span> <br>
+If <span class="math inline">\(M\)</span> and <span class="math inline">\(M'\)</span> are matchings in <span class="math inline">\(G\)</span> with <span class="math inline">\(|M| &lt; |M'|\)</span> then <span class="math inline">\(M \oplus M'\)</span> contains an <span class="math inline">\(M\)</span>-augmenting path.</p>
+</div>
+<div class="proof" data-key="@lem-augment-characterize">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p><span class="math inline">\(M \oplus M'\)</span> is a union of <span class="math inline">\(M\)</span>-alternating components. An <span class="math inline">\(M\)</span>-alternating component where all vertices have degree-<span class="math inline">\(2\)</span> must be a cycle. Since the edges must alternate between edges in <span class="math inline">\(M\)</span> and in <span class="math inline">\(M'\)</span>, the cycle must have an equal number of edges from <span class="math inline">\(M\)</span> and <span class="math inline">\(M'\)</span>. Since <span class="math inline">\(|M| &lt; |M'|\)</span> we must then have an <span class="math inline">\(M\)</span>-alternating component that is a path and contains more edges from <span class="math inline">\(M'\)</span> than <span class="math inline">\(M\)</span>.</p>
+</div>
+<p>This motivates a family of algorithms for the maximum matching problem.</p>
+<div class="pseudocode-container quarto-float" data-no-end="false" data-caption-prefix="Algorithm" data-comment-delimiter="1.2em" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-indent-size="1.2em">
+<div class="pseudocode">
+\begin{algorithm} \caption{Computing a Maximum-Matching} \begin{algorithmic} \State{\textbf{initialize} $M = \emptyset$} \Repeat \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path} \State{$M \leftarrow M \oplus P$} \Until{there is no $M$-augmenting path} \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>This algorithm terminates in at most <span class="math inline">\(\mathcal{O}(n/2)\)</span> iterations as each iteration increases the size of the matching by <span class="math inline">\(1\)</span> and a maximum matching has size at most <span class="math inline">\(n/2\)</span>.</p>
+<p>Different strategies for finding the <span class="math inline">\(M\)</span>-augmenting path <span class="math inline">\(P\)</span> yield different algorithms.</p>
+<div id="def-bipartite" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4 (Bipartite)</strong></span> <br>
+A graph <span class="math inline">\(G\)</span> is said to be <em>bipartite</em> if there exists a partition <span class="math inline">\(V(G) = L \sqcup R\)</span> such that every edge has exactly one endpoint in <span class="math inline">\(L\)</span> and <span class="math inline">\(R\)</span>.</p>
+</div>
+<p>We now present a simple strategy that works when <span class="math inline">\(G\)</span> is bipartite.</p>
+<div id="def-g-m" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 5 (<span class="math inline">\(G_M\)</span>)</strong></span> <br>
+Let <span class="math inline">\(G=(L, R, E)\)</span> be a bipartite graph and <span class="math inline">\(M\)</span> be a matching. The graph <span class="math inline">\(G_M\)</span> is defined as the directed graph formed from <span class="math inline">\(G\)</span> by orienting each edge from <span class="math inline">\(L\)</span> to <span class="math inline">\(R\)</span> if it does not belong to <span class="math inline">\(M\)</span> and from <span class="math inline">\(R\)</span> to <span class="math inline">\(L\)</span>, otherwise.</p>
+</div>
+<div id="lem-g-m-aug-path" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 4</strong></span> <br>
+Let <span class="math inline">\(M\)</span> be a matching in a bipartite graph <span class="math inline">\(G\)</span> and <span class="math inline">\(F\)</span> be the set of free vertices. The <span class="math inline">\(M\)</span>-augmenting paths are in one-to-one correspondence with directed paths from <span class="math inline">\(L \cap F\)</span> to <span class="math inline">\(R \cap F\)</span> in <span class="math inline">\(G_M\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-g-m-aug-path">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Let <span class="math inline">\(P\)</span> be a directed path from <span class="math inline">\(L \cap F\)</span> to <span class="math inline">\(R \cap F\)</span> in <span class="math inline">\(G_M\)</span>. First, its endpoints are free with respect to <span class="math inline">\(M\)</span>. Since <span class="math inline">\(G_M\)</span> is bipartite, its edges alternate from edges <span class="math inline">\(L \to R\)</span> and edges <span class="math inline">\(R \to L\)</span>. That is, the edges alternate from edges in <span class="math inline">\(M\)</span> and not in <span class="math inline">\(M\)</span>. Thus, the undirected edge set corresponding to <span class="math inline">\(P\)</span> is an <span class="math inline">\(M\)</span>-augmenting path.</p>
+<p>Next, let <span class="math inline">\(P\)</span> be an augmenting path. Note that <span class="math inline">\(P\)</span> has odd length, and hence, its endpoints are on opposite sides of the partition <span class="math inline">\((L, R)\)</span>. Since its endpoints are also free, it suffices to show that <span class="math inline">\(P\)</span> corresponds to a directed path in <span class="math inline">\(G_M\)</span>. Note that every interior vertex of <span class="math inline">\(P\)</span> has exactly one edge in <span class="math inline">\(M\)</span> and one edge not in <span class="math inline">\(M\)</span>. The former edge corresponds to a directed edge <span class="math inline">\(R \to L\)</span> and the latter corresponds to a directed edge <span class="math inline">\(L \to R\)</span>. Thus, <span class="math inline">\(P\)</span> corresponds to a directed path in <span class="math inline">\(G_M\)</span> from <span class="math inline">\(L \cap F\)</span> and <span class="math inline">\(R \cap F\)</span>.</p>
+</div>
+<p>This gives us a natural algorithm for maximum-matching in a bipartite graph. We merely build <span class="math inline">\(G_M\)</span> and find a path from <span class="math inline">\(L \cap F\)</span> to <span class="math inline">\(R \cap F\)</span> using BFS/DFS. Building <span class="math inline">\(G_M\)</span> and performing BFS/DFS both take <span class="math inline">\(\mathcal{O}(m + n)\)</span> time. We may also assume <span class="math inline">\(m \ge n/2\)</span>; otherwise, the graph contains isolated edges which can be removed in a preprocessing step taking <span class="math inline">\(\mathcal{ O }(n)\)</span> times. Thus, overall, we get a <span class="math inline">\(\mathcal{ O }(m n)\)</span> algorithm for maximum-matching in bipartite graphs.</p>
+</section>
+<section id="hopcroft-karp-algorithm" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="hopcroft-karp-algorithm"><span class="header-section-number">1.2</span> Hopcroft-Karp Algorithm</h3>
+<p>Choosing only one augmenting path at a time is quite wasteful. The Hopcroft-Karp algorithm improves upon this by attempting to find many disjoint augmenting paths in every iteration. We start with the following generalization of <a href="#cor-augment-by-one" class="quarto-xref">Corollary&nbsp;1</a> and <a href="#lem-change-match-2" class="quarto-xref">Lemma&nbsp;3</a>.</p>
+<p>As a brief aside, vertex disjoint may refer to different notions depending on the source.</p>
+<div id="def-vertex-disjoint" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6 (Vertex Disjoint)</strong></span> <br>
+A set of subgraphs <span class="math inline">\(\{G_i\}\)</span> are <em>(externally) vertex-disjoint</em> if they share no vertices. A set of paths <span class="math inline">\(\{P_i\}\)</span> are said to be <em>internally vertex-disjoint</em> if they share no vertices other than their endpoints.</p>
+</div>
+<div id="lem-equiv-matching" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 5 (Characterization of Augmentable Matchings)</strong></span> <br>
+If <span class="math inline">\(G\)</span> is a graph and <span class="math inline">\(M\)</span> is a matching in <span class="math inline">\(G\)</span> then the following are equivalent for all <span class="math inline">\(k \in \mathbb{N}\)</span></p>
+<ol type="a">
+<li>there exists a matching <span class="math inline">\(M'\)</span> with <span class="math inline">\(|M| + k\)</span> edges;</li>
+<li><span class="math inline">\(G\)</span> contains <span class="math inline">\(k\)</span> vertex-disjoint <span class="math inline">\(M\)</span>-augmenting paths;</li>
+<li>there exists a matching <span class="math inline">\(M'\)</span> such that the edge set <span class="math inline">\(M \oplus M'\)</span> contains at least <span class="math inline">\(k\)</span> vertex-disjoint <span class="math inline">\(M\)</span>-augmenting paths.</li>
+</ol>
+</div>
+<div class="proof" data-key="@lem-equiv-matching">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<ul>
+<li><span class="math inline">\(a. \Rightarrow c.\)</span></li>
+</ul>
+<p>Consider <span class="math inline">\(M'\)</span> such that <span class="math inline">\(|M'| = |M| + k\)</span>. Note that <span class="math inline">\(M \oplus M' = (M \backslash M') \sqcup (M' \backslash M)\)</span> with <span class="math inline">\(|M' \backslash M| = |M \backslash M'| + k\)</span>. Every vertex <span class="math inline">\(v \in M \oplus M'\)</span> has degree <span class="math inline">\(\in \{1, 2\}\)</span> as every vertex has degree at most <span class="math inline">\(1\)</span> in each of <span class="math inline">\(M\)</span>, <span class="math inline">\(M'\)</span> and degree <span class="math inline">\(1\)</span> in at least one of <span class="math inline">\(M\)</span>, <span class="math inline">\(M'\)</span>. Thus, <span class="math inline">\(M \oplus M'\)</span> must be a union of vertex-disjoint paths and cycles.</p>
+<p>As <span class="math inline">\(M\)</span> and <span class="math inline">\(M'\)</span> are matchings, each vertex of degree <span class="math inline">\(2\)</span> in <span class="math inline">\(M \oplus M'\)</span> is adjacent to exactly one edge from <span class="math inline">\(M\)</span> and one edge from <span class="math inline">\(M'\)</span>. Since a cycle can be alternating only if it has even length, it has an equal number of edges from <span class="math inline">\(M\)</span> and <span class="math inline">\(M'\)</span>. Since <span class="math inline">\(|M' \backslash M| = |M \backslash M'| + k\)</span>, there must be at least <span class="math inline">\(k\)</span>-many <span class="math inline">\(M\)</span>-alternating paths in <span class="math inline">\(M \oplus M'\)</span>.</p>
+<ul>
+<li><span class="math inline">\(c. \Rightarrow b.\)</span></li>
+</ul>
+<p>This is immediate by noting that <span class="math inline">\(M \oplus M' \subseteq E(G)\)</span>.</p>
+<ul>
+<li><span class="math inline">\(b. \Rightarrow a.\)</span></li>
+</ul>
+<p>It suffices to show that if <span class="math inline">\(P\)</span> and <span class="math inline">\(P'\)</span> are vertex disjoint <span class="math inline">\(M\)</span>-augmenting paths then <span class="math inline">\(P'\)</span> is also a <span class="math inline">\((M \oplus P)\)</span>-augmenting path. As <span class="math inline">\(P\)</span> and <span class="math inline">\(P'\)</span> are vertex-disjoint, they are edge disjoint too. Since endpoints of <span class="math inline">\(P'\)</span> aren’t adjacent to edges in <span class="math inline">\(M\)</span> or <span class="math inline">\(P\)</span>, they will be free with respect to <span class="math inline">\(M \oplus P\)</span> too. Next, any edge of <span class="math inline">\(M \cap P' \subseteq M \\ P\)</span> is still in <span class="math inline">\(M \oplus P\)</span>. Furthermore, any edge of <span class="math inline">\(P' \backslash M\)</span> isn’t contained in <span class="math inline">\(M\)</span> or <span class="math inline">\(P\)</span> and hence, isn’t an edge in <span class="math inline">\(M \oplus P\)</span>. Thus, <span class="math inline">\(P'\)</span> is <span class="math inline">\((M \oplus P)\)</span>-alternating.</p>
+</div>
+<p>Again, we shall assume <span class="math inline">\(G\)</span> is bipartite. As always, we start with some helpful definitions to frame our algorithm.</p>
+<div id="def-bfs-levels" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7 (BFS Levels)</strong></span> <br>
+In the graph <span class="math inline">\(G_M\)</span>, define <span class="math inline">\(L_0, L_1, ..., L_\infty\)</span> to be the levels in a breadth-first traversal rooted at <span class="math inline">\(L \cap F\)</span>. That is,</p>
+<p><span class="math display">\[\begin{align*}
+L_0 = &amp; L \cap F, \\ L_{i + 1} = &amp;\text{ all vertices } v \notin \bigcup_{ k = 0 }^i L_k \text{ s.t. } G_M \\ &amp;\text{ contains an edge from } L_i \text{ to } v, \\ L_\infty = &amp;\text{ all vertices } v \notin \bigcup_{k = 1}^n L_k.
+\end{align*}\]</span></p>
+</div>
+<div id="def-adv-ret" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 8 (Advancing and Retreating Edges)</strong></span> <br>
+An edge <span class="math inline">\(e = (u, v) \in G_M\)</span> is an <em>advancing edge</em> if <span class="math inline">\(u \in L_i\)</span> and <span class="math inline">\(v \in L_{i + 1}\)</span>. Otherwise, we call it a <em>retreating edge</em>. A path composed entirely of advancing edges is called an <em>advancing path</em>.</p>
+</div>
+<p>The following lemma then somewhat clarifies the importance of advancing edges.</p>
+<div id="lem-advancing-as-shortest" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 6</strong></span> <br>
+If <span class="math inline">\(e = (u, v)\)</span> is an advancing edge we must have <span class="math inline">\(d(v) &gt; d(u) \Rightarrow d(v) = d(u) + 1\)</span>. Consequently, an <span class="math inline">\(s\)</span>-<span class="math inline">\(t\)</span> path <span class="math inline">\(P\)</span> is an advancing path if and only if it is a shortest <span class="math inline">\(s\)</span>-<span class="math inline">\(t\)</span> path.</p>
+</div>
+<div class="proof" data-key="@lem-advancing-as-shortest">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>By definition, if <span class="math inline">\(e\)</span> is an edge going from <span class="math inline">\(L_i\)</span> to <span class="math inline">\(L_j\)</span> for <span class="math inline">\(j &gt; i\)</span>, then we must have <span class="math inline">\(j = i + 1\)</span>. Furthermore, <span class="math inline">\(L_i\)</span> consists of all vertices that are at a distance of <span class="math inline">\(i\)</span> from <span class="math inline">\(L_0\)</span>.</p>
+</div>
+<div id="def-blocking-set" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 9 (Blocking Set)</strong></span> <br>
+A <em>blocking set</em> of <span class="math inline">\(M\)</span>-augmenting paths is a maximal (under set-inclusion) set of vertex-disjoint advancing <span class="math inline">\(M\)</span>-augmenting paths.</p>
+</div>
+<div class="pseudocode-container quarto-float" data-no-end="false" data-caption-prefix="Algorithm" data-comment-delimiter="1.2em" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-indent-size="1.2em">
+<div class="pseudocode">
+\begin{algorithm} \caption{Hopcroft-Karp Algorithm} \begin{algorithmic} \State{\textbf{initialize} $M = \emptyset$} \Repeat \State{$\{P_i\} \leftarrow$ \textbf{find} a blocking set of $M$-augmenting paths} \State{$M \leftarrow M \oplus P_1 \oplus \dots P_k$} \Until{there is no $M$-augmenting path} \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>As before, we know that this algorithm terminates in at most <span class="math inline">\(n/2\)</span> iterations as each iteration increases the cardinality of <span class="math inline">\(M\)</span> by at least <span class="math inline">\(1\)</span>. To obtain a superior bound, we need to also integrate an alternative measure of progress. Particularly, we shall show that the length of the shortest augmenting path is strictly increasing every iteration. Intuitively, this occurs because augmenting by a path reverses the orientation of all its edges and hence, any future <span class="math inline">\(s\)</span>-<span class="math inline">\(t\)</span> path taking these edges must be longer than the shortest <span class="math inline">\(s\)</span>-<span class="math inline">\(t\)</span> paths available prior.</p>
+<div id="lem-incr-aug-path-length" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 7 (Increasing Augmenting Path Lengths)</strong></span> <br>
+If <span class="math inline">\(M_t\)</span> and <span class="math inline">\(M_{ t + 1 }\)</span> are the matchings in two consecutive iterations of the Hopcroft-Karp algorithm, the length of the shortest <span class="math inline">\(M_{ t + 1 }\)</span>-augmenting path is strictly greater than the length of the shortest <span class="math inline">\(M_t\)</span>-augmenting path.</p>
+</div>
+<p>Our strategy will be to “follow” along a path <span class="math inline">\(P\)</span> in <span class="math inline">\(G_{M_{t + 1}}\)</span> while keeping track of the distances as we would in <span class="math inline">\(G_{M_t}\)</span>! Note that the undirected edge structure of both <span class="math inline">\(G_{M_t}\)</span> and <span class="math inline">\(G_{M_{t + 1}}\)</span> are identical, the only distinction lie in the orientation of an edge and the BFS layers. The latter is really a consequence of the former: the availibility of directed edges is what changes the shortest path. Furthermore, the notion of advancing and retreating edges help us compare the path <span class="math inline">\(P\)</span> in <span class="math inline">\(G_{M_{t + 1}}\)</span> to the shortest paths in <span class="math inline">\(G_{M_t}\)</span>.</p>
+<div class="proof" data-key="@lem-incr-aug-path-length">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Let <span class="math inline">\(L_0, L_1, \dots,\)</span> denote the BFS layers of <span class="math inline">\(G_{ M_t }\)</span> and suppose <span class="math inline">\(d \in \mathbb{N}\)</span> is minimal such that <span class="math inline">\(L_d\)</span> intersects <span class="math inline">\(R \cap F\)</span>. Furthermore, suppose <span class="math inline">\(P = u_0 u_1 \dots u_j\)</span> is a shortest <span class="math inline">\(M_{ t + 1 }\)</span>-augmenting path. Note that <span class="math inline">\(u_0, u_j\)</span> must be free with respect to <span class="math inline">\(M_t\)</span> as once a vertex is matched, it remains matched after augementation too. Below <span class="math inline">\(d(\cdot)\)</span> denotes the distance in <span class="math inline">\(G_{ M_t }\)</span> from <span class="math inline">\(L \cap F\)</span>. Edges <span class="math inline">\((u_i, u_{ i + 1 })\)</span> were either:</p>
+<ul>
+<li><p>advancing edges in <span class="math inline">\(G_{M_t}\)</span> whose orientation is reversed in <span class="math inline">\(G_{M_{t + 1}}\)</span> (because <span class="math inline">\((u_{i + 1}, u_i)\)</span> belonged to a blocking set <span class="math inline">\(\mathcal{ P }\)</span>) <span class="math display">\[\begin{align*}
+d(u_{i}) = d(u_{i + 1}) + 1,
+\end{align*}\]</span></p></li>
+<li><p>advancing edges in <span class="math inline">\(G_{M_t}\)</span> whose orientation is preserved in <span class="math inline">\(G_{M_{t + 1}}\)</span> <span class="math display">\[\begin{align*}
+d(u_{i + 1}) = d(u_i) + 1,
+\end{align*}\]</span></p></li>
+<li><p>reversing edges in <span class="math inline">\(G_{M_t}\)</span> <span class="math display">\[\begin{align*}
+d(u_{ i + 1 }) &lt; d(u_i).
+\end{align*}\]</span></p></li>
+</ul>
+<p>Thus, in all cases we have <span class="math inline">\(d(u_{ i + 1 }) \le d(u_i) + 1\)</span>. Inductively, <span class="math inline">\(d \le d(u_j) \le j\)</span>.</p>
+<p>Note that <span class="math inline">\(d(u_j) = j\)</span> if and only if <span class="math inline">\(P\)</span> is an advancing path in <span class="math inline">\(G_{M_t}\)</span>. This implies that <span class="math inline">\(P\)</span> is edge disjoint from the blocking set of <span class="math inline">\(M_{t}\)</span>-augmenting paths, <span class="math inline">\(M_t \oplus M_{ t + 1 }\)</span>. Since <span class="math inline">\(P\)</span> wasn’t used as an augmenting path in iteration <span class="math inline">\(t\)</span>, it must be the case that there exists <span class="math inline">\(v \in V(M_t \oplus M_{ t + 1 }) \cap V(P)\)</span>. Since all vertices in <span class="math inline">\(V(M_t \oplus M_{t+1})\)</span> are matched in <span class="math inline">\(M_{t+1}\)</span>, vertex <span class="math inline">\(v\)</span> cannot be an endpoint of <span class="math inline">\(P\)</span> (which are <span class="math inline">\(M_{t+1}\)</span>-free). Since <span class="math inline">\(M_t \oplus M_{t + 1}\)</span> is a blocking set, each vertex therein is adjacent to an edge <span class="math inline">\(e \in M_{t + 1} \backslash M_t\)</span>.</p>
+<p>As <span class="math inline">\(P\)</span> is <span class="math inline">\(M_{ t + 1 }\)</span>-augmenting and <span class="math inline">\(v\)</span> is an interior vertex of <span class="math inline">\(P\)</span>, the unique edge of <span class="math inline">\(M_{ t + 1 }\)</span> adjacent to <span class="math inline">\(v\)</span>, namely <span class="math inline">\(e\)</span>, is contained in <span class="math inline">\(P\)</span>. That is, <span class="math inline">\(e \in (M_t \backslash M_{ t + 1 }) \cap P\)</span>, contradicting the edge-disjointness of <span class="math inline">\(P\)</span> from <span class="math inline">\(M_t \oplus M_{ t + 1 }\)</span>.</p>
+<p>Thus, <span class="math inline">\(d \le d(u_j) &lt; j\)</span>.</p>
+</div>
+<p>Note that as augmenting paths are of odd length, each iteration increases the length of the shortest <span class="math inline">\(M\)</span>-augmenting path by at least two. Using these measures of progress independently, we get the same bound of <span class="math inline">\(n/2\)</span> on the number of iterations. Using these two measures in different phases of the algorithm yields a superior bound than using either one alone.</p>
+<div id="prp-runtime" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 (Hopcroft-Karp Iterations)</strong></span> <br>
+For any <span class="math inline">\(t \le n/2\)</span>, the number of iterations of Hopcraft-Karp is bounded by <span class="math inline">\(t + n/2t\)</span>.</p>
+</div>
+<div class="proof" data-key="@prp-runtime">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>After <span class="math inline">\(t\)</span> iterations, the length of the shortest <span class="math inline">\(M\)</span>-augmenting path is at least <span class="math inline">\(2 t\)</span>. Then let <span class="math inline">\(k = |M^\star| - |M_t|\)</span>. Note that <span class="math inline">\(M\)</span> must have at least one augmenting path with vertices at most <span class="math inline">\(n/k\)</span>. Hence, <span class="math inline">\(2 t \le n/k \Rightarrow k \le n/(2t)\)</span>. Thus, the runtime is bounded by <span class="math inline">\(t + k \le t + n/(2t)\)</span>.</p>
+</div>
+<p>By the AM-GM inequality, we note that <span class="math inline">\(\sqrt{ 2 n } \le t + n/2t\)</span> with equality obtained when <span class="math inline">\(t = \sqrt{n/2}\)</span>.</p>
+<div id="cor-hk-runtime" class="theorem corollary">
+<p><span class="theorem-title"><strong>Corollary 2</strong></span> <br>
+Hopcroft-Karp terminates in at most <span class="math inline">\(\mathcal{ O }(\sqrt{ n })\)</span> iterations.</p>
+</div>
+</section>
+<section id="min-cost-bipartite-perfect-matching-lp-relaxation" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="min-cost-bipartite-perfect-matching-lp-relaxation"><span class="header-section-number">1.3</span> Min-Cost Bipartite Perfect Matching, LP Relaxation</h3>
+<p><strong>Minimum-Cost Bipartite Perfect Matching.</strong> Given an undirected bipartite graph <span class="math inline">\(G = (L, R, E)\)</span> together with costs <span class="math inline">\(c: E \to \mathbb{R}_{ \ge 0 }\)</span> for each edge, find a perfect matching <span class="math inline">\(M\)</span> that minimizes <span class="math inline">\(c(M) = \sum_{ e \in M } c(e)\)</span>.</p>
+<p>Without loss of generality, we shall assume that a perfect matching exists as we have already discussed algorithms capable of detecting this.</p>
+<div id="def-induced-cost" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 10 (Induced Costs)</strong></span> <br>
+Let <span class="math inline">\(M\)</span> be a matching. Then <span class="math inline">\(M\)</span> and <span class="math inline">\(c: E \to \mathbb{R}_{ \ge 0 }\)</span> induce a cost function <span class="math inline">\(\Delta_M: E \to \mathbb{R}\)</span> defined by <span class="math display">\[\begin{align*}
+\Delta_M (e) = \Bbb{1}\{e \notin M\} \cdot c(e) - \Bbb{1}\{e \in M\} \cdot c(e).
+\end{align*}\]</span></p>
+</div>
+<p>This induced cost is natural for <span class="math inline">\(M\)</span>-augmenting paths due to the following lemma.</p>
+<div id="lem-augment-cost" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 8 (Costs Under Augmentation)</strong></span> <br>
+If <span class="math inline">\(P\)</span> is an <span class="math inline">\(M\)</span>-augmenting path then <span class="math display">\[\begin{align*}
+c(M \oplus P) = c(M) + \Delta_M (P).
+\end{align*}\]</span></p>
+</div>
+<p>This motivates a greedy algorithm for our problem. Note that bipartiteness is not required yet.</p>
+<div class="pseudocode-container quarto-float" data-no-end="false" data-caption-prefix="Algorithm" data-comment-delimiter="1.2em" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-indent-size="1.2em">
+<div class="pseudocode">
+\begin{algorithm} \caption{Greedy Algorithm for Min-Cost Perfect Matching} \begin{algorithmic} \State{\textbf{initialize} $M = \emptyset$} \While{$M$ is not a perfect matching} \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path minimizing $\Delta_M(\cdot)$} \State{$M \leftarrow M \oplus P$} \EndWhile \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>Correctness follows from a proof by induction showing that at iteration <span class="math inline">\(t\)</span>, we have the minimum-cost matching of cardinality <span class="math inline">\(t\)</span>.</p>
+<div id="lem-min-cost-correctness" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 9 (Correctness)</strong></span> <br>
+If <span class="math inline">\(M_k\)</span> is a minimum-cost matching of size <span class="math inline">\(k\)</span> in <span class="math inline">\(G\)</span> and <span class="math inline">\(P\)</span> is an <span class="math inline">\(M_k\)</span>-augmenting path of minimum incremental cost, then <span class="math inline">\(M_k \oplus P\)</span> is a minimum-cost matching of size <span class="math inline">\(k + 1\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-min-cost-correctness">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Let <span class="math inline">\(M_{ k + 1 }\)</span> denote the minimum-cost matching of size <span class="math inline">\(k + 1\)</span>. By definition, we must have <span class="math inline">\(c(M_{ k + 1 }) \le c(M_k \oplus P)\)</span>.</p>
+<p>Now, we prove the reverse inequality. <span class="math inline">\(M_k \oplus M_{ k + 1 }\)</span> is a union of alternating components that must contain at least one <span class="math inline">\(M_k\)</span>-alternating path <span class="math inline">\(Q\)</span> as <span class="math inline">\(|M_{ k + 1 }| = |M_k| + 1\)</span>. Let <span class="math inline">\(R\)</span> denote the union of the remaining alternating components. Note that <span class="math inline">\(R\)</span> must have the same number of edges in <span class="math inline">\(M_k\)</span> and in <span class="math inline">\(M_{ k + 1 }\)</span> since the path <span class="math inline">\(Q\)</span> already accounts for <span class="math inline">\(|M_{ k + 1 }| = |M_k| + 1\)</span>. So, <span class="math inline">\(M_k \oplus R\)</span> is a <span class="math inline">\(k\)</span>-matching and <span class="math inline">\(M_{ k + 1 } \oplus R\)</span> is a <span class="math inline">\((k + 1)\)</span>-matching. From this, it is immediate that <span class="math inline">\(c_{M_k} (R), c_{M_{ k + 1 }}(R) \ge 0\)</span> via <span class="math display">\[\begin{align*}
+c(M_k) \le c(M_k \oplus R) = c(M_k) + c_{ M_k }(R) \\ c(M_{ k + 1 }) \le c(M_{ k + 1 } \oplus R) = c(M_{ k + 1 }) + c_{ M_{ k + 1 } }(R).
+\end{align*}\]</span></p>
+<p>Furthermore, we have <span class="math inline">\(c_{ M_k }(R) + c_{ M_{ k + 1 } }(R) = 0\)</span> which implies <span class="math inline">\(c_{ M_k }(R) = c_{ M_{ k + 1 } }(R) = 0\)</span>. <span class="math display">\[\begin{align*}
+c_{ M_k }(R) + c_{ M_{ k + 1 } }(R) &amp;= c(R \backslash M_k) - c(R \cap M_k) + c(R \backslash M_{ k + 1 }) - c(R \cap M_{ k + 1 }) \\ &amp;= c(R \cap M_{ k + 1 }) - c(R \cap M_k) + c(R \cap M_k) - c(R \cap M_{ k + 1 }) \\ &amp;= 0.
+\end{align*}\]</span></p>
+<p>Then, as <span class="math inline">\(Q\)</span> is an <span class="math inline">\(M_k\)</span>-alternating path, we have <span class="math inline">\(c_{ M_k }(P) \le c_{ M_k }(Q)\)</span>. Using this, we obtain our result <span class="math display">\[\begin{align*}
+c(M_k \oplus P) &amp;= c(M_k) + c_{M_k} (P) \\ &amp;\le c(M_k) + c_{M_k} (Q) \\ &amp;= c(M_k) + c_{M_k} (Q) + c_{M_k} (R) \\ &amp;= c(M_k) + c_{M_k} (M_k \oplus M_{ k + 1 }) \\ &amp;= c(M_k \oplus (M_k \oplus M_{ k + 1 })) \\ &amp;= c(M_{ k + 1 }).
+\end{align*}\]</span></p>
+</div>
+<p>Implementing this algorithm requires us to find shortest <span class="math inline">\(\Delta_M\)</span>-weighted aternating paths. Assuming <span class="math inline">\(G\)</span> is bipartite, we can construct <span class="math inline">\(G_M\)</span> and reduce the problem to finding the minimum-cost path in <span class="math inline">\(G_M\)</span> from <span class="math inline">\(L \cap F\)</span> to <span class="math inline">\(R \cap F\)</span>. The cost for a directed edge <span class="math inline">\((u, v)\)</span> are just given by the cost for its undirected counterpart, <span class="math inline">\(\Delta_M (u, v)\)</span>.</p>
+<p>Note that as edges may have positive and negative costs, the appropriate algorithm to use here is the Bellman-Ford algorithm. However, Bellman-Ford to successfully solve the min-cost path problem, we require that <span class="math inline">\(G_M\)</span> contains no negative-cost cycles.</p>
+<div id="lem-no-neg-cycle-gm" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 10</strong></span> <br>
+Suppose <span class="math inline">\(M\)</span> is the minimum-cost matching of size <span class="math inline">\(|M|\)</span> in <span class="math inline">\(G\)</span>. Then there are no negative-cost cycles in <span class="math inline">\(G_M\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-no-neg-cycle-gm">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Note that if <span class="math inline">\(C\)</span> is a cycle in <span class="math inline">\(G_M\)</span> then <span class="math inline">\(C\)</span> is an <span class="math inline">\(M\)</span>-alternating cycle. All alternating cycles have even length. Thus, <span class="math inline">\(M \oplus C\)</span> is a matching with the same cardinality as <span class="math inline">\(M\)</span>. Consequently, <span class="math display">\[\begin{align*}
+c(M) \le c(M \oplus C) = c(M) + \Delta_M(C) \implies 0 \le \Delta_M(C).
+\end{align*}\]</span></p>
+</div>
+<p>So, we can find the min-cost incremental paths via Bellman-Ford. The runtime of Bellman-Ford is <span class="math inline">\(\mathcal{O}(mn)\)</span>. There are <span class="math inline">\(n/2\)</span> iterations and so, the overall runtime of our min-cost perfect matching algorithm becomes <span class="math inline">\(\mathcal{O}(mn^2)\)</span>.</p>
+<section id="an-economic-perspective" class="level4" data-number="1.3.1">
+<h4 data-number="1.3.1" class="anchored" data-anchor-id="an-economic-perspective"><span class="header-section-number">1.3.1</span> An Economic Perspective</h4>
+<p>In this section, we only consider bipartite graphs.</p>
+<p>We present an alternative approach to minimum-cost matching that has certaing economic motivations. Assume that <span class="math inline">\(L\)</span> represents a set of people who need to be assigned to do a set of jobs <span class="math inline">\(R\)</span>. For an edge <span class="math inline">\(e = (u, v)\)</span>, the cost <span class="math inline">\(c_e\)</span> is a cost associated with having person <span class="math inline">\(u\)</span> do job <span class="math inline">\(v\)</span>. Furthermore, there is a price <span class="math inline">\(p(u)\)</span> associated with <span class="math inline">\(u \in U\)</span> that corresponds to a “signing bonus” for <span class="math inline">\(u\)</span> and a price <span class="math inline">\(p(v)\)</span> associated with <span class="math inline">\(v \in V\)</span> that corresponds to the reward associated with doing job <span class="math inline">\(v\)</span>. Then, the net cost of assigning a person <span class="math inline">\(u\)</span> to do job <span class="math inline">\(v\)</span> becomes <span class="math inline">\(p(u) + c_e - p(v)\)</span>. This merits a special name.</p>
+<div id="def-reduced-cost" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 11 (Reduced Cost)</strong></span> <br>
+The reduced cost of an edge <span class="math inline">\(e = (u, v)\)</span> is <span class="math display">\[\begin{align*}
+c^p_e = p(u) + c_e - p(v).
+\end{align*}\]</span></p>
+</div>
+<p>The benefit of using reduced costs is that it is “equivalent” to using the costs <span class="math inline">\(c_e\)</span> we originally cared about.</p>
+<div id="lem-equiv-reduced-cost" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 11</strong></span> <br>
+Over the feasible set of perfect matchings, minimizing <span class="math inline">\(M \mapsto \sum_{e \in M} c^p_e\)</span> is equivalent to minimizing <span class="math inline">\(M \mapsto \sum_{e \in M} c_e\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-equiv-reduced-cost">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>It suffices to show that these two objective are monotone and particularly, just differ by a constant factor. Let <span class="math inline">\(M\)</span> be a perfect matching then, <span class="math display">\[\begin{align*}
+\sum_{e \in M} c^p_e &amp;= \sum_{e=(u, v) \in M} (p(u) + c_e - p(v)) \\
+&amp;= \sum_{e \in M} c_e + \sum_{e = (u, v)} p(u) - \sum_{e = (u, v)} p(v) \end{align*}\]</span> Then as <span class="math inline">\(M\)</span> is a perfect matching, <span class="math display">\[\begin{align*}
+&amp;= \sum_{e \in M} c_e + \sum_{u \in L} p(u) - \sum_{v \in R} p(v).
+\end{align*}\]</span> Finally, note that <span class="math inline">\(\sum_{u \in L} p(u) - \sum_{v \in R} p(v)\)</span> is constant across all perfect matchings.</p>
+</div>
+<p>The key thing about <a href="#lem-equiv-reduced-cost" class="quarto-xref">Lemma&nbsp;11</a> is it gives us a family of equivalent optimization problems, parametrized on our choice of the pricing <span class="math inline">\(p\)</span>. What would be a convenient choice for the pricing <span class="math inline">\(p\)</span> then? First, it would be desirable if finding the augmenting path of minimum cost is equivalent to a shortest-path problem over non-negative weights. This would allow us to use the more efficient Dijkstra’s algorithm over Bellman-Ford! For a matching <span class="math inline">\(M\)</span>, the weighting of the edges on an augmenting path would be, <span class="math display">\[\begin{align*}
+\Delta^p_M(e) = \Bbb{1} \{e \notin M\} \cdot c^p_e - \Bbb{1} \{e \in M\} \cdot c^p_e.
+\end{align*}\]</span></p>
+<p>Thus, it suffices to consider prices such that <span class="math inline">\(c^p_e \ge 0\)</span> for all edges and <span class="math inline">\(c^p_e = 0\)</span> for <span class="math inline">\(e \in M\)</span>.</p>
+<p>Furthermore, motivated by our economic analogy we will require that every person not doing any job does not have to be paid. This may not feel too natural and in fact, we don’t really use it when we discuss the desirable properties that compatible pricings offer. Rather, this assertion reflects a property of the compatible pricing we will actually end up using in our algorithm. Not much is lost if the reader implicitly drops this requirement while reading the remainder of the section.</p>
+<!-- ::: {#rem-edit-2} -->
+<!---->
+<!-- Economic intuition here leaves a bit to be desired. Either the presentation here needs to be slicker or we need to motivate it better. -->
+<!---->
+<!-- ::: -->
+<p>We formalize these requirements as follows.</p>
+<div id="def-compatible-prices" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12 (Compatible Prices)</strong></span> <br>
+Given a matching <span class="math inline">\(M\)</span>, a pricing of the vertices, <span class="math inline">\(p: V \to \mathbb{R}\)</span>, is said to be a <em><span class="math inline">\(M\)</span>-compatible pricing</em> if</p>
+<ol type="i">
+<li>for all unmatched vertices <span class="math inline">\(v \in L\)</span> we have <span class="math inline">\(p(v) = 0\)</span>;</li>
+<li>for all edges <span class="math inline">\(e\)</span> we have <span class="math inline">\(c_e^p \ge 0\)</span>;</li>
+<li>for all edges <span class="math inline">\(e \in M\)</span> we have <span class="math inline">\(c_e^p = 0\)</span>.</li>
+</ol>
+</div>
+<p>We first show that a perfect matching <span class="math inline">\(M\)</span> along with a <span class="math inline">\(M\)</span>-compatible pricing <span class="math inline">\(p\)</span> easily certify the optimality of <span class="math inline">\(M\)</span>.</p>
+<div id="lem-pricing-certify" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 12 (Compatible Prices Certify Optimality)</strong></span> <br>
+Let <span class="math inline">\(M\)</span> be a matching with <span class="math inline">\(|M| = k\)</span>. If there exists a <span class="math inline">\(M\)</span>-compatible pricing <span class="math inline">\(p\)</span>, then <span class="math inline">\(M\)</span> is a min-cost matching of cardinality <span class="math inline">\(k\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-pricing-certify">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Let <span class="math inline">\(M'\)</span> be any other matching of cardinality <span class="math inline">\(k\)</span>. Note that <span class="math inline">\(M \oplus M'\)</span> is a union of alternating components. We then have, <span class="math display">\[\begin{align*}
+c^p(M') &amp;= c^p(M) + \Delta^p_M(M \oplus M') \\
+&amp;= c^p(M) + c^p(M' \backslash M) - c^p(M \backslash M') \\
+&amp;= c^p(M' \backslash M) \\
+&amp;\ge c^p(M) = 0.
+\end{align*}\]</span></p>
+</div>
+<p>In summary, compatible pricings have two key offerings: (a) it allows us to efficiently compute an augmenting path of minimum cost (b) it alows us to easily certify the optimality of a perfect matching.</p>
+<p>This leads to a natural candidate for an algorithm: at every iteration, we augment by the min-cost path for the current pricing and afterword, modify the pricing to be compatible with respect to the new matching. Note that initially when our matching is <span class="math inline">\(M = \emptyset\)</span>, the zero pricing <span class="math inline">\(p = 0\)</span> is <span class="math inline">\(M\)</span>-compatible. The only task remaining is to come up with a mechanism for maintaining compatibility of the pricing.</p>
+<div id="lem-update" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 13 (Maintaining Compatibility)</strong></span> <br>
+Let <span class="math inline">\(M\)</span> be a matching, let <span class="math inline">\(p\)</span> be a <span class="math inline">\(M\)</span>-compatible pricing and let <span class="math inline">\(M'\)</span> be a matching obtained by augmenting along the augmenting path minimizing <span class="math inline">\(\Delta_M^p\)</span>. By <span class="math inline">\(d_M^p(v)\)</span> denote the min-cost of a path from the unmatched set <span class="math inline">\(L \backslash V(M)\)</span> to <span class="math inline">\(v\)</span>.</p>
+<p>Then <span class="math inline">\(p'(v) = d_{M}^p (v) + p(v)\)</span> is a compatible set of prices for <span class="math inline">\(M'\)</span>.</p>
+</div>
+<div class="proof" data-key="@lem-update">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+<p>Consider each of the requirements,</p>
+<ol type="i">
+<li>for all unmatched vertices <span class="math inline">\(v \in L\)</span> we have <span class="math inline">\(p'(v) = 0\)</span></li>
+</ol>
+<p>Suppose <span class="math inline">\(v \in L \backslash V(M)\)</span>. Then <span class="math inline">\(d^p_M (v) = 0\)</span>. Thus, <span class="math inline">\(p'(v) = p(v) + d^p_M(v) = 0\)</span>.</p>
+<ol start="2" type="i">
+<li>for all edges <span class="math inline">\(e\)</span> we have <span class="math inline">\(c_e^{p'} \ge 0\)</span></li>
+</ol>
+<p>Consdier <span class="math inline">\(e = (u, v)\)</span> and then,</p>
+<p><span class="math display">\[\begin{align*}
+d^p_M (v) &amp;\le d^p_M (u) + c^p_e \\
+\implies 0 &amp;\le d^p_M (u) + c^p_e - d^p_M (v) \\
+&amp;= d^p_M (u) + p(u) + c_e - (p(v) + d^p_M(v)) \\
+&amp;= p'(u) + c_e - p'(v) \\
+&amp;= c^{p'}_e.
+\end{align*}\]</span></p>
+<ol start="3" type="i">
+<li>for all edges <span class="math inline">\(e \in M'\)</span> we have <span class="math inline">\(c_e^{p'} = 0\)</span></li>
+</ol>
+<p>Suppose <span class="math inline">\(e = (u, v) \in M\)</span>. The only edge entering <span class="math inline">\(u\)</span> in <span class="math inline">\(G_M\)</span> is the directed edge <span class="math inline">\((v, u)\)</span>. Thus, <span class="math display">\[\begin{align*}
+d_M^p(u) &amp;= d^p_M(v) - c^p_e  \\
+\implies 0 &amp;= d_M^p(u) + c^p_e - d_M^p(v)  \\
+&amp;= p'(u) + c_e - p'(v) \\
+&amp;= c^{p'}_e.
+\end{align*}\]</span></p>
+<p>Now, suppose <span class="math inline">\(e = (u, v) \in M' \backslash M\)</span>. Note that these edges are along the minimum-<span class="math inline">\(\Delta_M^p\)</span> augmenting paths in <span class="math inline">\(G_M\)</span>. Thus, <span class="math display">\[\begin{align*}
+d^p_M(v) &amp;= d^p_M(u) + c^p_e \\
+\implies 0 &amp;= d^p_M(u) + c^p_e - d^p_M(v) \\
+&amp;= p'(u) + c_e - p'(v) \\
+&amp;= c_e^{p'}.
+\end{align*}\]</span></p>
+</div>
+<p>We summarize the entire section by formally presenting the algorithm.</p>
+<div class="pseudocode-container quarto-float" data-no-end="false" data-caption-prefix="Algorithm" data-comment-delimiter="1.2em" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-indent-size="1.2em">
+<div class="pseudocode">
+\begin{algorithm} \caption{Pricing Algorithm for Min-Cost Perfect Matching} \begin{algorithmic} \State{\textbf{initialize} $M = \emptyset$, $p = 0$} \While{$M$ is not a perfect matching} \State{$P \leftarrow$ \textbf{find} an $M$-augmenting path minimizing $\Delta_M^p(\cdot)$} \State{$d^p_M(v) \leftarrow$ min-cost of a path $\set{L \backslash V(M)} \to v$} \State{$M \leftarrow M \oplus P$} \State{$p \leftarrow d^p_M + p$} \EndWhile \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<p>In each iteration, computing <span class="math inline">\(d^p_M\)</span> takes <span class="math inline">\(\mathcal{O}(m \log n)\)</span> time via Dijkstra’s and computing <span class="math inline">\(P\)</span> takes an additional <span class="math inline">\(\mathcal{O}(n)\)</span>. There are at most <span class="math inline">\(n/2\)</span> iterations to reach a perfect matching. Thus, the overall runtime is <span class="math inline">\(\mathcal{O}(mn \log n + n^2)\)</span>.</p>
+</section>
+<section id="lp-relaxation-of-bipartite-matching" class="level4" data-number="1.3.2">
+<h4 data-number="1.3.2" class="anchored" data-anchor-id="lp-relaxation-of-bipartite-matching"><span class="header-section-number">1.3.2</span> LP Relaxation of Bipartite Matching</h4>
+<p>The algorithm in the prior section is quite elegant but appears to come from nowhere. In this section, we present a more principled way of designing the very same algorithm.</p>
+<p>We start off by relaxing our notion of a matching.</p>
+<div id="def-frac-match" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 13 (Fractional Matching)</strong></span> <br>
+A <em>fractional matching</em> in a bipartite graph <span class="math inline">\((L, R, E)\)</span> is a vector <span class="math inline">\(\vec{x} = (x_{uv})_{\{u, v\} \in E}\)</span> that satisfies <span class="math display">\[\begin{align*}
+\forall u \in L,&amp;&amp; \sum_v &amp;x_{uv} \le 1,  \\
+\forall v \in R,&amp;&amp; \sum_u &amp;x_{uv} \le 1, \\
+\forall \{u, v\} \in E,&amp;&amp; \quad &amp;x_{uv} \ge 0.
+\end{align*}\]</span></p>
+<p>A <em>fractional perfect matching</em> additionally satisfies <span class="math display">\[\begin{align*}
+\forall u \in L,&amp;&amp; \sum_v &amp;x_{uv} = 1,  \\
+\forall v \in R,&amp;&amp; \sum_u &amp;x_{uv} = 1.
+\end{align*}\]</span></p>
+</div>
+<p>Restricting each <span class="math inline">\(x_{uv} \in \{0, 1\}\)</span> to be integral allows us to interpret <span class="math inline">\(\vec{x}\)</span> as an indicator vector for a set of edges <span class="math inline">\(M \subseteq E\)</span>. The fractional matching constraints require <span class="math inline">\(M\)</span> to be a matching and the fractional perfect matching constraints require <span class="math inline">\(M\)</span> to be a perfect matching. This is the sense in which allowing <span class="math inline">\(x_{uv} \in [0, 1]\)</span>, “relaxes” our discrete notion of a matching.</p>
+<div id="lem-relaxation" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 14 (Integral Matching)</strong></span> <br>
+Suppose <span class="math inline">\(\vec{x} \in \bits^{E}\)</span>. If <span class="math inline">\(\vec{x}\)</span> is a fractional matching then it is a matching. Furthermore, if <span class="math inline">\(\vec{x}\)</span> is a perfect fractional matching then it is a perfect matching.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+</div>
+<p>Relaxing enlarges our feasible set and one may be concerned that properties of a relaxation may not represent the properties of the original objects we were studying.</p>
+<div id="exm-non-bipartite" class="theorem example">
+<p><span class="theorem-title"><strong>Example 1 (Non-Bipartite Relaxation)</strong></span> <br>
+In our definition for fractional matching, we required the underlying graph to be bipartite. If we allowed for non-bipartite graphs, one doesn’t need to look beyond <span class="math inline">\(K_3\)</span> to see possible problems that may arise.</p>
+<p>Indeed, the illustrated example we have a fractional matching where each edge has a positive value. This fractional matching appears to be “larger” than any actual matching availible in the underlying graph.</p>
+</div>
+<p>Fortunately, the following theorem guarantees a nice correspondence between matchings and fractional matchings for bipartite graphs.</p>
+<div id="prp-birk-neuman" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 3 (Birkhoff-von Neumann)</strong></span> <br>
+In any bipartite graph, every fractional perfect matching is a convex combination of integral perfect matchings.</p>
+<p>That is, for any fractional perfect matching <span class="math inline">\(\vec{x} \in [0, 1]^E\)</span> there exists a finite collection of integral perfect matchings <span class="math inline">\(\vec{y_i} \in \bits^E\)</span> such that <span class="math display">\[\begin{align*}
+\vec{x} = \sum_{i} \alpha_i y_i
+\end{align*}\]</span> where <span class="math inline">\(\alpha_i \ge 0\)</span> and <span class="math inline">\(\sum_i \alpha_i = 1\)</span>.</p>
+</div>
+<div class="proof" data-key="@prp-birk-neuman">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+</div>
+<p>We are interested in the min-cost fractional perfect matching problem.</p>
+<p><strong>Minimum-Cost Fractional Perfect Matching.</strong> Given an undirected bipartite graph <span class="math inline">\(G = (L, R, E)\)</span> together with costs <span class="math inline">\(c: E \to \RR_{\ge 0}\)</span> for each edge, find a fractional perfect matching <span class="math inline">\(\vec{x}\)</span> that minimizes <span class="math inline">\(c(\vec{x}) = \sum_{\{u, v\} \in E} c_{uv} x_{uv}\)</span>.</p>
+<p>Alternatively, we can express this problem as a <em>linear program</em>, dubbed the <em>primal</em>.</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \text{minimize} &amp;&amp;\sum_{\{u, v\} \in E} c_{uv} x_{uv} \\
+&amp; \text{subject to} &amp;&amp;\sum_{v} x_{uv} = 1, &amp;\forall u \in L, \\
+&amp; &amp;&amp;\sum_{v} x_{uv} = 1, &amp;\forall v \in R, \\
+&amp; &amp;&amp; x_{uv} \ge 0, &amp;\forall \{u, v\} \in E.
+\end{align*}\]</span></p>
+<p>By the Birkhoff-von Neumann theorem, we note that the objective value of this problem is the same as the objective value for its integral perfect matching counterpart.</p>
+<div id="cor-equivalence" class="theorem corollary">
+<p><span class="theorem-title"><strong>Corollary 3</strong></span> <br>
+<span class="math display">\[\begin{align*}
+\text{cost}(\text{min-cost fractional perfect matching}) = \text{cost}(\text{min-cost integral perfect matching})
+\end{align*}\]</span></p>
+</div>
+<div class="proof" data-key="@cor-equivalence">
+<p><span class="proof-title"><em>Proof</em>. </span></p>
+</div>
+<p>We start by first considering how we can prove lower bounds on the optimum. A nice trick is to take linear combinations of the constraints of our primal program to “algebraically reconstruct” the objective function. More precisely, for every vertex <span class="math inline">\(u \in L\)</span> and <span class="math inline">\(v \in R\)</span>, define variables <span class="math inline">\(y_u, y_v\)</span> by which we scale the corresponding degree constraints,</p>
+<p><span class="math display">\[\begin{align*}
+\sum_v y_u x_{uv} = y_u, \quad \sum_u y_v x_{uv} = y_v.
+\end{align*}\]</span></p>
+<p>Summing these equations we obtain <span class="math display">\[\begin{align*}
+\sum_{(u, v) \in L \times R} (y_u + y_v) x_{uv} = \sum_{u \in L} y_u + \sum_{v \in R} y_v.
+\end{align*}\]</span></p>
+<p>If we have <span class="math inline">\(y_u + u_v \le c_{uv}\)</span> for every <span class="math inline">\((u, v) \in L \times R\)</span> then we have the lower bound on the optimum, <span class="math display">\[\begin{align*}
+\sum_{\{u,v\} \in E} c_{uv} x_{uv} \ge \sum_{(u, v) \in L \times R} (y_u + y_v) x_{uv} = \sum_{u \in L} y_u + \sum_{v \in R} y_v.
+\end{align*}\]</span></p>
+<p>We can represent the strongest lower bound obtainable via this method as a solution to a different linear program, dubbed the <em>dual</em>.</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \text{maximize} &amp;&amp; \sum_{w \in L \sqcup R} y_w \\
+&amp; \text{subject to} &amp;&amp; y_u + y_v \le c_{uv}, &amp;\forall \{u, v\} \in E, \\
+&amp; &amp;&amp; y_w \in \mathbb{R}, &amp;\forall w \in L \sqcup R.
+\end{align*}\]</span></p>
+<p>Our prior discussion motivating the dual corresponds to a special case of <em>weak duality</em>.</p>
+<div id="prp-weak-dual" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 4 (Weak Duality for Min-Cost Fractional Matching)</strong></span> <br>
+For any primal-feasible <span class="math inline">\(\vec{x}\)</span> and dual-feasible <span class="math inline">\(\vec{y}\)</span> we have, <span class="math display">\[\begin{align*}
+\sum_{w \in L \sqcup R} y_w \le \sum_{\{u, v\} \in E} c_{uv} x_{uv}.
+\end{align*}\]</span></p>
+</div>
+<div id="rem-edit-2" class="proof remark">
+<p><span class="proof-title"><em>Remark 2</em>. </span></p>
+<p>Add the primal-dual exposition.</p>
+</div>
+</section>
+</section>
+<section id="mise-en-place-ski-rental-problem" class="level3" data-number="1.4">
+<h3 data-number="1.4" class="anchored" data-anchor-id="mise-en-place-ski-rental-problem"><span class="header-section-number">1.4</span> <em>Mise en Place</em> : Ski-Rental Problem</h3>
+<p>We now take a brief excursion from discussing matching to introduce online algorithms and primal-dual approaches for such problems. We will take the ski-rental problem as being a prototypic example for this model.</p>
+<p><strong>Ski-Rental Problem.</strong> A skier will make <span class="math inline">\(T\)</span> ski trips this season. Each trip they must either rent a ski, for a cost of <span class="math inline">\(1\)</span> per trip, or buy a ski, for a cost of <span class="math inline">\(B\)</span> the first time you choose this option, and <span class="math inline">\(\emptyset\)</span> after. The goal is minimize total cost.</p>
+<p>If <span class="math inline">\(T\)</span> is known, there is an easy solution. <span class="math display">\[\begin{align*}
+\begin{cases}
+\, \text{buy a ski at } t = 0 &amp;\text{if } T &gt; B, \\
+\, \text{rent a ski at all timesteps } t &amp;\text{if } T \le B.
+\end{cases}
+\end{align*}\]</span></p>
+<p>In the <em>online</em> version,</p>
+</section>
+<section id="online-matching" class="level3" data-number="1.5">
+<h3 data-number="1.5" class="anchored" data-anchor-id="online-matching"><span class="header-section-number">1.5</span> Online Matching</h3>
+</section>
+<section id="algebraic-algorithms" class="level3" data-number="1.6">
+<h3 data-number="1.6" class="anchored" data-anchor-id="algebraic-algorithms"><span class="header-section-number">1.6</span> Algebraic Algorithms</h3>
+</section>
+</section>
+<section id="linear-programming" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="linear-programming"><span class="header-section-number">2</span> Linear Programming</h2>
+<section id="basics" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="basics"><span class="header-section-number">2.1</span> Basics</h3>
+</section>
+<section id="duality" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="duality"><span class="header-section-number">2.2</span> Duality</h3>
+</section>
+<section id="simplex-method" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="simplex-method"><span class="header-section-number">2.3</span> Simplex Method</h3>
+</section>
+<section id="strong-duality" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="strong-duality"><span class="header-section-number">2.4</span> Strong Duality</h3>
+</section>
+<section id="separation-oracles" class="level3" data-number="2.5">
+<h3 data-number="2.5" class="anchored" data-anchor-id="separation-oracles"><span class="header-section-number">2.5</span> Separation Oracles</h3>
+</section>
+<section id="ellipsoid-algorithm" class="level3" data-number="2.6">
+<h3 data-number="2.6" class="anchored" data-anchor-id="ellipsoid-algorithm"><span class="header-section-number">2.6</span> Ellipsoid Algorithm</h3>
+</section>
+</section>
+<section id="network-flow" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="network-flow"><span class="header-section-number">3</span> Network Flow</h2>
+<section id="minimum-cut" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="minimum-cut"><span class="header-section-number">3.1</span> Minimum Cut</h3>
+</section>
+<section id="maximum-flow" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="maximum-flow"><span class="header-section-number">3.2</span> Maximum Flow</h3>
+</section>
+<section id="ford-fulkerson" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="ford-fulkerson"><span class="header-section-number">3.3</span> Ford-Fulkerson</h3>
+</section>
+<section id="dinitzs-algorithm" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="dinitzs-algorithm"><span class="header-section-number">3.4</span> Dinitz’s Algorithm</h3>
+</section>
+<section id="applications" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="applications"><span class="header-section-number">3.5</span> Applications</h3>
+</section>
+</section>
+<section id="multicommodity-flow" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="multicommodity-flow"><span class="header-section-number">4</span> Multicommodity Flow</h2>
+<section id="sparsest-cut-multicommodity-flow" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="sparsest-cut-multicommodity-flow"><span class="header-section-number">4.1</span> Sparsest Cut &amp; Multicommodity Flow</h3>
+</section>
+<section id="mise-en-place-the-chernoff-bound" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="mise-en-place-the-chernoff-bound"><span class="header-section-number">4.2</span> <em>Mise en Place</em>: The Chernoff Bound</h3>
+</section>
+<section id="randomized-rounding-for-approximate-congestion-minimization" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="randomized-rounding-for-approximate-congestion-minimization"><span class="header-section-number">4.3</span> Randomized Rounding for Approximate Congestion Minimization</h3>
+</section>
+<section id="approximate-max-flow-min-cut" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="approximate-max-flow-min-cut"><span class="header-section-number">4.4</span> Approximate Max-Flow Min-Cut</h3>
+</section>
+</section>
+<section id="multiplicative-weights" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="multiplicative-weights"><span class="header-section-number">5</span> Multiplicative Weights</h2>
+<section id="halving-weighted-majority" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="halving-weighted-majority"><span class="header-section-number">5.1</span> Halving &amp; Weighted Majority</h3>
+</section>
+<section id="hedge" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="hedge"><span class="header-section-number">5.2</span> Hedge</h3>
+</section>
+<section id="minimax-theorem" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="minimax-theorem"><span class="header-section-number">5.3</span> Minimax Theorem</h3>
+</section>
+<section id="solving-multicommodity-flow" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="solving-multicommodity-flow"><span class="header-section-number">5.4</span> Solving Multicommodity Flow</h3>
+</section>
+</section>
+<section id="spectral-methods" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="spectral-methods"><span class="header-section-number">6</span> Spectral Methods</h2>
+<section id="graph-laplacian" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="graph-laplacian"><span class="header-section-number">6.1</span> Graph Laplacian</h3>
+</section>
+<section id="degree-weighting-normalization" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="degree-weighting-normalization"><span class="header-section-number">6.2</span> Degree-weighting &amp; Normalization</h3>
+</section>
+<section id="cheegers-inequality" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="cheegers-inequality"><span class="header-section-number">6.3</span> Cheeger’s Inequality</h3>
+</section>
+<section id="max-cut-and-the-goemans-williamson-algorithm" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="max-cut-and-the-goemans-williamson-algorithm"><span class="header-section-number">6.4</span> Max-Cut and the Goemans-Williamson Algorithm</h3>
+</section>
+</section>
+<section id="markov-chains" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="markov-chains"><span class="header-section-number">7</span> Markov Chains</h2>
+<section id="sampling-problems" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="sampling-problems"><span class="header-section-number">7.1</span> Sampling Problems</h3>
+</section>
+<section id="metropolis-algorithm" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="metropolis-algorithm"><span class="header-section-number">7.2</span> Metropolis Algorithm</h3>
+</section>
+<section id="mixing-times-and-couplings" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="mixing-times-and-couplings"><span class="header-section-number">7.3</span> Mixing Times and Couplings</h3>
+</section>
+<section id="sampling-matchings" class="level3" data-number="7.4">
+<h3 data-number="7.4" class="anchored" data-anchor-id="sampling-matchings"><span class="header-section-number">7.4</span> Sampling Matchings</h3>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+    <script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
+
+
+
+
+</body></html>

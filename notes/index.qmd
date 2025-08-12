@@ -1,0 +1,9 @@
+---
+title: "A Collection of Notes"
+---
+
+- [Complex Analysis](complex.html)
+- [Optimization](optimization.html)
+- [Probability Theory](probability.html)
+- [Algorithms](algorithms.html)
+- [Concentration Inequalities](concentration.html)
