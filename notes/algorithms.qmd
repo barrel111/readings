@@ -35,7 +35,7 @@ The following are some easy but useful properties of an $M$-augmenting path.
 
 ::: {#rem-edit-1}
 # Todo 1
-Should probably turn this into properties of alternatig paths and use an identical argument to show that alternating cycles are of even length. 
+Should probably turn this into properties of alternating paths and use an identical argument to show that alternating cycles are of even length. 
 :::
 
 ::: {#lem-alt-prop} 
@@ -657,9 +657,157 @@ If $T$ is known, there is an easy solution.
 \end{cases}
 \end{align*}
 
-In the _online_ version, 
+In the _online_ version, $T$ is unknown. The common benchmark for online problems is a comparison with respect to the offline optimal.
+
+::: {#def-online-min}
+# Competitiveness for Minimization Problems
+An online algorithm for a minimization problem is _$c$-competitive_ if there exists a constant $b$ such that for all input sequences,  
+\begin{align*}
+\alg \le c \cdot \opt + b
+\end{align*}
+where $\alg$ and $\opt$ denote the value of the algorithm's solution and the optimum one, respectively. It is _strictly competitive_ if $b = 0$. A randomized algorithm is _$c$-competitive_ (against an oblivious adversary) if the above holds with $\E[\alg]$ in place of $\alg$ .
+:::
+
+We start off by presenting a simple deterministic algorithm that just rents as much as possible until it is abundantly clear that it should have just bought the ski. 
+
+```pseudocode
+#| html-line-number: false
+
+\begin{algorithm}
+\caption{A Deterministic Algorithm for Ski-Rental}
+\begin{algorithmic}
+\If{$t \le B$}
+\State{\textbf{rent} a ski.}
+\Else
+\State{\textbf{buy} a ski.}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+```
+
+This algorithm turns out to be strictly $2$-competitive.
+
+::: {#prp-deterministic-has-2-comp}
+# 2-Competitive
+The algorithm given above is strictly $2$-competitive.
+:::
+::: {.proof key=@prp-deterministic-has-2-comp}
+
+We can do case analysis on $T$. If $T \le B$ then $\opt = T = \alg$. If $T > B$ then $\alg = 2 B$ whereas $\opt = B$. Thus, in both cases we have $\alg \le 2 \opt$.
+
+:::
+
+In fact, no deterministic algorithm can beat this guarantee.
+
+::: {#prp-deterministic-2-comp-opt}
+# Optimality
+No deterministic algorithm for the ski-rental problem can be $c$-competitive for $c < 2$.
+:::
+::: {.proof key=@prp-deterministic-2-comp-opt}
+
+A deterministic algorithms rents a ski if and only if $t < K$ for some $K \in \NN \cup \{\infty\}$.  
+
+If $K = \infty$, the adversary constructs an instance where $T = 2 B$. Then $\alg = 2 B$ whereas $\opt = B$. Thus, the competitive ratio here is $\alg/\opt = 2$
+
+If $K < \infty$, the adversary starts by setting $T = K$. If $B > K$ then $\alg = K - 1 + B \ge 2 K$  whereas $\opt = T = K$. If $B < K$ then $\alg = K - 1 + B \ge 2 B$ whereas $\opt = B$. Regardless, the competitive ratio here is also $\alg/\opt \ge 2$.
+
+:::
+
+The next natural question would be to wonder how randomization could possible improve this. To answer this, we will again consider an LP relaxation of our problem-- this time interpreting the relaxed solution as a probability distribution. The following primal, parametrized on $T$, is our relaxation.
+
+\begin{align*}
+& \text{minimize} && \sum_{i = 1}^T x_i + B z \\
+& \text{subject to} && x_i + z \ge 1, &\forall i \in [T]\\
+& && x_1, \dots, x_T, z \ge 0.
+\end{align*}
+
+We take its dual, 
+
+\begin{align*}
+& \text{maximize} && \sum_{i = 1}^T y_i \\
+& \text{subject to} && y_i \le 1, &\forall i \in [T],\\
+& && \sum_{i = 1}^T y_i \le B, \\
+& && y_i \ge 0, &\forall i \in [T].
+\end{align*}
+
+Both of these are easy linear programs to solve. This isn't necessarily the point though-- solving the primal LP requires us to know $T$ and we already have a clean characterization of the offline solution. Rather, the idiomatic point of considering LP relaxations for the design of algorithms is to lighten our cognitive load. In practice, reasoning about a primal and dual program often naturally helps us understand the structure of the underlying problem. 
+
+In this case, the dual problem is much nicer. In fact, it isn't too difficult to solve it online, without prior knowledge of $T$. As each variable $y_i$ "arrives" online, we can just set it maximally to $y_i = 1$. The second constraint then gives us that we only need to do this while $i \le B$ and then we must set $y_i = 0$ for all $i > B$. These constraints also guarantees the optimality of our approach.
+
+::: {#lem-optimal-dual}
+An optimal dual solution is given by, 
+\begin{align*}
+y_i = \begin{cases}
+1 &\text{if } i \le B,\\
+0 &\text{if } i > B.
+\end{cases}
+\end{align*}
+:::
+::: {.proof}
+:::
+
+Now, our goal is to go from this online algorithm for the dual problem to a randomized algorithm for the ski-rental problem. Our strategy is outlined as follows.
+
++ Set $\{x_i, z\}$ and $\{y_i\}$ in tandem. Note that $x_t, y_t$ will be permenantly set at time $t$. We note that $z$ will only increase in time-- as we will see, it is only schemes that guarantee this property that naturally correspond to a randomized online algorithm. 
+
++ For all $t \le T$, make sure $(x_1, \dots, x_t, z)$ is feasible for $\textsc{P}{RIMAL}(t)$, and $(y_1, \dots, y_t)$ is feasible for $\textsc{D}{UAL}(t)$.
+
++ Make sure the $\textsc{P}{RIMAL}$ objective never exceeds the $\textsc{D}{UAL}$ objective by more than a factor of $\alpha < \infty$.
+
+Note that, by weak duality, we must have $1 \le \frac{\textsc{P}{RIMAL}}{\textsc{D}{UAL}} < \alpha$.
+
+If we set a value of $x_i$ (the algorithm we design will have $\le x_{i - 1}$) and set $z = 1 - x_i \ge 1 - x_{i - 1}$ to satisfy the primal constraint $z + x_i \ge 1$ without increasing the objective value unnecessarily. Then $\Delta \textsc{P}{RIMAL} = x_i + B \Delta z = x_i + B (x_{i - 1} - x_i)$ and $\Delta \textsc{D}{UAL} = \begin{cases}1 &\text{if } i \le B \\ 0 &\text{if } i > B\end{cases}$. We further want to guarantee 
+\begin{align*}
+\Delta \textsc{P}{RIMAL} \le \alpha \cdot \Delta \textsc{D}{UAL}.
+\end{align*}
+
+as it would ensure that the $\textsc{P}{RIMAL}$ objective never exceeds the $\textsc{D}{UAL}$ by more than $\alpha$.
+
+Thus, we need to deisgn an algorithm for the primal such that 
+\begin{align*}
+\Delta \textsc{P}{RIMAL} \le \begin{cases}\alpha &\text{if } i \le B \\ \emptyset &\text{if } i > B\end{cases}
+\end{align*}
+
+Thus, when $i > B$, we need $x_i = x_{i - 1} = 0$. As an aside, if $x_{i - 1}$, the constraint $z + x_{i - 1} \ge 1$ implies that we have already set $z = 1$ at time $i - 1$.
+
+Now, we also want $\Delta \textsc{P}{RIMAL} \le \alpha$ when $i \le B$. First, note that the algorithm we're designing sets some value $x_i$ if the ski season lasts for $\ge i$ days. For convenience, we call this value $f\left(\frac{i}{B}\right)$ where $f:[0, 1] \to [0, 1]$. Then, 
+
+\begin{align*}
+\alpha \ge \Delta \textsc{P}{RIMAL} &= x_i + B(x_{i - 1} - x_{i}) \\
+&= f\left(\frac{i}{B}\right) - \frac{f\left(\frac{i}{B}\right) - f\left(\frac{i - 1}{B}\right)}{\frac{1}{B}}
+\end{align*}
+
+What if we consider the solution to the following differential equation? 
+
+\begin{align*}
+f(x) - f'(x) = \alpha \\
+\implies \frac{f'(x)}{f(x) - \alpha} = 1 \\
+\implies \int \frac{f'(x)}{f(x) - \alpha} \, dx = x + C \\
+\end{align*}
+
+As we claimed prior $\alpha > 1$ and so, with $A = e^C$, we get
+\begin{align*}
+&\implies \ln [ \alpha - f(x) ] = x + C \\
+&\implies \alpha - f(x) = A e^x \\
+&\implies f(x) = \alpha - A e^x.
+\end{align*}
+
+::: {#rem-todo}
+Boundary conditions + $\alpha$ + concavity
+:::
 
 ### Online Matching
+
+**Online Matching**: 
+
+::: {#def-online-min}
+# Competitiveness for Maximization Problems
+An online algorithm for a maximization problem is _$c$-competitive_ if there exists a constant $b$ such that for all input sequences,  
+\begin{align*}
+c \cdot \alg + b \ge \opt
+\end{align*}
+where $\alg\,$ and $\opt$ denote the value of the algorithm's solution and the optimum one, respectively. It is _strictly competitive_ if $b = 0$. A randomized algorithm is _$c$-competitive_ (against an oblivious adversary) if the above holds with $\E[\alg]$ in place of $\alg$.
+:::
 
 ### Algebraic Algorithms
 

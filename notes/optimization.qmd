@@ -2,17 +2,296 @@
 title: "Optimization"
 ---
 
-An introduction to functional analysis from an applied perspective centered around optimization.
+An introduction to functional analysis from an applied perspective focusing on optimization.
 
 ## Vector Spaces
 
-### The Basic Theory
+### The Theoretical Minimum
+
+::: {#def-vectorspace}
+# Vector Spaces
+
+
+:::
+
+::: {#lem-prop-of-vs}
+# Properties of Vector Spaces
+:::
+
+::: {#exm-vs}
+# Examples of Vector Spaces
+:::
+
+::: {#def-subspace}
+# Vector Subspaces
+:::
+
+#### Constructing Vector Spaces
+
+::: {#lem-cap-subspace}
+# Intersection of Subspaces
+:::
+
+::: {#def-sum-vs}
+# Sum of Vector Spaces
+:::
+
+::: {#lem-sum}
+# Sum as Subspace
+:::
+
+::: {#def-lin-comb}
+# Linear Combinations
+:::
+
+::: {#def-gen-subspace}
+# Generated Subspace
+:::
+
+::: {#def-affine}
+# Affine Subspaces
+:::
+
+:::{#lem-cap-affine}
+# Intersection of Affine Subspaces
+:::
+
+::: {#def-gen-affine}
+# Generated Affine Subspace
+:::
+
+::: {#def-quotient}
+# Quotient Spaces
+:::
+
+#### Linear Independence and Dimension
+
+::: {#def-dep-indep}
+# Linear Dependence and Independence
+:::
+
+::: {#prp-indep}
+# Independence and Trivial Linear Combination
+:::
+
+::: {#cor-indep-unique}
+# Unique Representation Under Independent Set
+:::
+
+::: {#def-basis}
+# Basis
+:::
+
+::: {#lem-steinitz}
+# Steinitz Exchange Lemma
+:::
+
+::: {#cor-basis}
+# Cardinality of Bases for Finite Dimensional Spaces
+:::
+
+::: {#def-dim}
+# Dimension of Vector Space
+:::
+
+#### Convexity, Cones
+
+::: {#def-convex}
+# Convex Subset
+:::
+
+::: {#lem-new-old-convex}
+# Constructing Convex Sets 
+:::
+
+::: {#lem-cap-convex}
+# Intersection and Convexity
+:::
+
+::: {#def-convex-hull}
+# Convex Hull
+:::
+
+::: {#def-cone}
+# Cones 
+:::
 
 ### Normed Vector Spaces
+
+::: {#def-normed-vs}
+# Normed Vector Spaces
+:::
+
+::: {#lem-rev-triangle}
+# Reverse Triangle Inequality
+:::
+
+::: {#exm-vs}
+# Examples of Normed Vector Spaces
+:::
+
+#### $\ell_p$ and $L_p$ Spaces
+
+::: {#def-ell-p}
+# $\ell_p$ Space
+:::
+
+::: {#prp-holder-ell-p}
+# $\ell_p$ Hölder's Inequality
+:::
+
+::: {#prp-minkowski-ell-p}
+# $\ell_p$ Minkowski's Inequality
+:::
+
+::: {#def-ell-p}
+# $L_p$ Space
+:::
+
+::: {#def-esssup}
+# Essential Supremum
+:::
+
+::: {#prp-holder-ell-p}
+# $L_p$ Hölder's Inequality
+:::
+
+::: {#prp-minkowski-ell-p}
+# $L_p$ Minkowski's Inequality
+:::
+
+#### Open, Closed Sets 
+
+::: {#def-interior}
+# Interior
+:::
+
+::: {#def-open}
+# Open Sets
+:::
+
+::: {#def-limit-point}
+# Limit Point
+:::
+
+::: {#def-closure}
+# Closure
+:::
+
+::: {#def-closed-set}
+# Closed Set
+:::
+
+::: {#prp-setops-top}
+# Set Operations and Topology
+:::
+
+::: {#prp-convex-topology}
+# Convexity and Topology
+:::
+
+#### Convergence, Continuity
+
+::: {#def-convergence}
+# Convergence
+:::
+
+::: {#prp-unique-conv}
+# Uniqueness of Limits
+If a sequence converges, its limit is unique.
+:::
+
+::: {#prp-closed}
+# Closed Sets and Convergence
+A set $F$ is closed if and only if every convergent sequence with elements in $F$ has its limit in $F$.
+:::
+
+::: {#def-functional}
+# Functional
+:::
+
+::: {#def-linear}
+# Linear Transformation
+:::
+
+::: {#def-continuous}
+# Continuous Transformation
+:::
+
+::: {#prp-continuous}
+# Continuity and Sequences
+:::
+
+#### Completeness, Banach Spaces
+
+::: {#def-cauchy}
+# Cauchy Sequences
+:::
+
+::: {#def-complete}
+# Completeness
+:::
+
+::: {#def-banach}
+# Banach Spaces
+:::
+
+::: {#lem-cauchy-bounded}
+A Cauchy sequence is bounded.
+:::
+
+::: {#prp-complete-closed}
+# Completeness and Closed Sets
+:::
+
+::: {#prp-finite-complete}
+# Finite Dimensional Subspaces $\implies$ Complete
+In a normed linear space, any finite dimensional subspace is complete.
+:::
+
+::: {#def-quotient-banach}
+# Quotient by Closed Set
+:::
+
+#### Compactness, Extreme Values
+
+::: {#def-semicontinuous}
+# Semicontinuous
+:::
+
+::: {#lem-limsup-semi}
+# Limsup, Liminf, Semicontinuity
+:::
+
+::: {#def-compact}
+# Compact
+:::
+
+::: {#prp-weierstrass}
+# Weierstrass's Extreme Value Theorem
+:::
+
+#### Denseness, Separability
+
+::: {#def-density}
+# Dense 
+:::
+
+::: {#def-nowhere}
+# Nowhere Dense 
+:::
+
+::: {#def-separable}
+# Separable
+:::
 
 ## Hilbert Spaces
 
 ### Inner Product Spaces
+
+::: {#exm-vs}
+# Examples of Hilbert Spaces
+:::
 
 ### Approximation
 
