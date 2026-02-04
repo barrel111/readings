@@ -1,0 +1,28 @@
+\documentclass{article}
+
+\usepackage{preamble}
+\usepackage{mathtools}
+\usepackage{kpfonts}
+
+\title{Interval Matching on the Circle}
+
+\begin{document}
+\maketitle{}
+
+We assuming $(L_i, R_i) \in [0, 2\pi)$ and always consider the counterclockwise arc.
+
+Let $\{L_i\}$ be the set of all left endpoints. Note that $L_i \in [0, 2\pi)$. For each $L_i$, we unenroll the circle onto the line:
+\begin{align*}
+  R_j \xmapsto{\alpha} \begin{cases}
+    R_i &\text{if } R_i < L_j \text{ and } L_i < R_j,\\
+    R_j &\text{otherwise.}
+  \end{cases}
+\end{align*}
+
+Run the regular algorithm on each of these instances; if any of these instances finds a matching then output the matching, otherwise indicate none exist.
+
+We prove correctness now. It suffices to show that whenever such a matching exists, our algorithm also finds a matching. Let $\{P_i\}$ denote this matching with $P_i \in [0, 2\pi]^2 \times [0, 2\pi]$. Fix a cyclic ordering $P_1 \prec \hdots \prec P_n$.  
+
+Perform our transformation using $P_1 = ((L_1, R_1), x_1)$. It suffices to argue that $\{P_i\}$ corresponds to a matching $\{\alpha(P_i)\}$. By correctness of our regular algorithm, we know that we must identify a matching too then. 
+
+\end{document}

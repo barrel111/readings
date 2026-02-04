@@ -1,27 +1,15 @@
 project:
-  type: default
   output-dir: _output
   render: 
     - "*.qmd"
 
 format:
-  html:
-    theme: yeti
-    mainfont: EB Garamond
+  math-web-html:
+    theme:
+      - custom.scss
 
-    toc: true
-    toc-location: right
 
-    bibliography: references.bib
-    
-    css: custom.scss
-
-    html-math-method: 
-      method: mathjax
-      url: "https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.js"
-
-    include-in-header:
-      - text: <script src="mathjax-config.js"></script>
+bibliography: references.bib
 
 number-sections: true
 

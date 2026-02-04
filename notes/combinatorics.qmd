@@ -1,0 +1,32 @@
+---
+title: "Combinatorics"
+format: math-web-html
+---
+
+
+# The Twelvefold Way
+
+## Basic Counting Principles
+
+:::{#def-funct}
+A function $f: A \to B$ is 
+
++ _injective_ if $\forall a, a' \in A$ with $a \ne a'$, we have $f(a) \ne f(a')$,
+
++ _surjective_ if $\forall b \in B, \exists a \in A$ such that $f(a) = b$,
+
++ _bijective_ if it is injective and surjective.
+
+Equivalently, $f: A \to B$ is 
+
++ injective iff $\exists g: B \to A$ such that $g \circ f = \id \parens{x}$ ($g$ is a _retraction_),
+
++ surjective iff $\exists g: B \to A$ such that $f \circ g = \id$ ($g$ is a _section_),
+
++ bijective iff $\exists g: B \to A$ such that $f \circ g = \id_B, \, g \circ f = \id_A$ ($g$ is an _inverse_).
+
+:::
+
+# Exponential Generating Functions
+
+# $q$-analogs

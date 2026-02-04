@@ -2,12 +2,6 @@
 title: "Probability Theory"
 ---
 
-These notes on probability emerge from a familiar struggle: the compulsive search for resources that align perfectly with one's mathematical background and aesthetic sensibilities. Rather than continuing this perhaps utile pursuit, I've decided to synthesize my own understanding from the various imperfect sources I've encountered.
-
-Drawing loosely on Erdős's notion of "the Book"—that celestial collection of the most elegant proofs—I imagine these notes as fragments toward some idealized treatment of probability theory. They represent an attempt to distill what resonates most clearly from my reading, organized according to my own developing intuitions about the subject.
-
-The result is necessarily incomplete and reflects my current limitations, but perhaps that's appropriate for a subject built on uncertainty.
-
 ## Introduction
 ### Motivation
 
